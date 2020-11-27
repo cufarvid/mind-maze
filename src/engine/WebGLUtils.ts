@@ -1,6 +1,6 @@
 import { ProgramRecord, ShaderRecord, TextureOptions } from '../types';
 
-export class WebGLUtils {
+export default class WebGLUtils {
   static createShader(
     gl: WebGL2RenderingContext,
     source: string,
@@ -60,8 +60,8 @@ export class WebGLUtils {
   static buildPrograms(
     gl: WebGL2RenderingContext,
     shaders: Record<string, ShaderRecord>,
-  ): Record<string, WebGLProgram> {
-    const programs: Record<string, WebGLProgram> = {};
+  ): Record<string, ProgramRecord> {
+    const programs: Record<string, ProgramRecord> = {};
 
     for (const key in shaders) {
       try {

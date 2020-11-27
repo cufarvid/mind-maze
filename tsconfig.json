@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "sourceMap": true
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "allowJs": true
   },
   "exclude": [
     "node_modules"
