@@ -1,9 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires,no-undef
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-// eslint-disable-next-line no-undef
 module.exports = {
-  entry: './src/index.ts',
+  mode: 'production',
+  entry: path.resolve(__dirname, './src/index.ts'),
   module: {
     rules: [
       {
@@ -18,13 +18,17 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js',
-    // eslint-disable-next-line no-undef
     path: path.resolve(__dirname, 'dist'),
   },
   devServer: {
-    // eslint-disable-next-line no-undef
-    contentBase: path.join(__dirname, './src'),
+    contentBase: path.join(__dirname, 'dist'),
     compress: true,
-    port: 9000,
+    port: 9000
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Custom template',
+      template: path.resolve(__dirname, './src/index.html'),
+    })
+  ]
 };
