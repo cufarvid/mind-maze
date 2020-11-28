@@ -1,15 +1,15 @@
-import Application from './Application';
+import Application from './engine/Application';
 import WebGLUtils from './engine/WebGLUtils';
 import shaders from './shaders/shaders';
 import { ProgramRecord } from './types';
 
 class App extends Application {
-  programs: Record<string, ProgramRecord>;
-  vertexBuffer: WebGLBuffer;
-  offsetX: number;
-  offsetY: number;
+  private programs: Record<string, ProgramRecord>;
+  private vertexBuffer: WebGLBuffer;
+  private offsetX: number;
+  private offsetY: number;
 
-  start() {
+  public start() {
     const gl = this.gl;
 
     this.programs = WebGLUtils.buildPrograms(gl, shaders);
@@ -21,8 +21,8 @@ class App extends Application {
     const vertices = new Float32Array([
        0.0,  0.5,    1, 0, 0, 1,
       -0.5, -0.5,    0, 1, 0, 1,
-      0.5,  -0.5,    0, 0, 1, 1,
-        1,    -1,    1, 1, 0, 1,
+       0.5, -0.5,    0, 0, 1, 1,
+         1,   -1,    1, 1, 0, 1,
     ]);
 
     this.vertexBuffer = gl.createBuffer();
@@ -33,7 +33,7 @@ class App extends Application {
     this.offsetY = 0;
   }
 
-  render() {
+  public render() {
     const gl = this.gl;
 
     gl.clearColor(1, 1, 1, 1);
@@ -96,5 +96,5 @@ class App extends Application {
 
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.querySelector('canvas');
-  const app = new App(canvas);
+  new App(canvas);
 });

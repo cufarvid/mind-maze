@@ -1,8 +1,8 @@
 export default class Application {
-  gl: WebGL2RenderingContext = null;
-  canvas: HTMLCanvasElement;
+  protected gl: WebGL2RenderingContext = null;
+  private readonly canvas: HTMLCanvasElement;
 
-  constructor(canvas: HTMLCanvasElement) {
+  public constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this._initGL();
     this.start();
@@ -10,7 +10,7 @@ export default class Application {
     requestAnimationFrame(this._update.bind(this));
   }
 
-  _initGL(): void {
+  private _initGL(): void {
     try {
       this.gl = this.canvas.getContext('webgl2', {
         preserveDrawingBuffer: true,
@@ -24,7 +24,7 @@ export default class Application {
     }
   }
 
-  _update(): void {
+  private _update(): void {
     this._resize();
     this.update();
     this.render();
@@ -32,7 +32,7 @@ export default class Application {
     requestAnimationFrame(this._update.bind(this));
   }
 
-  _resize(): void {
+  private _resize(): void {
     const canvas = this.canvas;
     const gl = this.gl;
 
@@ -49,19 +49,19 @@ export default class Application {
     }
   }
 
-  start(): void {
+  public start(): void {
     // initialization
   }
 
-  update(): void {
+  public update(): void {
     // update
   }
 
-  render(): void {
+  public render(): void {
     // render
   }
 
-  resize(): void {
+  public resize(): void {
     // resize
   }
 }

@@ -35,6 +35,7 @@ module.exports = {
       patterns: [
         {
           from: path.resolve(__dirname, './src/style.css'),
+          to: path.resolve(__dirname, 'dist'),
         }
       ]
     })
