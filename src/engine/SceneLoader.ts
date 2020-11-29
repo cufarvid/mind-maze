@@ -1,13 +1,13 @@
-import { IScene, ISceneData } from '../types';
+import { ISceneOptions, ISceneData } from '../types';
 
 export default class SceneLoader {
-  public async loadScene(uri: string): Promise<IScene> {
+  public async loadScene(uri: string): Promise<ISceneOptions> {
     const sceneData: ISceneData = await SceneLoader.loadJson(uri);
     const images = sceneData.textures.map((uri) => this.loadImage(uri));
     const meshes = sceneData.meshes.map((uri) => SceneLoader.loadJson(uri));
 
     return {
-      nodes: sceneData.nodes,
+      entities: sceneData.entities,
       textures: await Promise.all(images),
       meshes: await Promise.all(meshes),
     };
