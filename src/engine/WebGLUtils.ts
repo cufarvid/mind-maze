@@ -1,4 +1,12 @@
-import { ProgramRecord, ShaderRecord, TextureOptions } from '../types';
+import {
+  Attributes,
+  Program,
+  Programs,
+  Shader,
+  Shaders,
+  TextureOptions,
+  Uniforms,
+} from '../types';
 
 export default class WebGLUtils {
   static createShader(
@@ -22,7 +30,7 @@ export default class WebGLUtils {
   static createProgram(
     gl: WebGL2RenderingContext,
     shaders: Array<WebGLShader>,
-  ): ProgramRecord {
+  ): Program {
     const program: WebGLProgram = gl.createProgram();
 
     for (const shader of shaders) {
@@ -35,9 +43,8 @@ export default class WebGLUtils {
       throw new Error(`Could not link program.\nLog:\n${log}`);
     }
 
-    const attributes: Record<string, GLint> = {};
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const activeAttributes = gl.getProgramParameter(
+    const attributes: Attributes = {};
+    const activeAttributes: unknown = gl.getProgramParameter(
       program,
       gl.ACTIVE_ATTRIBUTES,
     );
@@ -46,9 +53,11 @@ export default class WebGLUtils {
       attributes[info.name] = gl.getAttribLocation(program, info.name);
     }
 
-    const uniforms: Record<string, WebGLUniformLocation> = {};
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const activeUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+    const uniforms: Uniforms = {};
+    const activeUniforms: unknown = gl.getProgramParameter(
+      program,
+      gl.ACTIVE_UNIFORMS,
+    );
     for (let i = 0; i < activeUniforms; i++) {
       const info = gl.getActiveUniform(program, i);
       uniforms[info.name] = gl.getUniformLocation(program, info.name);
@@ -57,18 +66,15 @@ export default class WebGLUtils {
     return { program, attributes, uniforms };
   }
 
-  static buildPrograms(
-    gl: WebGL2RenderingContext,
-    shaders: Record<string, ShaderRecord>,
-  ): Record<string, ProgramRecord> {
-    const programs: Record<string, ProgramRecord> = {};
+  static buildPrograms(gl: WebGL2RenderingContext, shaders: Shaders): Programs {
+    const programs: Programs = {};
 
     for (const key in shaders) {
       try {
-        const program: ShaderRecord = shaders[key];
+        const shader: Shader = shaders[key];
         programs[key] = WebGLUtils.createProgram(gl, [
-          WebGLUtils.createShader(gl, program.vertex, gl.VERTEX_SHADER),
-          WebGLUtils.createShader(gl, program.fragment, gl.FRAGMENT_SHADER),
+          WebGLUtils.createShader(gl, shader.vertex, gl.VERTEX_SHADER),
+          WebGLUtils.createShader(gl, shader.fragment, gl.FRAGMENT_SHADER),
         ]);
       } catch (e) {
         console.error(e);

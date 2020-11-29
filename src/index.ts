@@ -1,15 +1,15 @@
 import Application from './engine/Application';
 import WebGLUtils from './engine/WebGLUtils';
+import { Programs } from './types';
 import shaders from './shaders/shaders';
-import { ProgramRecord } from './types';
 
 class App extends Application {
-  private programs: Record<string, ProgramRecord>;
+  private programs: Programs;
   private vertexBuffer: WebGLBuffer;
   private offsetX: number;
   private offsetY: number;
 
-  public start() {
+  public start(): void {
     const gl = this.gl;
 
     this.programs = WebGLUtils.buildPrograms(gl, shaders);
@@ -33,7 +33,7 @@ class App extends Application {
     this.offsetY = 0;
   }
 
-  public render() {
+  public render(): void {
     const gl = this.gl;
 
     gl.clearColor(1, 1, 1, 1);
