@@ -1,4 +1,5 @@
-import Node from './engine/Node';
+import Entity from './engine/Entity';
+import { vec3 } from 'gl-matrix';
 
 // Interfaces
 export interface IProgram {
@@ -32,38 +33,41 @@ export interface ITextureOptions {
 }
 
 export interface ISceneData {
-  nodes: Array<ICameraNode | IModelNode>;
+  entities: Array<IEntityOptions>;
   textures: Array<string>;
   meshes: Array<string>;
 }
 
-export interface IScene {
-  nodes: Array<ICameraNode | IModelNode>;
+export interface ISceneOptions {
+  entities: Array<IEntityOptions>;
   textures: Array<HTMLImageElement>;
   meshes: Array<IMeshData>;
 }
 
-interface INode {
+export interface IEntityOptions {
   type: string;
-  translation: Array<number>;
+  translation: vec3;
   aabb: AABB;
+  // Camera
+  aspect?: number;
+  fov?: number;
+  near?: number;
+  far?: number;
+  velocity?: vec3;
+  mouseSensitivity?: number;
+  maxSpeed?: number;
+  friction?: number;
+  acceleration?: number;
+  // Model
+  rotation?: vec3;
+  scale?: vec3;
+  mesh?: number;
+  texture?: number;
 }
 
-export interface ICameraNode extends INode {
-  aspect: number;
-  fov: number;
-  near: number;
-  far: number;
-}
-
-export interface IModelNode extends INode {
-  mesh: number;
-  texture: number;
-}
-
-interface AABB {
-  min: Array<number>;
-  max: Array<number>;
+export interface AABB {
+  min: vec3;
+  max: vec3;
 }
 
 export interface IMeshData {
@@ -74,7 +78,7 @@ export interface IMeshData {
 }
 
 export interface ITraverseFunction {
-  (node: Node): void;
+  (entity: Entity): void;
 }
 
 // Types
