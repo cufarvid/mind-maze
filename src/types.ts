@@ -1,16 +1,18 @@
+import Node from './engine/Node';
+
 // Interfaces
-export interface Program {
+export interface IProgram {
   program: WebGLProgram;
   attributes: Record<string, GLint>;
   uniforms: Record<string, WebGLUniformLocation>;
 }
 
-export interface Shader {
+export interface IShader {
   vertex: string;
   fragment: string;
 }
 
-export interface TextureOptions {
+export interface ITextureOptions {
   target?: GLenum;
   iformat?: GLint;
   width?: GLsizei;
@@ -29,11 +31,57 @@ export interface TextureOptions {
   mip?: GLint;
 }
 
+export interface ISceneData {
+  nodes: Array<ICameraNode | IModelNode>;
+  textures: Array<string>;
+  meshes: Array<string>;
+}
+
+export interface IScene {
+  nodes: Array<ICameraNode | IModelNode>;
+  textures: Array<HTMLImageElement>;
+  meshes: Array<IMeshData>;
+}
+
+interface INode {
+  type: string;
+  translation: Array<number>;
+  aabb: AABB;
+}
+
+export interface ICameraNode extends INode {
+  aspect: number;
+  fov: number;
+  near: number;
+  far: number;
+}
+
+export interface IModelNode extends INode {
+  mesh: number;
+  texture: number;
+}
+
+interface AABB {
+  min: Array<number>;
+  max: Array<number>;
+}
+
+export interface IMeshData {
+  vertices: Array<number>;
+  texcoords: Array<number>;
+  normals: Array<number>;
+  indices: Array<number>;
+}
+
+export interface ITraverseFunction {
+  (node: Node): void;
+}
+
 // Types
-export type Attributes = Record<string, GLint>;
+export type TAttributes = Record<string, GLint>;
 
-export type Programs = Record<string, Program>;
+export type TPrograms = Record<string, IProgram>;
 
-export type Shaders = Record<string, Shader>;
+export type TShaders = Record<string, IShader>;
 
-export type Uniforms = Record<string, WebGLUniformLocation>;
+export type TUniforms = Record<string, WebGLUniformLocation>;

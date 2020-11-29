@@ -1,10 +1,10 @@
 import Application from './engine/Application';
 import WebGLUtils from './engine/WebGLUtils';
-import { Programs } from './types';
+import { TPrograms } from './types';
 import shaders from './shaders/shaders';
 
 class App extends Application {
-  private programs: Programs;
+  private programs: TPrograms;
   private vertexBuffer: WebGLBuffer;
   private offsetX: number;
   private offsetY: number;

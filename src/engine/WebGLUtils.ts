@@ -1,11 +1,11 @@
 import {
-  Attributes,
-  Program,
-  Programs,
-  Shader,
-  Shaders,
-  TextureOptions,
-  Uniforms,
+  TAttributes,
+  IProgram,
+  TPrograms,
+  IShader,
+  TShaders,
+  ITextureOptions,
+  TUniforms,
 } from '../types';
 
 export default class WebGLUtils {
@@ -30,7 +30,7 @@ export default class WebGLUtils {
   static createProgram(
     gl: WebGL2RenderingContext,
     shaders: Array<WebGLShader>,
-  ): Program {
+  ): IProgram {
     const program: WebGLProgram = gl.createProgram();
 
     for (const shader of shaders) {
@@ -43,7 +43,7 @@ export default class WebGLUtils {
       throw new Error(`Could not link program.\nLog:\n${log}`);
     }
 
-    const attributes: Attributes = {};
+    const attributes: TAttributes = {};
     const activeAttributes: unknown = gl.getProgramParameter(
       program,
       gl.ACTIVE_ATTRIBUTES,
@@ -53,7 +53,7 @@ export default class WebGLUtils {
       attributes[info.name] = gl.getAttribLocation(program, info.name);
     }
 
-    const uniforms: Uniforms = {};
+    const uniforms: TUniforms = {};
     const activeUniforms: unknown = gl.getProgramParameter(
       program,
       gl.ACTIVE_UNIFORMS,
@@ -66,12 +66,15 @@ export default class WebGLUtils {
     return { program, attributes, uniforms };
   }
 
-  static buildPrograms(gl: WebGL2RenderingContext, shaders: Shaders): Programs {
-    const programs: Programs = {};
+  static buildPrograms(
+    gl: WebGL2RenderingContext,
+    shaders: TShaders,
+  ): TPrograms {
+    const programs: TPrograms = {};
 
     for (const key in shaders) {
       try {
-        const shader: Shader = shaders[key];
+        const shader: IShader = shaders[key];
         programs[key] = WebGLUtils.createProgram(gl, [
           WebGLUtils.createShader(gl, shader.vertex, gl.VERTEX_SHADER),
           WebGLUtils.createShader(gl, shader.fragment, gl.FRAGMENT_SHADER),
@@ -87,7 +90,7 @@ export default class WebGLUtils {
 
   static createTexture(
     gl: WebGL2RenderingContext,
-    options: TextureOptions,
+    options: ITextureOptions,
   ): WebGLTexture {
     const target = options.target || gl.TEXTURE_2D;
     const iformat = options.iformat || gl.RGBA;
