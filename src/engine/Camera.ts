@@ -1,37 +1,32 @@
 import { mat4, vec3 } from 'gl-matrix';
-import Entity from './Entity';
+import Utils from './Utils';
 import { IEntityOptions } from '../types';
+import Entity from './Entity';
 
 export default class Camera extends Entity {
   public projection: mat4 = mat4.create();
-  private keys: Record<string, boolean> = {};
-
-  public aspect = 1;
-  private fov = 1.5;
-  private near = 0.01;
-  private far = 100;
-  private velocity: vec3 = [0, 0, 0];
-  private mouseSensitivity = 0.002;
-  private maxSpeed = 3;
-  private friction = 0.2;
-  private acceleration = 20;
+  private readonly keys: Record<string, boolean> = {};
+  private fov: number;
+  public aspect: number;
+  private near: number;
+  private far: number;
+  private mouseSensitivity: number;
+  private maxSpeed: number;
+  private friction: number;
+  private acceleration: number;
 
   public constructor(options: IEntityOptions) {
     super(options);
-    this.setOptions(options);
-    this.updateProjection();
-  }
+    Utils.init(this, defaults, options);
 
-  public setOptions(options: IEntityOptions): void {
-    this.aspect = options.aspect || this.aspect;
-    this.fov = options.fov || this.fov;
-    this.near = options.near || this.near;
-    this.far = options.far || this.far;
-    this.velocity = options.velocity || this.velocity;
-    this.mouseSensitivity = options.mouseSensitivity || this.mouseSensitivity;
-    this.maxSpeed = options.maxSpeed || this.maxSpeed;
-    this.friction = options.friction || this.friction;
-    this.acceleration = options.acceleration || this.acceleration;
+    this.updateProjection();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    this.keyDownHandler = this.keyDownHandler.bind(this);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    this.keyUpHandler = this.keyUpHandler.bind(this);
   }
 
   public updateProjection(): void {
@@ -44,14 +39,14 @@ export default class Camera extends Entity {
     );
   }
 
-  public update(timeDelta: number): void {
-    const forward: vec3 = vec3.set(
+  public update(dt: number): void {
+    const forward = vec3.set(
       vec3.create(),
       -Math.sin(this.rotation[1]),
       0,
       -Math.cos(this.rotation[1]),
     );
-    const right: vec3 = vec3.set(
+    const right = vec3.set(
       vec3.create(),
       Math.cos(this.rotation[1]),
       0,
@@ -59,19 +54,22 @@ export default class Camera extends Entity {
     );
 
     // Add acceleration
-    const acceleration: vec3 = vec3.create();
-    if (this.keys['KeyW']) vec3.add(acceleration, acceleration, forward);
-    if (this.keys['KeyS']) vec3.sub(acceleration, acceleration, forward);
-    if (this.keys['KeyD']) vec3.add(acceleration, acceleration, right);
-    if (this.keys['KeyA']) vec3.sub(acceleration, acceleration, right);
+    const acc: vec3 = vec3.create();
+    if (this.keys['KeyW']) {
+      vec3.add(acc, acc, forward);
+    }
+    if (this.keys['KeyS']) {
+      vec3.sub(acc, acc, forward);
+    }
+    if (this.keys['KeyD']) {
+      vec3.add(acc, acc, right);
+    }
+    if (this.keys['KeyA']) {
+      vec3.sub(acc, acc, right);
+    }
 
     // Update velocity
-    vec3.scaleAndAdd(
-      this.velocity,
-      this.velocity,
-      acceleration,
-      timeDelta * this.acceleration,
-    );
+    vec3.scaleAndAdd(this.velocity, this.velocity, acc, dt * this.acceleration);
 
     // Apply friction if needed
     if (
@@ -84,21 +82,28 @@ export default class Camera extends Entity {
     }
 
     // Limit speed
-    const len = vec3.len(this.velocity);
-    if (len > this.maxSpeed)
+    const len: number = vec3.len(this.velocity);
+    if (len > this.maxSpeed) {
       vec3.scale(this.velocity, this.velocity, this.maxSpeed / len);
+    }
   }
 
   public enable(): void {
-    document.addEventListener('mousemove', (e) => this.mouseMoveHandler(e));
-    document.addEventListener('keydown', (e) => this.keyDownHandler(e));
-    document.addEventListener('keydown', (e) => this.keyUpHandler(e));
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    document.addEventListener('mousemove', this.mouseMoveHandler);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    document.addEventListener('keydown', this.keyDownHandler);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    document.addEventListener('keyup', this.keyUpHandler);
   }
 
   public disable(): void {
-    document.removeEventListener('mousemove', (e) => this.mouseMoveHandler(e));
-    document.removeEventListener('keydown', (e) => this.keyDownHandler(e));
-    document.removeEventListener('keydown', (e) => this.keyUpHandler(e));
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    document.removeEventListener('mousemove', this.mouseMoveHandler);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    document.removeEventListener('keydown', this.keyDownHandler);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    document.removeEventListener('keyup', this.keyUpHandler);
 
     for (const key in this.keys) {
       this.keys[key] = false;
@@ -116,17 +121,34 @@ export default class Camera extends Entity {
     const twopi = pi * 2;
     const halfpi = pi / 2;
 
-    if (this.rotation[0] > halfpi) this.rotation[0] = halfpi;
-    if (this.rotation[0] < -halfpi) this.rotation[0] = -halfpi;
+    if (this.rotation[0] > halfpi) {
+      this.rotation[0] = halfpi;
+    }
+    if (this.rotation[0] < -halfpi) {
+      this.rotation[0] = -halfpi;
+    }
 
     this.rotation[1] = ((this.rotation[1] % twopi) + twopi) % twopi;
   }
 
-  private keyUpHandler(event: KeyboardEvent): void {
+  private keyDownHandler(event: KeyboardEvent): void {
     this.keys[event.code] = true;
   }
 
-  private keyDownHandler(event: KeyboardEvent): void {
+  private keyUpHandler(event: KeyboardEvent): void {
     this.keys[event.code] = false;
   }
 }
+
+// prettier-ignore
+const defaults = {
+  aspect           : 1,
+  fov              : 1.5,
+  near             : 0.01,
+  far              : 100,
+  velocity         : [0, 0, 0],
+  mouseSensitivity : 0.002,
+  maxSpeed         : 3,
+  friction         : 0.2,
+  acceleration     : 20
+};

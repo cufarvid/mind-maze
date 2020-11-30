@@ -1,44 +1,40 @@
-import { mat4, quat, vec3 } from 'gl-matrix';
+import { vec3, mat4, quat } from 'gl-matrix';
+import Utils from './Utils';
 import { AABB, IEntityOptions, ITraverseFunction } from '../types';
-import Model from './Model';
 import Camera from './Camera';
 import Mesh from './Mesh';
+import Model from './Model';
 
 export default class Entity {
   public transform: mat4 = mat4.create();
   private readonly children: Array<Entity | Camera | Model> = [];
   private parent: Entity = null;
 
-  protected translation: vec3 = [0, 0, 0];
+  public velocity: vec3;
+  public translation: vec3 = [0, 0, 0];
   protected rotation: vec3 = [0, 0, 0];
   protected scale: vec3 = [0, 0, 0];
-  protected aabb: AABB = {
+  public aabb: AABB = {
     min: [0, 0, 0],
     max: [0, 0, 0],
   };
 
   public mesh?: Mesh;
-  public texture?: HTMLImageElement;
+  public image?: HTMLImageElement;
   public gl?: Record<string, any>;
 
   public constructor(options: IEntityOptions) {
-    this.setOptions(options);
+    Utils.init(this, defaults, options);
     this.updateTransform();
   }
 
-  public setOptions(options: IEntityOptions): void {
-    this.translation = options.translation || this.translation;
-    this.rotation = options.rotation || this.rotation;
-    this.scale = options.scale || this.scale;
-    this.aabb = options.aabb || this.aabb;
-  }
-
-  protected updateTransform(): void {
-    const degrees = this.rotation.map((x: number) => (x * 100) / Math.PI);
+  public updateTransform(): void {
+    const t = this.transform;
+    const degrees = this.rotation.map((x: number) => (x * 180) / Math.PI);
     const q = quat.fromEuler(quat.create(), degrees[0], degrees[1], degrees[2]);
     const v = vec3.clone(this.translation);
     const s = vec3.clone(this.scale);
-    mat4.fromRotationTranslationScale(this.transform, q, v, s);
+    mat4.fromRotationTranslationScale(t, q, v, s);
   }
 
   public getGlobalTransform(): mat4 {
@@ -63,12 +59,22 @@ export default class Entity {
   }
 
   public traverse(before: ITraverseFunction, after: ITraverseFunction): void {
-    before(this);
+    before && before(this);
 
     for (const child of this.children) {
       child.traverse(before, after);
     }
 
-    after(this);
+    after && after(this);
   }
 }
+
+const defaults = {
+  translation: [0, 0, 0],
+  rotation: [0, 0, 0],
+  scale: [1, 1, 1],
+  aabb: {
+    min: [0, 0, 0],
+    max: [0, 0, 0],
+  },
+};

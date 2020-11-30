@@ -1,18 +1,13 @@
-import Mesh from './Mesh';
-import Entity from './Entity';
 import { IEntityOptions } from '../types';
+import Entity from './Entity';
+import Mesh from './Mesh';
 
 export default class Model extends Entity {
-  public mesh: Mesh;
-  public texture: HTMLImageElement;
+  public image: HTMLImageElement;
 
-  public constructor(
-    mesh: Mesh,
-    texture: HTMLImageElement,
-    options: IEntityOptions,
-  ) {
+  constructor(mesh: Mesh, image: HTMLImageElement, options: IEntityOptions) {
     super(options);
-    this.texture = texture;
     this.mesh = mesh;
+    this.image = image;
   }
 }

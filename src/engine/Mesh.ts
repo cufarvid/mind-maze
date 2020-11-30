@@ -1,6 +1,6 @@
 import { IMeshData } from '../types';
 
-export default class Mesh implements IMeshData {
+export default class Mesh {
   public indices: Array<number>;
   public normals: Array<number>;
   public texcoords: Array<number>;
