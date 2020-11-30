@@ -12,22 +12,22 @@ export default class SceneBuilder {
     this.sceneOptions = sceneOptions;
   }
 
-  private createEntity(entitySpec: IEntityOptions): Entity {
-    switch (entitySpec.type) {
+  private createEntity(entityOptions: IEntityOptions): Entity {
+    switch (entityOptions.type) {
       case 'camera':
-        return new Camera(entitySpec);
+        return new Camera(entityOptions);
       case 'model': {
-        const mesh = new Mesh(this.sceneOptions.meshes[entitySpec.mesh]);
-        const texture = this.sceneOptions.textures[entitySpec.texture];
-        return new Model(mesh, texture, entitySpec);
+        const mesh = new Mesh(this.sceneOptions.meshes[entityOptions.mesh]);
+        const texture = this.sceneOptions.textures[entityOptions.texture];
+        return new Model(mesh, texture, entityOptions);
       }
     }
   }
 
   public build(): Scene {
     const scene = new Scene();
-    this.sceneOptions.entities.forEach((spec) =>
-      scene.addEntity(this.createEntity(spec)),
+    this.sceneOptions.entities.forEach((option) =>
+      scene.addEntity(this.createEntity(option)),
     );
 
     return scene;

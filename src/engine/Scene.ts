@@ -1,10 +1,12 @@
 import Entity from './Entity';
 import { ITraverseFunction } from '../types';
+import Camera from './Camera';
+import Model from './Model';
 
 export default class Scene {
-  public entities: Array<Entity>;
+  public entities: Array<Entity> = [];
 
-  public addEntity(entity: Entity): void {
+  public addEntity(entity: Entity | Camera | Model): void {
     this.entities.push(entity);
   }
 

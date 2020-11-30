@@ -98,9 +98,9 @@ export default class WebGLUtils {
     const type = options.type || gl.UNSIGNED_BYTE;
     const texture = options.texture || gl.createTexture();
 
-    if (options.unit) {
-      gl.activeTexture(gl.TEXTURE0 + options.unit);
-    }
+    if (options.unit) gl.activeTexture(gl.TEXTURE0 + options.unit);
+
+    gl.bindTexture(target, texture);
 
     if (options.image)
       gl.texImage2D(target, 0, iformat, format, type, options.image);
@@ -111,7 +111,7 @@ export default class WebGLUtils {
         iformat,
         options.width,
         options.height,
-        options.border,
+        0,
         format,
         type,
         options.data,
