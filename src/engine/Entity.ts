@@ -1,9 +1,12 @@
-import { mat4, vec3 } from 'gl-matrix';
+import { mat4, quat, vec3 } from 'gl-matrix';
 import { AABB, IEntityOptions, ITraverseFunction } from '../types';
+import Model from './Model';
+import Camera from './Camera';
+import Mesh from './Mesh';
 
 export default class Entity {
-  private transform: mat4 = mat4.create();
-  private readonly children: Array<Entity> = [];
+  public transform: mat4 = mat4.create();
+  private readonly children: Array<Entity | Camera | Model> = [];
   private parent: Entity = null;
 
   protected translation: vec3 = [0, 0, 0];
@@ -14,15 +17,28 @@ export default class Entity {
     max: [0, 0, 0],
   };
 
+  public mesh?: Mesh;
+  public texture?: HTMLImageElement;
+  public gl?: Record<string, any>;
+
   public constructor(options: IEntityOptions) {
     this.setOptions(options);
+    this.updateTransform();
   }
 
   public setOptions(options: IEntityOptions): void {
-    this.translation = options.translation;
-    this.rotation = options.rotation;
-    this.scale = options.scale;
-    this.aabb = options.aabb;
+    this.translation = options.translation || this.translation;
+    this.rotation = options.rotation || this.rotation;
+    this.scale = options.scale || this.scale;
+    this.aabb = options.aabb || this.aabb;
+  }
+
+  protected updateTransform(): void {
+    const degrees = this.rotation.map((x: number) => (x * 100) / Math.PI);
+    const q = quat.fromEuler(quat.create(), degrees[0], degrees[1], degrees[2]);
+    const v = vec3.clone(this.translation);
+    const s = vec3.clone(this.scale);
+    mat4.fromRotationTranslationScale(this.transform, q, v, s);
   }
 
   public getGlobalTransform(): mat4 {
@@ -33,12 +49,12 @@ export default class Entity {
     }
   }
 
-  public addChild(entity: Entity): void {
+  public addChild(entity: Entity | Camera | Model): void {
     this.children.push(entity);
     entity.parent = this;
   }
 
-  public removeChild(entity: Entity): void {
+  public removeChild(entity: Entity | Camera | Model): void {
     const index = this.children.indexOf(entity);
     if (index >= 0) {
       this.children.splice(index, 1);

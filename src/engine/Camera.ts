@@ -3,10 +3,10 @@ import Entity from './Entity';
 import { IEntityOptions } from '../types';
 
 export default class Camera extends Entity {
-  private projection: mat4 = mat4.create();
+  public projection: mat4 = mat4.create();
   private keys: Record<string, boolean> = {};
 
-  private aspect = 1;
+  public aspect = 1;
   private fov = 1.5;
   private near = 0.01;
   private far = 100;
@@ -19,20 +19,19 @@ export default class Camera extends Entity {
   public constructor(options: IEntityOptions) {
     super(options);
     this.setOptions(options);
-
     this.updateProjection();
   }
 
   public setOptions(options: IEntityOptions): void {
-    this.aspect = options.aspect;
-    this.fov = options.fov;
-    this.near = options.near;
-    this.far = options.far;
-    this.velocity = options.velocity;
-    this.mouseSensitivity = options.mouseSensitivity;
-    this.maxSpeed = options.maxSpeed;
-    this.friction = options.friction;
-    this.acceleration = options.acceleration;
+    this.aspect = options.aspect || this.aspect;
+    this.fov = options.fov || this.fov;
+    this.near = options.near || this.near;
+    this.far = options.far || this.far;
+    this.velocity = options.velocity || this.velocity;
+    this.mouseSensitivity = options.mouseSensitivity || this.mouseSensitivity;
+    this.maxSpeed = options.maxSpeed || this.maxSpeed;
+    this.friction = options.friction || this.friction;
+    this.acceleration = options.acceleration || this.acceleration;
   }
 
   public updateProjection(): void {
