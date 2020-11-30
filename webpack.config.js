@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   entry: path.resolve(__dirname, './src/index.ts'),
   module: {
     rules: [
@@ -36,6 +36,10 @@ module.exports = {
         {
           from: path.resolve(__dirname, './src/style.css'),
           to: path.resolve(__dirname, 'dist'),
+        },
+        {
+          from: path.resolve(__dirname, './src/assets/'),
+          to: path.resolve(__dirname, 'dist/assets/'),
         }
       ]
     })
