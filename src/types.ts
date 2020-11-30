@@ -81,6 +81,11 @@ export interface ITraverseFunction {
   (entity: Entity): void;
 }
 
+export interface TraverseParams {
+  before: ITraverseFunction;
+  after: ITraverseFunction;
+}
+
 export interface ModelRecord {
   vao: WebGLVertexArrayObject;
   indices: number;

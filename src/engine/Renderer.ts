@@ -1,10 +1,11 @@
-import { IProgram, ModelRecord, TPrograms } from '../types';
+import { mat4 } from 'gl-matrix';
 import WebGLUtils from './WebGLUtils';
 import shaders from '../shaders/shaders';
-import Scene from './Scene';
-import Mesh from './Mesh';
+import { IProgram, ModelRecord, TPrograms } from '../types';
 import Camera from './Camera';
-import { mat4 } from 'gl-matrix';
+import Entity from './Entity';
+import Mesh from './Mesh';
+import Scene from './Scene';
 
 export default class Renderer {
   private readonly gl: WebGL2RenderingContext;
@@ -31,8 +32,7 @@ export default class Renderer {
     scene.entities.forEach((entity) => {
       entity.gl = {};
       if (entity.mesh) Object.assign(entity.gl, this.createModel(entity.mesh));
-      if (entity.texture)
-        entity.gl.texture = this.createTexture(entity.texture);
+      if (entity.image) entity.gl.texture = this.createTexture(entity.image);
     });
   }
 
@@ -52,11 +52,10 @@ export default class Renderer {
     mat4.copy(matrix, viewMatrix);
     gl.uniformMatrix4fv(program.uniforms.uProjection, false, camera.projection);
 
-    scene.traverse(
-      (entity) => {
+    scene.traverse({
+      before: (entity: Entity) => {
         matrixStack.push(mat4.clone(matrix));
         mat4.mul(matrix, matrix, entity.transform);
-
         if (entity.gl.vao) {
           gl.bindVertexArray(entity.gl.vao);
           gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
@@ -71,8 +70,8 @@ export default class Renderer {
           );
         }
       },
-      () => (matrix = matrixStack.pop()),
-    );
+      after: () => (matrix = matrixStack.pop()),
+    });
   }
 
   private createModel(modelMesh: Mesh): ModelRecord {
@@ -108,7 +107,7 @@ export default class Renderer {
     gl.enableVertexAttribArray(2);
     gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 0, 0);
 
-    const indices = modelMesh.indices.length;
+    const indices: number = modelMesh.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(
       gl.ELEMENT_ARRAY_BUFFER,
