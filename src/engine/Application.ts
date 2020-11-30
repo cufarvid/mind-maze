@@ -1,6 +1,6 @@
 export default class Application {
   protected gl: WebGL2RenderingContext = null;
-  private readonly canvas: HTMLCanvasElement;
+  protected readonly canvas: HTMLCanvasElement;
 
   public constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -49,19 +49,19 @@ export default class Application {
     }
   }
 
-  public start(): void {
+  protected start(): void {
     // initialization
   }
 
-  public update(): void {
+  protected update(): void {
     // update
   }
 
-  public render(): void {
+  protected render(): void {
     // render
   }
 
-  public resize(): void {
+  protected resize(): void {
     // resize
   }
 }

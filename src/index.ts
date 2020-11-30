@@ -1,96 +1,70 @@
 import Application from './engine/Application';
-import WebGLUtils from './engine/WebGLUtils';
-import { TPrograms } from './types';
-import shaders from './shaders/shaders';
+import Renderer from './engine/Renderer';
+import Camera from './engine/Camera';
+import SceneLoader from './engine/SceneLoader';
+import SceneBuilder from './engine/SceneBuilder';
+import Scene from './engine/Scene';
 
 class App extends Application {
-  private programs: TPrograms;
-  private vertexBuffer: WebGLBuffer;
-  private offsetX: number;
-  private offsetY: number;
+  private renderer: Renderer;
+  private scene: Scene;
+  private camera: Camera = null;
+  private time: number = Date.now();
+  private startTime: number = Date.now();
+  private aspect = 1;
 
-  public start(): void {
-    const gl = this.gl;
-
-    this.programs = WebGLUtils.buildPrograms(gl, shaders);
-
-    // This time we store all the data interleaved, so that
-    // all the attributes for each vertex are close in memory.
-    // This significantly improves cache usage.
-    // prettier-ignore
-    const vertices = new Float32Array([
-       0.0,  0.5,    1, 0, 0, 1,
-      -0.5, -0.5,    0, 1, 0, 1,
-       0.5, -0.5,    0, 0, 1, 1,
-         1,   -1,    1, 1, 0, 1,
-    ]);
-
-    this.vertexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-
-    this.offsetX = 0;
-    this.offsetY = 0;
+  protected start(): void {
+    this.renderer = new Renderer(this.gl);
+    void this.load('./assets/scenes/scene.json');
   }
 
-  public render(): void {
-    const gl = this.gl;
+  async load(uri: string): Promise<void> {
+    const scene = await new SceneLoader().loadScene(uri);
+    const builder = new SceneBuilder(scene);
+    this.scene = builder.build();
 
-    gl.clearColor(1, 1, 1, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    const program = this.programs.test;
-    gl.useProgram(program.program);
-
-    // Bind the one buffer we have created.
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-
-    // Tell WebGL that the data comes from a buffer.
-    gl.enableVertexAttribArray(program.attributes.aPosition);
-
-    // Connect the buffer and the attribute and specify how to extract
-    // the data from the buffer.
-    //
-    // Now the position data is not tightly packed together, as it is
-    // interleaved with color data. We thus have to compute the
-    // offset and the stride ourselves.
-    gl.vertexAttribPointer(
-      program.attributes.aPosition,
-      2,
-      gl.FLOAT,
-      false,
-
-      // We have 6 floats per vertex (2 for position and 4 for color),
-      // each float is 4 bytes, so the stride is 6 * 4 bytes = 24 bytes.
-      24,
-
-      // Within each vertex, the position is stored right at
-      // the beginning, therefore the offset is 0.
-      0,
+    this.scene.traverse(
+      (entity) => {
+        if (entity instanceof Camera) this.camera = entity;
+      },
+      () => 1,
     );
 
-    // For color data we do not have to bind a different buffer, the data
-    // is already available in the single buffer we already have bound.
-    gl.enableVertexAttribArray(program.attributes.aColor);
-    gl.vertexAttribPointer(
-      program.attributes.aColor,
-      4,
-      gl.FLOAT,
-      false,
+    this.camera.aspect = this.aspect;
+    this.camera.updateProjection();
+    this.renderer.prepare(this.scene);
+  }
 
-      // The stride is the same, each vertex is 24 bytes in size.
-      24,
+  protected enableCamera(): void {
+    this.canvas.requestPointerLock();
+  }
 
-      // The offset within each vertex is 2 floats because of the
-      // position data, so that is 2 * 4 bytes = 8 bytes.
-      8,
-    );
+  protected pointerlockchangeHandler(): void {
+    if (!this.camera) return;
 
-    // Set the uniform.
-    gl.uniform2f(program.uniforms.uOffset, this.offsetX, this.offsetY);
+    if (document.pointerLockElement === this.canvas) this.camera.enable();
+    else this.camera.disable();
+  }
 
-    // Draw!
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  protected update(): void {
+    const dt = (this.time - this.startTime) * 0.001;
+    this.startTime = this.time;
+
+    if (this.camera) this.camera.update(dt);
+  }
+
+  protected render(): void {
+    if (this.scene) this.renderer.render(this.scene, this.camera);
+  }
+
+  protected resize(): void {
+    const w = this.canvas.clientWidth;
+    const h = this.canvas.clientHeight;
+    this.aspect = w / h;
+    if (this.camera) {
+      this.camera.aspect = this.aspect;
+      this.camera.updateProjection();
+    }
   }
 }
 

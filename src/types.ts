@@ -81,6 +81,11 @@ export interface ITraverseFunction {
   (entity: Entity): void;
 }
 
+export interface ModelRecord {
+  vao: WebGLVertexArrayObject;
+  indices: number;
+}
+
 // Types
 export type TAttributes = Record<string, GLint>;
 
