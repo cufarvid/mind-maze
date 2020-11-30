@@ -1,15 +1,16 @@
 // language=GLSL
 const vertex = `#version 300 es
-uniform vec2 uOffset;
+layout (location = 0) in vec4 aPosition;
+layout (location = 1) in vec2 aTexCoord;
 
-in vec2 aPosition;
-in vec4 aColor;
+uniform mat4 uViewModel;
+uniform mat4 uProjection;
 
-out vec4 vColor;
+out vec2 vTexCoord;
 
 void main() {
-    vColor = aColor;
-    gl_Position = vec4(aPosition + uOffset, 0, 1);
+    vTexCoord = aTexCoord;
+    gl_Position = uProjection * uViewModel * aPosition;
 }
 `;
 
@@ -17,15 +18,17 @@ void main() {
 const fragment = `#version 300 es
 precision mediump float;
 
-in vec4 vColor;
+uniform mediump sampler2D uTexture;
+
+in vec2 vTexCoord;
 
 out vec4 oColor;
 
 void main() {
-    oColor = vColor;
+    oColor = texture(uTexture, vTexCoord);
 }
 `;
 
 export default {
-  test: { vertex, fragment },
+  simple: { vertex, fragment },
 };
