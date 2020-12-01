@@ -1,7 +1,7 @@
 import { mat4 } from 'gl-matrix';
 import WebGLUtils from './WebGLUtils';
 import shaders from '../shaders/shaders';
-import { IProgram, ModelRecord, TPrograms } from '../types';
+import { IEntityGlProps, IProgram, ModelRecord, TPrograms } from '../types';
 import Camera from './Camera';
 import Entity from './Entity';
 import Mesh from './Mesh';
@@ -30,9 +30,10 @@ export default class Renderer {
 
   public prepare(scene: Scene): void {
     scene.entities.forEach((entity) => {
-      entity.gl = {};
-      if (entity.mesh) Object.assign(entity.gl, this.createModel(entity.mesh));
-      if (entity.image) entity.gl.texture = this.createTexture(entity.image);
+      entity.props = {} as IEntityGlProps;
+      if (entity.mesh)
+        Object.assign(entity.props, this.createModel(entity.mesh));
+      if (entity.image) entity.props.texture = this.createTexture(entity.image);
     });
   }
 
@@ -56,15 +57,15 @@ export default class Renderer {
       before: (entity: Entity) => {
         matrixStack.push(mat4.clone(matrix));
         mat4.mul(matrix, matrix, entity.transform);
-        if (entity.gl.vao) {
-          gl.bindVertexArray(entity.gl.vao);
+        if (entity.props.vao) {
+          gl.bindVertexArray(entity.props.vao);
           gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
           gl.activeTexture(gl.TEXTURE0);
-          gl.bindTexture(gl.TEXTURE_2D, entity.gl.texture);
+          gl.bindTexture(gl.TEXTURE_2D, entity.props.texture);
           gl.uniform1i(program.uniforms.uTexture, 0);
           gl.drawElements(
             gl.TRIANGLES,
-            entity.gl.indices,
+            entity.props.indices,
             gl.UNSIGNED_SHORT,
             0,
           );

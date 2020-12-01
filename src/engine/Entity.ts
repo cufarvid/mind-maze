@@ -1,27 +1,29 @@
 import { vec3, mat4, quat } from 'gl-matrix';
 import Utils from './Utils';
-import { AABB, IEntityOptions, ITraverseFunction } from '../types';
+import {
+  AABB,
+  IEntityGlProps,
+  IEntityOptions,
+  ITraverseFunction,
+} from '../types';
 import Camera from './Camera';
 import Mesh from './Mesh';
 import Model from './Model';
 
 export default class Entity {
-  public transform: mat4 = mat4.create();
-  private readonly children: Array<Entity | Camera | Model> = [];
+  private children: Array<Entity | Camera | Model> = [];
   private parent: Entity = null;
 
+  public transform: mat4 = mat4.create();
   public velocity: vec3;
-  public translation: vec3 = [0, 0, 0];
-  protected rotation: vec3 = [0, 0, 0];
-  protected scale: vec3 = [0, 0, 0];
-  public aabb: AABB = {
-    min: [0, 0, 0],
-    max: [0, 0, 0],
-  };
+  public translation: vec3;
+  public rotation: vec3;
+  public scale: vec3;
+  public aabb: AABB;
 
   public mesh?: Mesh;
   public image?: HTMLImageElement;
-  public gl?: Record<string, any>;
+  public props?: IEntityGlProps;
 
   public constructor(options: IEntityOptions) {
     Utils.init(this, defaults, options);
@@ -69,7 +71,7 @@ export default class Entity {
   }
 }
 
-const defaults = {
+const defaults: IEntityOptions = {
   translation: [0, 0, 0],
   rotation: [0, 0, 0],
   scale: [1, 1, 1],

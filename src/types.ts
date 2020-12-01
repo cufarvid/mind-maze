@@ -45,9 +45,9 @@ export interface ISceneOptions {
 }
 
 export interface IEntityOptions {
-  type: string;
-  translation: vec3;
-  aabb: AABB;
+  type?: string;
+  translation?: vec3;
+  aabb?: AABB;
   // Camera
   aspect?: number;
   fov?: number;
@@ -63,6 +63,12 @@ export interface IEntityOptions {
   scale?: vec3;
   mesh?: number;
   texture?: number;
+}
+
+export interface IEntityGlProps {
+  texture: WebGLTexture;
+  vao: WebGLVertexArrayObject;
+  indices: number;
 }
 
 export interface AABB {
