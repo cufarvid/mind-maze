@@ -63,6 +63,9 @@ export interface IEntityOptions {
   scale?: vec3;
   mesh?: number;
   texture?: number;
+  // Floor
+  width?: number;
+  height?: number;
 }
 
 export interface IEntityGlProps {
