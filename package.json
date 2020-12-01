@@ -20,6 +20,7 @@
   "homepage": "https://github.com/cufarvid/mind-maze#readme",
   "devDependencies": {
     "@types/dat.gui": "^0.7.6",
+    "@types/lodash": "^4.14.165",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
     "copy-webpack-plugin": "^6.3.2",
@@ -39,6 +40,7 @@
   },
   "dependencies": {
     "dat.gui": "^0.7.7",
-    "gl-matrix": "^3.3.0"
+    "gl-matrix": "^3.3.0",
+    "lodash": "^4.17.20"
   }
 }
