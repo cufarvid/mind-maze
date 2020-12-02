@@ -1,4 +1,4 @@
-import { mat4 } from 'gl-matrix';
+import { mat4, vec3 } from 'gl-matrix';
 import WebGLUtils from './WebGLUtils';
 import shaders from '../shaders/shaders';
 import { IEntityGlProps, IProgram, ModelRecord, TPrograms } from '../types';
@@ -6,6 +6,7 @@ import Camera from './Camera';
 import Entity from './Entity';
 import Mesh from './Mesh';
 import Scene from './Scene';
+import Light from './Light';
 
 export default class Renderer {
   private readonly gl: WebGL2RenderingContext;
@@ -53,6 +54,8 @@ export default class Renderer {
     mat4.copy(matrix, viewMatrix);
     gl.uniformMatrix4fv(program.uniforms.uProjection, false, camera.projection);
 
+    let lightCount = 0;
+
     scene.traverse({
       before: (entity: Entity) => {
         matrixStack.push(mat4.clone(matrix));
@@ -61,7 +64,10 @@ export default class Renderer {
           gl.bindVertexArray(entity.props.vao);
           gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
           gl.activeTexture(gl.TEXTURE0);
-          gl.bindTexture(gl.TEXTURE_2D, entity.props.texture);
+          gl.bindTexture(
+            gl.TEXTURE_2D,
+            entity.props.texture || this.defaultTexture,
+          );
           gl.uniform1i(program.uniforms.uTexture, 0);
           gl.drawElements(
             gl.TRIANGLES,
@@ -69,6 +75,44 @@ export default class Renderer {
             gl.UNSIGNED_SHORT,
             0,
           );
+        } else if (entity instanceof Light) {
+          let color: vec3 = vec3.clone(entity.ambientColor);
+          vec3.scale(color, color, 1.0 / 255.0);
+          gl.uniform3fv(
+            program.uniforms[`'uAmbientColor[${lightCount}]`],
+            color,
+          );
+
+          color = vec3.clone(entity.diffuseColor);
+          vec3.scale(color, color, 1.0 / 255.0);
+          gl.uniform3fv(
+            program.uniforms[`uDiffuseColor[${lightCount}]`],
+            color,
+          );
+
+          color = vec3.clone(entity.specularColor);
+          vec3.scale(color, color, 1.0 / 255.0);
+          gl.uniform3fv(
+            program.uniforms[`uSpecularColor[${lightCount}]`],
+            color,
+          );
+
+          const position: vec3 = [0, 0, 0];
+          mat4.getTranslation(position, entity.transform);
+
+          gl.uniform3fv(
+            program.uniforms[`uLightPosition[${lightCount}]`],
+            position,
+          );
+          gl.uniform1f(
+            program.uniforms[`uShininess[${lightCount}]`],
+            entity.shininess,
+          );
+          gl.uniform3fv(
+            program.uniforms[`uLightAttenuation[${lightCount}]`],
+            entity.attenuation,
+          );
+          lightCount++;
         }
       },
       after: () => (matrix = matrixStack.pop()),

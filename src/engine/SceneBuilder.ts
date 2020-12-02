@@ -5,6 +5,7 @@ import Mesh from './Mesh';
 import Model from './Model';
 import Camera from './Camera';
 import Floor from './Floor';
+import Light from './Light';
 
 export default class SceneBuilder {
   private sceneOptions: ISceneOptions;
@@ -26,6 +27,8 @@ export default class SceneBuilder {
         const texture = this.sceneOptions.textures[entityOptions.texture];
         return new Floor(texture, entityOptions);
       }
+      case 'light':
+        return new Light(entityOptions);
     }
   }
 
