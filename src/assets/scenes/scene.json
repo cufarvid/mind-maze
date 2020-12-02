@@ -62,7 +62,20 @@
       "height": 5
     },
     {
-      "type": "light"
+      "type": "light",
+      "translation": [-5, 5, -5]
+    },
+    {
+      "type": "light",
+      "translation": [-5, 5, 5]
+    },
+    {
+      "type": "light",
+      "translation": [5, 5, 5]
+    },
+    {
+      "type": "light",
+      "translation": [5, 5, -5]
     }
   ],
   "textures": [
