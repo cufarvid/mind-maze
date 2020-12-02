@@ -43,9 +43,9 @@ in vec3 vVertexPosition;
 out vec4 oColor;
 
 void main() {
-  oColor = vec4(0);
+  oColor = vec4(0.0);
 
-  for (int i = 0; i < 1; i++) {
+  for (int i = 0; i < 4; i++) {
     vec3 lightPosition = (uViewModel * vec4(uLightPosition[i], 1)).xyz;
     float d = distance(vVertexPosition, lightPosition);
     float attenuation = 1.0 / dot(uLightAttenuation[i] * vec3(1, d, d * d), vec3(1, 1, 1));

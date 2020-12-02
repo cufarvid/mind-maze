@@ -60,9 +60,16 @@ export default class WebGLUtils {
     );
     for (let i = 0; i < activeUniforms; i++) {
       const info = gl.getActiveUniform(program, i);
-      uniforms[info.name] = gl.getUniformLocation(program, info.name);
+      console.log(info);
+      if (info.name.includes('[0]')) {
+        for (let j = 0; j < info.size; j++) {
+          const uniformName = `${info.name.slice(0, -3)}[${j}]`;
+          uniforms[uniformName] = gl.getUniformLocation(program, uniformName);
+        }
+      } else {
+        uniforms[info.name] = gl.getUniformLocation(program, info.name);
+      }
     }
-
     return { program, attributes, uniforms };
   }
 
