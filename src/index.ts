@@ -7,7 +7,6 @@ import SceneBuilder from './engine/SceneBuilder';
 import Scene from './engine/Scene';
 import Entity from './engine/Entity';
 import * as dat from 'dat.gui';
-import Light from './engine/Light';
 
 class App extends Application {
   private renderer: Renderer;
@@ -65,19 +64,6 @@ class App extends Application {
     this.time = Date.now();
     const dt = (this.time - this.startTime) * 0.001;
     this.startTime = this.time;
-    let lightCount = 0;
-    this.scene?.traverse({
-      before: (entity) => {
-        if (entity instanceof Light && lightCount < 3) {
-          entity.diffuseColor[lightCount] =
-            Math.sin(this.time / 1000 + (lightCount * Math.PI) / 2) * 255;
-          entity.specularColor[lightCount] =
-            Math.sin(this.time / 1000 + (lightCount * Math.PI) / 3) * 255;
-          lightCount++;
-        }
-      },
-      after: null,
-    });
 
     if (this.camera) this.camera.update(dt);
 

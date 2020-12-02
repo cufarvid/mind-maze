@@ -60,7 +60,6 @@ export default class WebGLUtils {
     );
     for (let i = 0; i < activeUniforms; i++) {
       const info = gl.getActiveUniform(program, i);
-      console.log(info);
       if (info.name.includes('[0]')) {
         for (let j = 0; j < info.size; j++) {
           const uniformName = `${info.name.slice(0, -3)}[${j}]`;

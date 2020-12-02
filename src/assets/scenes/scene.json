@@ -63,19 +63,34 @@
     },
     {
       "type": "light",
-      "translation": [-5, 5, -5]
+      "translation": [-7, 5, -7]
     },
     {
       "type": "light",
-      "translation": [-5, 5, 5]
+      "shininess": 10,
+      "ambientColor": [50, 50, 50],
+      "diffuseColor": [200, 200, 200],
+      "specularColor": [255, 0, 0],
+      "attenuation": [1, 0, 0.02],
+      "translation": [-7, 5, 7]
     },
     {
       "type": "light",
-      "translation": [5, 5, 5]
+      "shininess": 10,
+      "ambientColor": [50, 50, 50],
+      "diffuseColor": [200, 200, 200],
+      "specularColor": [0, 255, 0],
+      "attenuation": [1, 0, 0.02],
+      "translation": [7, 5, 7]
     },
     {
       "type": "light",
-      "translation": [5, 5, -5]
+      "shininess": 10,
+      "ambientColor": [50, 50, 50],
+      "diffuseColor": [200, 200, 200],
+      "specularColor": [0, 0, 255],
+      "attenuation": [1, 0, 0.02],
+      "translation": [7, 5, -7]
     }
   ],
   "textures": [

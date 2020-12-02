@@ -1,16 +1,26 @@
 import { vec3 } from 'gl-matrix';
-import Entity from './Entity';
+import Utils from './Utils';
 import { IEntityOptions } from '../types';
+import Entity from './Entity';
 
 export default class Light extends Entity {
-  public ambientColor: vec3 = [50.0, 50.0, 50.0];
-  public diffuseColor: vec3 = [200.0, 200.0, 200.0];
-  public specularColor: vec3 = [255.0, 255.0, 255.0];
-  public shininess = 10.0;
-  public attenuation: vec3 = [1.0, 0, 0.02];
+  public shininess: number;
+  public ambientColor: vec3;
+  public diffuseColor: vec3;
+  public specularColor: vec3;
+  public attenuation: vec3;
 
   public constructor(options: IEntityOptions) {
     super(options);
-    this.translation = options.translation;
+    Utils.init(this, defaults, options);
   }
 }
+
+const defaults: IEntityOptions = {
+  shininess: 10,
+  ambientColor: [50, 50, 50],
+  diffuseColor: [200, 200, 200],
+  specularColor: [255, 255, 255],
+  attenuation: [1, 0, 0.01],
+  translation: [0, 5, 0],
+};
