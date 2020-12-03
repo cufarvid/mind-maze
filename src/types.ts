@@ -63,6 +63,15 @@ export interface IEntityOptions {
   scale?: vec3;
   mesh?: number;
   texture?: number;
+  // Floor
+  width?: number;
+  height?: number;
+  // Light
+  ambientColor?: vec3;
+  diffuseColor?: vec3;
+  specularColor?: vec3;
+  attenuation?: vec3;
+  shininess?: number;
 }
 
 export interface IEntityGlProps {

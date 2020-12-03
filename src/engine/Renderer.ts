@@ -1,16 +1,17 @@
-import { mat4 } from 'gl-matrix';
+import { mat4, vec3 } from 'gl-matrix';
 import WebGLUtils from './WebGLUtils';
-import shaders from '../shaders/shaders';
+import shaders from '../shaders/lightShader';
 import { IEntityGlProps, IProgram, ModelRecord, TPrograms } from '../types';
 import Camera from './Camera';
 import Entity from './Entity';
 import Mesh from './Mesh';
 import Scene from './Scene';
+import Light from './Light';
 
 export default class Renderer {
   private readonly gl: WebGL2RenderingContext;
   private programs: TPrograms;
-  private defaultTexture: WebGLTexture;
+  private readonly defaultTexture: WebGLTexture;
 
   public constructor(gl: WebGL2RenderingContext) {
     this.gl = gl;
@@ -53,15 +54,21 @@ export default class Renderer {
     mat4.copy(matrix, viewMatrix);
     gl.uniformMatrix4fv(program.uniforms.uProjection, false, camera.projection);
 
+    let lightCount = 0;
+
     scene.traverse({
       before: (entity: Entity) => {
         matrixStack.push(mat4.clone(matrix));
         mat4.mul(matrix, matrix, entity.transform);
+
         if (entity.props.vao) {
           gl.bindVertexArray(entity.props.vao);
           gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
           gl.activeTexture(gl.TEXTURE0);
-          gl.bindTexture(gl.TEXTURE_2D, entity.props.texture);
+          gl.bindTexture(
+            gl.TEXTURE_2D,
+            entity.props.texture || this.defaultTexture,
+          );
           gl.uniform1i(program.uniforms.uTexture, 0);
           gl.drawElements(
             gl.TRIANGLES,
@@ -69,6 +76,42 @@ export default class Renderer {
             gl.UNSIGNED_SHORT,
             0,
           );
+        } else if (entity instanceof Light) {
+          let color: vec3 = vec3.clone(entity.ambientColor);
+          vec3.scale(color, color, 1.0 / 255.0);
+          gl.uniform3fv(
+            program.uniforms[`uAmbientColor[${lightCount}]`],
+            color,
+          );
+          color = vec3.clone(entity.diffuseColor);
+          vec3.scale(color, color, 1.0 / 255.0);
+          gl.uniform3fv(
+            program.uniforms[`uDiffuseColor[${lightCount}]`],
+            color,
+          );
+          color = vec3.clone(entity.specularColor);
+          vec3.scale(color, color, 1.0 / 255.0);
+          gl.uniform3fv(
+            program.uniforms[`uSpecularColor[${lightCount}]`],
+            color,
+          );
+
+          const position: vec3 = [0, 0, 0];
+          mat4.getTranslation(position, entity.transform);
+
+          gl.uniform3fv(
+            program.uniforms[`uLightPosition[${lightCount}]`],
+            position,
+          );
+          gl.uniform1f(
+            program.uniforms[`uShininess[${lightCount}]`],
+            entity.shininess,
+          );
+          gl.uniform3fv(
+            program.uniforms[`uLightAttenuation[${lightCount}]`],
+            entity.attenuation,
+          );
+          lightCount++;
         }
       },
       after: () => (matrix = matrixStack.pop()),
@@ -93,20 +136,20 @@ export default class Renderer {
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array(modelMesh.texcoords),
+      new Float32Array(modelMesh.normals),
       gl.STATIC_DRAW,
     );
     gl.enableVertexAttribArray(1);
-    gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array(modelMesh.normals),
+      new Float32Array(modelMesh.texcoords),
       gl.STATIC_DRAW,
     );
     gl.enableVertexAttribArray(2);
-    gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(2, 2, gl.FLOAT, false, 0, 0);
 
     const indices: number = modelMesh.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
