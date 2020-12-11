@@ -6,7 +6,11 @@ export default class Floor extends Entity {
   public constructor(image: HTMLImageElement, options: IEntityOptions) {
     super(null);
     this.image = image;
-    this.mesh = Floor.generate(options.width, options.height);
+    this.mesh = Floor.generate(
+      options.width,
+      options.height,
+      options.roughness,
+    );
   }
 
   private static generate(width = 10, height = 10, roughness = 0): Mesh {

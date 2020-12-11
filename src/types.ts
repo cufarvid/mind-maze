@@ -66,6 +66,7 @@ export interface IEntityOptions {
   // Floor
   width?: number;
   height?: number;
+  roughness?: number;
   // Light
   ambientColor?: vec3;
   diffuseColor?: vec3;
