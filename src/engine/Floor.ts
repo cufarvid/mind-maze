@@ -6,10 +6,10 @@ export default class Floor extends Entity {
   public constructor(image: HTMLImageElement, options: IEntityOptions) {
     super(null);
     this.image = image;
-    this.mesh = Floor.generateRough(options.width, options.height);
+    this.mesh = Floor.generate(options.width, options.height);
   }
 
-  private static generateRough(width = 10, height = 10): Mesh {
+  private static generate(width = 10, height = 10, roughness = 0): Mesh {
     const vertices: Array<number> = [];
     const normals: Array<number> = [];
     const texcoords: Array<number> = [];
@@ -18,7 +18,7 @@ export default class Floor extends Entity {
       for (let i = 0; i <= width; i++) {
         const x = i - width / 2;
         const z = j - height / 2;
-        const y = Math.random() / 4;
+        const y = roughness <= 0 ? 0 : Math.random() / roughness;
 
         vertices.push(x);
         vertices.push(y);

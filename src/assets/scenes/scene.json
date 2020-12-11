@@ -88,9 +88,9 @@
       "shininess": 10,
       "ambientColor": [50, 50, 50],
       "diffuseColor": [200, 200, 200],
-      "specularColor": [0, 0, 255],
+      "specularColor": [255, 255, 255],
       "attenuation": [1, 0, 0.02],
-      "translation": [7, 5, -7]
+      "translation": [5, 1, -9]
     }
   ],
   "textures": [
