@@ -10,22 +10,22 @@ import * as dat from 'dat.gui';
 
 class App extends Application {
   private renderer: Renderer;
+  private physics: Physics;
   private scene: Scene;
   private camera: Camera = null;
   private time: number = Date.now();
   private startTime: number = Date.now();
   private aspect = 1;
-  private physics: Physics;
+
+  private pointerLockChangeHandler: EventListener;
 
   protected start(): void {
     this.renderer = new Renderer(this.gl);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(this);
+    this.pointerLockChangeHandler = () => this.pointerLockChange();
     document.addEventListener(
       'pointerlockchange',
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      this.pointerlockchangeHandler,
+      this.pointerLockChangeHandler,
     );
 
     void this.load('./assets/scenes/scene.json');
@@ -53,7 +53,7 @@ class App extends Application {
     this.canvas.requestPointerLock();
   }
 
-  protected pointerlockchangeHandler(): void {
+  protected pointerLockChange(): void {
     if (!this.camera) return;
 
     if (document.pointerLockElement === this.canvas) this.camera.enable();
