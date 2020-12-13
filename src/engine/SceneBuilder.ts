@@ -6,6 +6,7 @@ import Model from './Model';
 import Camera from './Camera';
 import Floor from './Floor';
 import Light from './Light';
+import Maze from './Maze';
 
 export default class SceneBuilder {
   private sceneOptions: ISceneOptions;
@@ -29,6 +30,11 @@ export default class SceneBuilder {
       }
       case 'light':
         return new Light(entityOptions);
+      case 'maze': {
+        const mesh = new Mesh(this.sceneOptions.meshes[entityOptions.mesh]);
+        const texture = this.sceneOptions.textures[entityOptions.texture];
+        return new Maze(mesh, texture, entityOptions);
+      }
     }
   }
 
