@@ -11,11 +11,10 @@ export default class Maze extends Entity {
     options: IEntityOptions,
   ) {
     super(null);
-    this.makeBlocks(mesh, image, options);
-    console.log(Maze.generate(5, 5, 'hello'));
+    this.make(mesh, image, options);
   }
 
-  private makeBlocks(
+  private make(
     mesh: Mesh,
     image: HTMLImageElement,
     options: IEntityOptions,
@@ -35,24 +34,42 @@ export default class Maze extends Entity {
       scale: [0.1, 1, 1],
     };
 
-    for (let h = 0; h < options.height * 2; h += 2) {
-      for (let w = 0; w < options.width * 2; w += 2) {
-        if (h === 0) {
+    const { horizontal, vertical } = Maze.generate(
+      options.width,
+      options.height,
+      'hello',
+    );
+
+    this.makeBlock(mesh, image, horizontal, hOptions, 0, 0);
+    this.makeBlock(mesh, image, vertical, vOptions, 1, -1);
+  }
+
+  private makeBlock(
+    mesh: Mesh,
+    image: HTMLImageElement,
+    array: Array<Array<boolean>>,
+    modelOptions: IEntityOptions,
+    startX = 0,
+    startZ = 0,
+    offsetX = 2,
+    offsetZ = 2,
+  ): void {
+    let x = startX;
+    let z = startZ;
+    for (const row of array) {
+      for (const hole of row) {
+        if (!hole) {
           this.addChild(
             new Model(mesh, image, {
-              ...hOptions,
-              translation: [w, 1, h],
-            }),
-          );
-        } else if (h === options.height * 2 - 2) {
-          this.addChild(
-            new Model(mesh, image, {
-              ...hOptions,
-              translation: [w, 1, h],
+              ...modelOptions,
+              translation: [x, 1, z],
             }),
           );
         }
+        x += offsetX;
       }
+      x = startX;
+      z += offsetZ;
     }
   }
 
@@ -66,8 +83,8 @@ export default class Maze extends Entity {
       throw new Error('Illegal maze dimensions!');
     }
 
-    const horizontal = [];
     const vertical = [];
+    const horizontal = [];
     const rand = seedrandom(seed).quick();
     let here = [Math.floor(rand * x), Math.floor(rand * y)];
     const path = [here];
@@ -75,8 +92,8 @@ export default class Maze extends Entity {
     let next = [];
 
     for (let j = 0; j < x + 1; j++) {
-      horizontal[j] = [];
       vertical[j] = [];
+      horizontal[j] = [];
     }
 
     for (let j = 0; j < x + 2; j++) {
@@ -109,9 +126,9 @@ export default class Maze extends Entity {
         unvisited[next[0] + 1][next[1] + 1] = false;
 
         if (next[0] == here[0]) {
-          horizontal[next[0]][(next[1] + here[1] - 1) / 2] = true;
+          vertical[next[0]][(next[1] + here[1] - 1) / 2] = true;
         } else {
-          vertical[(next[0] + here[0] - 1) / 2][next[1]] = true;
+          horizontal[(next[0] + here[0] - 1) / 2][next[1]] = true;
         }
 
         path.push((here = next));
@@ -120,13 +137,20 @@ export default class Maze extends Entity {
       }
     }
 
+    console.log(Maze.display(x, y, vertical, horizontal));
+    console.log(vertical, horizontal);
+
     return {
       horizontal: Maze.fixEmpty(horizontal),
-      vertical: Maze.fixEmpty(vertical),
+      vertical: Maze.fixEmpty(vertical, true),
     };
   }
 
-  public static fixEmpty(array: Array<Array<boolean>>): Array<Array<boolean>> {
+  public static fixEmpty(
+    array: Array<Array<boolean>>,
+    vertical = false,
+  ): Array<Array<boolean>> {
+    // array = array.filter((sub) => sub.some((val) => true));
     for (const arr of array) {
       for (let i = 0; i < arr.length; i++) {
         const diff = array.length - 1 - arr.length;
@@ -134,6 +158,32 @@ export default class Maze extends Entity {
         if (diff > 0) arr.push(...new Array(diff).fill(false));
       }
     }
+    if (vertical) array[array.length - 2][array.length - 2] = true;
     return array;
+  }
+
+  public static display(x: number, y: number, horiz: any, verti: any): any {
+    const text = [];
+    for (let j = 0; j < x * 2 + 1; j++) {
+      const line = [];
+      if (0 == j % 2)
+        for (let k = 0; k < y * 4 + 1; k++)
+          if (0 == k % 4) line[k] = '+';
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          else if (j > 0 && verti[j / 2 - 1][Math.floor(k / 4)]) line[k] = ' ';
+          else line[k] = '-';
+      else
+        for (let k = 0; k < y * 4 + 1; k++)
+          if (0 == k % 4) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            if (k > 0 && horiz[(j - 1) / 2][k / 4 - 1]) line[k] = ' ';
+            else line[k] = '|';
+          } else line[k] = ' ';
+      if (0 == j) line[1] = line[2] = line[3] = ' ';
+      if (x * 2 - 1 == j) line[4 * y] = ' ';
+      text.push(line.join('') + '\r\n');
+    }
+
+    return text.join('');
   }
 }
