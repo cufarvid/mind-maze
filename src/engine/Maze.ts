@@ -39,8 +39,33 @@ export default class Maze extends Entity {
       options.height,
       'hello',
     );
+    // Outer horizontal
+    const startRow = Array(options.width).fill(false);
+    startRow[0] = true;
 
+    this.makeBlock(
+      mesh,
+      image,
+      [startRow, Array(options.width).fill(false)],
+      hOptions,
+      0,
+      -2,
+      2,
+      options.height * 2,
+    );
+    // Inner horizontal
     this.makeBlock(mesh, image, horizontal, hOptions, 0, 0);
+
+    // Outer vertical
+    this.makeBlock(
+      mesh,
+      image,
+      Array(options.height).fill(Array(1).fill(false)),
+      vOptions,
+      -1,
+      -1,
+    );
+    // Inner vertical
     this.makeBlock(mesh, image, vertical, vOptions, 1, -1);
   }
 
@@ -138,7 +163,6 @@ export default class Maze extends Entity {
     }
 
     console.log(Maze.display(x, y, vertical, horizontal));
-    console.log(vertical, horizontal);
 
     return {
       horizontal: Maze.fixEmpty(horizontal),
@@ -150,7 +174,6 @@ export default class Maze extends Entity {
     array: Array<Array<boolean>>,
     vertical = false,
   ): Array<Array<boolean>> {
-    // array = array.filter((sub) => sub.some((val) => true));
     for (const arr of array) {
       for (let i = 0; i < arr.length; i++) {
         const diff = array.length - 1 - arr.length;
@@ -162,7 +185,12 @@ export default class Maze extends Entity {
     return array;
   }
 
-  public static display(x: number, y: number, horiz: any, verti: any): any {
+  public static display(
+    x: number,
+    y: number,
+    horiz: Array<Array<boolean>>,
+    verti: Array<Array<boolean>>,
+  ): string {
     const text = [];
     for (let j = 0; j < x * 2 + 1; j++) {
       const line = [];
