@@ -30,11 +30,15 @@ export default class Renderer {
   }
 
   public prepare(scene: Scene): void {
-    scene.entities.forEach((entity) => {
-      entity.props = {} as IEntityGlProps;
-      if (entity.mesh)
-        Object.assign(entity.props, this.createModel(entity.mesh));
-      if (entity.image) entity.props.texture = this.createTexture(entity.image);
+    scene.traverse({
+      before: (entity) => {
+        entity.props = {} as IEntityGlProps;
+        if (entity.mesh)
+          Object.assign(entity.props, this.createModel(entity.mesh));
+        if (entity.image)
+          entity.props.texture = this.createTexture(entity.image);
+      },
+      after: null,
     });
   }
 
@@ -61,7 +65,7 @@ export default class Renderer {
         matrixStack.push(mat4.clone(matrix));
         mat4.mul(matrix, matrix, entity.transform);
 
-        if (entity.props.vao) {
+        if (entity.props?.vao) {
           gl.bindVertexArray(entity.props.vao);
           gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
           gl.activeTexture(gl.TEXTURE0);

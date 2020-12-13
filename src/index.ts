@@ -28,7 +28,7 @@ class App extends Application {
       this.pointerLockChangeHandler,
     );
 
-    void this.load('./assets/scenes/scene.json');
+    void this.load('./assets/scenes/maze-01.json');
   }
 
   private async load(uri: string): Promise<void> {
