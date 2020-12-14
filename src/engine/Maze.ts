@@ -1,24 +1,17 @@
 import seedrandom from 'seedrandom';
 import Entity from './Entity';
-import { IEntityOptions } from '../types';
+import { IEntityOptions, IMazeBlockData } from '../types';
 import Mesh from './Mesh';
 import Model from './Model';
 
 export default class Maze extends Entity {
-  public constructor(
-    mesh: Mesh,
-    image: HTMLImageElement,
-    options: IEntityOptions,
-  ) {
+  public constructor(options: IEntityOptions, blockData: IMazeBlockData) {
     super(null);
-    this.make(mesh, image, options);
+    this.make(options, blockData);
   }
 
-  private make(
-    mesh: Mesh,
-    image: HTMLImageElement,
-    options: IEntityOptions,
-  ): void {
+  private make(options: IEntityOptions, blockData: IMazeBlockData): void {
+    // Wall options
     const hOptions: IEntityOptions = {
       aabb: {
         min: [-1, -1, -0.1],
@@ -34,39 +27,45 @@ export default class Maze extends Entity {
       scale: [0.1, 1, 1],
     };
 
+    const { mesh, image } = blockData.wall;
+    const { width, height } = options;
     const { horizontal, vertical } = Maze.generate(
       options.width,
       options.height,
       'hello',
     );
+
+    const centerX = 0.1;
+    const centerZ = 3;
+
     // Outer horizontal
-    const startRow = Array(options.width).fill(false);
+    const startRow = Array(width).fill(false);
     startRow[0] = true;
 
     this.makeBlock(
       mesh,
       image,
-      [startRow, Array(options.width).fill(false)],
+      [startRow, Array(width).fill(false)],
       hOptions,
-      0,
-      -2,
+      centerX,
+      centerZ - 2,
       2,
-      options.height * 2,
+      height * 2,
     );
     // Inner horizontal
-    this.makeBlock(mesh, image, horizontal, hOptions, 0, 0);
+    this.makeBlock(mesh, image, horizontal, hOptions, centerX, centerZ);
 
     // Outer vertical
     this.makeBlock(
       mesh,
       image,
-      Array(options.height).fill(Array(1).fill(false)),
+      Array(height).fill(Array(1).fill(false)),
       vOptions,
-      -1,
-      -1,
+      centerX - 1,
+      centerZ - 1,
     );
     // Inner vertical
-    this.makeBlock(mesh, image, vertical, vOptions, 1, -1);
+    this.makeBlock(mesh, image, vertical, vOptions, centerX + 1, centerZ - 1);
   }
 
   private makeBlock(

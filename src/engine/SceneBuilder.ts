@@ -1,4 +1,4 @@
-import { IEntityOptions, ISceneOptions } from '../types';
+import { IEntityOptions, IMazeBlockData, ISceneOptions } from '../types';
 import Scene from './Scene';
 import Entity from './Entity';
 import Mesh from './Mesh';
@@ -15,27 +15,44 @@ export default class SceneBuilder {
     this.sceneOptions = sceneOptions;
   }
 
-  private createEntity(entityOptions: IEntityOptions): Entity {
-    switch (entityOptions.type) {
+  private createEntity(options: IEntityOptions): Entity {
+    switch (options.type) {
       case 'camera':
-        return new Camera(entityOptions);
+        return new Camera(options);
       case 'model': {
-        const mesh = new Mesh(this.sceneOptions.meshes[entityOptions.mesh]);
-        const texture = this.sceneOptions.textures[entityOptions.texture];
-        return new Model(mesh, texture, entityOptions);
+        const mesh = this.getMesh(options.mesh);
+        const texture = this.getTexture(options.texture);
+        return new Model(mesh, texture, options);
       }
       case 'floor': {
-        const texture = this.sceneOptions.textures[entityOptions.texture];
-        return new Floor(texture, entityOptions);
+        const texture = this.getTexture(options.texture);
+        return new Floor(texture, options);
       }
       case 'light':
-        return new Light(entityOptions);
+        return new Light(options);
       case 'maze': {
-        const mesh = new Mesh(this.sceneOptions.meshes[entityOptions.mesh]);
-        const texture = this.sceneOptions.textures[entityOptions.texture];
-        return new Maze(mesh, texture, entityOptions);
+        const mazeOptions: IMazeBlockData = {
+          wall: {
+            mesh: this.getMesh(options.blocks.wall.mesh),
+            image: this.getTexture(options.blocks.wall.texture),
+          },
+          holder: {
+            mesh: this.getMesh(options.blocks.holder.mesh),
+            image: this.getTexture(options.blocks.holder.texture),
+          },
+        };
+
+        return new Maze(options, mazeOptions);
       }
     }
+  }
+
+  private getMesh(index: number): Mesh {
+    return new Mesh(this.sceneOptions.meshes[index]);
+  }
+
+  private getTexture(index: number): HTMLImageElement {
+    return this.sceneOptions.textures[index];
   }
 
   public build(): Scene {
