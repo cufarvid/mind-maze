@@ -1,5 +1,6 @@
 import Entity from './engine/Entity';
 import { vec3 } from 'gl-matrix';
+import Mesh from './engine/Mesh';
 
 // Interfaces
 export interface IProgram {
@@ -73,6 +74,24 @@ export interface IEntityOptions {
   specularColor?: vec3;
   attenuation?: vec3;
   shininess?: number;
+  // Maze
+  blocks?: IMazeBlockOptions;
+}
+
+export interface IMazeBlockOptions {
+  wall: Record<string, number>;
+  holder: Record<string, number>;
+}
+
+export interface IMazeBlockData {
+  wall: IModelData;
+  holder: IModelData;
+}
+
+export interface IModelData {
+  mesh: Mesh;
+  image: HTMLImageElement;
+  location?: vec3;
 }
 
 export interface IEntityGlProps {
