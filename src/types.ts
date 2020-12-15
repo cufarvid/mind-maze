@@ -2,18 +2,30 @@ import Entity from './engine/Entity';
 import { vec3 } from 'gl-matrix';
 import Mesh from './engine/Mesh';
 
-// Interfaces
+/*
+ * Interfaces
+ */
+
+/*
+ * Program
+ */
 export interface IProgram {
   program: WebGLProgram;
   attributes: Record<string, GLint>;
   uniforms: Record<string, WebGLUniformLocation>;
 }
 
+/*
+ * Shader
+ */
 export interface IShader {
   vertex: string;
   fragment: string;
 }
 
+/*
+ * Texture
+ */
 export interface ITextureOptions {
   target?: GLenum;
   iformat?: GLint;
@@ -33,6 +45,9 @@ export interface ITextureOptions {
   mip?: GLint;
 }
 
+/*
+ * Scene
+ */
 export interface ISceneData {
   entities: Array<IEntityOptions>;
   textures: Array<string>;
@@ -45,6 +60,9 @@ export interface ISceneOptions {
   meshes: Array<IMeshData>;
 }
 
+/*
+ * Entity
+ */
 export interface IEntityOptions {
   type?: string;
   translation?: vec3;
@@ -75,23 +93,7 @@ export interface IEntityOptions {
   attenuation?: vec3;
   shininess?: number;
   // Maze
-  blocks?: IMazeBlockOptions;
-}
-
-export interface IMazeBlockOptions {
-  wall: Record<string, number>;
-  holder: Record<string, number>;
-}
-
-export interface IMazeBlockData {
-  wall: IModelData;
-  holder: IModelData;
-}
-
-export interface IModelData {
-  mesh: Mesh;
-  image: HTMLImageElement;
-  location?: vec3;
+  objects?: Array<IMazeObjectOptions>;
 }
 
 export interface IEntityGlProps {
@@ -105,6 +107,26 @@ export interface AABB {
   max: vec3;
 }
 
+/*
+ * Maze
+ */
+export interface IModelData {
+  name?: string;
+  mesh: Mesh;
+  image: HTMLImageElement;
+  location?: vec3;
+}
+
+export interface IMazeObjectOptions {
+  name: string;
+  mesh: number;
+  texture: number;
+  location?: vec3;
+}
+
+/*
+ * Mesh
+ */
 export interface IMeshData {
   vertices: Array<number>;
   texcoords: Array<number>;
@@ -112,6 +134,9 @@ export interface IMeshData {
   indices: Array<number>;
 }
 
+/*
+ * Traverse function
+ */
 export interface ITraverseFunction {
   (entity: Entity): void;
 }
@@ -121,12 +146,17 @@ export interface TraverseParams {
   after: ITraverseFunction;
 }
 
+/*
+ * Model
+ */
 export interface ModelRecord {
   vao: WebGLVertexArrayObject;
   indices: number;
 }
 
-// Types
+/*
+ * Types
+ */
 export type TAttributes = Record<string, GLint>;
 
 export type TPrograms = Record<string, IProgram>;
@@ -134,3 +164,5 @@ export type TPrograms = Record<string, IProgram>;
 export type TShaders = Record<string, IShader>;
 
 export type TUniforms = Record<string, WebGLUniformLocation>;
+
+export type TMazeObjects = Array<IModelData>;
