@@ -14,11 +14,16 @@ export default class Maze extends Entity {
 
   public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {
     super(null);
-    this.makeWalls(options.width, options.height, objectData);
+    this.makeWalls(options.width, options.height, options.seed, objectData);
     this.makeObjects(objectData);
   }
 
-  private makeWalls(width = 5, height = 5, objectData: TMazeObjectsData): void {
+  private makeWalls(
+    width = 5,
+    height = 5,
+    seed: string,
+    objectData: TMazeObjectsData,
+  ): void {
     // Wall options
     const hOptions: IEntityOptions = {
       aabb: {
@@ -36,7 +41,7 @@ export default class Maze extends Entity {
     };
 
     const { mesh, image } = objectData.find((obj) => obj.name === 'wall');
-    const { horizontal, vertical } = Maze.generate(width, height, 'hello');
+    const { horizontal, vertical } = Maze.generate(width, height, seed);
 
     const centerX = 0.1;
     const centerZ = 3;
@@ -89,11 +94,11 @@ export default class Maze extends Entity {
         found: false,
       });
 
-      this.makeObjectSegmet(obj, holder);
+      this.makeObjectSegment(obj, holder);
     });
   }
 
-  private makeObjectSegmet(object: IModelData, holder: IModelData): void {
+  private makeObjectSegment(object: IModelData, holder: IModelData): void {
     const hOptions: IEntityOptions = {
       aabb: {
         min: [-0.2, -1, -0.2],
@@ -110,10 +115,11 @@ export default class Maze extends Entity {
         scale: object.scale,
       }),
     );
+
     this.addChild(
       new Model(holder.mesh, holder.image, {
         ...hOptions,
-        translation: [x, 0.4, z],
+        translation: [x, hOptions.scale[1], z],
       }),
     );
   }

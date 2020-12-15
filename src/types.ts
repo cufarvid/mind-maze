@@ -64,6 +64,7 @@ export interface ISceneOptions {
  * Entity
  */
 export interface IEntityOptions {
+  name?: string;
   type?: string;
   translation?: vec3;
   aabb?: AABB;
@@ -93,6 +94,7 @@ export interface IEntityOptions {
   attenuation?: vec3;
   shininess?: number;
   // Maze
+  seed?: string;
   objects?: Array<IMazeObjectOptions>;
 }
 
