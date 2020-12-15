@@ -166,8 +166,8 @@ export default class Maze extends Entity {
 
     const vertical = [];
     const horizontal = [];
-    const rand = seedrandom(seed).quick();
-    let here = [Math.floor(rand * x), Math.floor(rand * y)];
+    const rand = seedrandom(seed);
+    let here = [Math.floor(rand() * x), Math.floor(rand() * y)];
     const path = [here];
     const unvisited = [];
     let next = [];
@@ -203,7 +203,7 @@ export default class Maze extends Entity {
 
       if (neighbors.length) {
         n = n - 1;
-        next = neighbors[Math.floor(rand * neighbors.length)];
+        next = neighbors[Math.floor(rand() * neighbors.length)];
         unvisited[next[0] + 1][next[1] + 1] = false;
 
         if (next[0] == here[0]) {

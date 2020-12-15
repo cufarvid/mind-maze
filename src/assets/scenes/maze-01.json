@@ -56,7 +56,7 @@
       "mesh": 0,
       "texture": 0,
       "name": "Level 1",
-      "seed": "5afaf1679ad0887adebaddb40e0bd3f7",
+      "seed": "3077658364",
       "width": 5,
       "height": 5,
       "objects": [
@@ -82,17 +82,6 @@
           "translation": [-1, 1, -1]
         },
         {
-          "name": "cylinder",
-          "mesh": 2,
-          "texture": 3,
-          "aabb": {
-            "min": [-0.3, -1, -0.3],
-            "max": [0.3, 1, 0.3]
-          },
-          "scale": [0.15, 0.15, 0.15],
-          "translation": [0, 1, -1]
-        },
-        {
           "name": "cone",
           "mesh": 3,
           "texture": 2,
@@ -113,17 +102,6 @@
           },
           "scale": [0.15, 0.15, 0.15],
           "translation": [2, 1, -1]
-        },
-        {
-          "name": "pyramid",
-          "mesh": 5,
-          "texture": 2,
-          "aabb": {
-            "min": [-0.3, -1, -0.3],
-            "max": [0.3, 1, 0.3]
-          },
-          "scale": [0.15, 0.15, 0.15],
-          "translation": [3, 1, -1]
         }
       ]
     },
