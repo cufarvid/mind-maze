@@ -15,27 +15,41 @@ export default class SceneBuilder {
     this.sceneOptions = sceneOptions;
   }
 
-  private createEntity(entityOptions: IEntityOptions): Entity {
-    switch (entityOptions.type) {
+  private createEntity(options: IEntityOptions): Entity {
+    switch (options.type) {
       case 'camera':
-        return new Camera(entityOptions);
-      case 'model': {
-        const mesh = new Mesh(this.sceneOptions.meshes[entityOptions.mesh]);
-        const texture = this.sceneOptions.textures[entityOptions.texture];
-        return new Model(mesh, texture, entityOptions);
-      }
-      case 'floor': {
-        const texture = this.sceneOptions.textures[entityOptions.texture];
-        return new Floor(texture, entityOptions);
-      }
+        return new Camera(options);
+      case 'floor':
+        return new Floor(this.getTexture(options.texture), options);
       case 'light':
-        return new Light(entityOptions);
-      case 'maze': {
-        const mesh = new Mesh(this.sceneOptions.meshes[entityOptions.mesh]);
-        const texture = this.sceneOptions.textures[entityOptions.texture];
-        return new Maze(mesh, texture, entityOptions);
-      }
+        return new Light(options);
+      case 'model':
+        return new Model(
+          this.getMesh(options.mesh),
+          this.getTexture(options.texture),
+          options,
+        );
+      case 'maze':
+        return new Maze(
+          options,
+          options.objects.map((obj) => ({
+            name: obj.name,
+            mesh: this.getMesh(obj.mesh),
+            image: this.getTexture(obj.texture),
+            translation: obj.translation,
+            aabb: obj.aabb,
+            scale: obj.scale,
+          })),
+        );
     }
+  }
+
+  private getMesh(index: number): Mesh {
+    return new Mesh(this.sceneOptions.meshes[index]);
+  }
+
+  private getTexture(index: number): HTMLImageElement {
+    return this.sceneOptions.textures[index];
   }
 
   public build(): Scene {

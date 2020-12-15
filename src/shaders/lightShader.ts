@@ -27,6 +27,7 @@ precision mediump float;
 
 uniform mat4 uViewModel;
 uniform mediump sampler2D uTexture;
+uniform vec4 uColorSelected;
 
 uniform vec3 uAmbientColor[4];
 uniform vec3 uDiffuseColor[4];
@@ -65,7 +66,7 @@ void main() {
     vec3 light = (ambient + diffuse + specular) * attenuation;
 
 
-    oColor += texture(uTexture, vTexCoord) * vec4(light, 1);
+    oColor += texture(uTexture, vTexCoord) * vec4(light, 1) * uColorSelected;
   }
 }
 `;

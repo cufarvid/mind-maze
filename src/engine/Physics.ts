@@ -1,6 +1,7 @@
 import { mat4, vec3 } from 'gl-matrix';
 import Entity from './Entity';
 import Scene from './Scene';
+import LocateModel from './LocateModel';
 import { AABB } from '../types';
 
 export default class Physics {
@@ -68,61 +69,62 @@ export default class Physics {
   }
 
   resolveCollision(a: Entity, b: Entity): void {
-    const ta: mat4 = a.getGlobalTransform();
-    const tb: mat4 = b.getGlobalTransform();
+    const tA: mat4 = a.getGlobalTransform();
+    const tB: mat4 = b.getGlobalTransform();
 
-    const posa = mat4.getTranslation(vec3.create(), ta);
-    const posb = mat4.getTranslation(vec3.create(), tb);
+    const posA = mat4.getTranslation(vec3.create(), tA);
+    const posB = mat4.getTranslation(vec3.create(), tB);
 
-    const mina = vec3.add(vec3.create(), posa, a.aabb.min);
-    const maxa = vec3.add(vec3.create(), posa, a.aabb.max);
-    const minb = vec3.add(vec3.create(), posb, b.aabb.min);
-    const maxb = vec3.add(vec3.create(), posb, b.aabb.max);
+    const minA = vec3.add(vec3.create(), posA, a.aabb.min);
+    const maxA = vec3.add(vec3.create(), posA, a.aabb.max);
+    const minB = vec3.add(vec3.create(), posB, b.aabb.min);
+    const maxB = vec3.add(vec3.create(), posB, b.aabb.max);
 
-    // Check if there is collision.
+    // Check if there is collision
     const isColliding = this.aabbIntersection(
       {
-        min: mina,
-        max: maxa,
+        min: minA,
+        max: maxA,
       },
       {
-        min: minb,
-        max: maxb,
+        min: minB,
+        max: maxB,
       },
     );
 
-    if (!isColliding) {
-      return;
+    if (!isColliding) return;
+    else if (b instanceof LocateModel && !b.isLocated) {
+      b.setLocated();
     }
 
-    // Move node A minimally to avoid collision.
-    const diffa: vec3 = vec3.sub(vec3.create(), maxb, mina);
-    const diffb: vec3 = vec3.sub(vec3.create(), maxa, minb);
+    // Move node A minimally to avoid collision
+    const diffA: vec3 = vec3.sub(vec3.create(), maxB, minA);
+    const diffB: vec3 = vec3.sub(vec3.create(), maxA, minB);
 
     let minDiff = Infinity;
     let minDirection: vec3 = [0, 0, 0];
-    if (diffa[0] >= 0 && diffa[0] < minDiff) {
-      minDiff = diffa[0];
+    if (diffA[0] >= 0 && diffA[0] < minDiff) {
+      minDiff = diffA[0];
       minDirection = [minDiff, 0, 0];
     }
-    if (diffa[1] >= 0 && diffa[1] < minDiff) {
-      minDiff = diffa[1];
+    if (diffA[1] >= 0 && diffA[1] < minDiff) {
+      minDiff = diffA[1];
       minDirection = [0, minDiff, 0];
     }
-    if (diffa[2] >= 0 && diffa[2] < minDiff) {
-      minDiff = diffa[2];
+    if (diffA[2] >= 0 && diffA[2] < minDiff) {
+      minDiff = diffA[2];
       minDirection = [0, 0, minDiff];
     }
-    if (diffb[0] >= 0 && diffb[0] < minDiff) {
-      minDiff = diffb[0];
+    if (diffB[0] >= 0 && diffB[0] < minDiff) {
+      minDiff = diffB[0];
       minDirection = [-minDiff, 0, 0];
     }
-    if (diffb[1] >= 0 && diffb[1] < minDiff) {
-      minDiff = diffb[1];
+    if (diffB[1] >= 0 && diffB[1] < minDiff) {
+      minDiff = diffB[1];
       minDirection = [0, -minDiff, 0];
     }
-    if (diffb[2] >= 0 && diffb[2] < minDiff) {
-      minDiff = diffb[2];
+    if (diffB[2] >= 0 && diffB[2] < minDiff) {
+      minDiff = diffB[2];
       minDirection = [0, 0, -minDiff];
     }
 

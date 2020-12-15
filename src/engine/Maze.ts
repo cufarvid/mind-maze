@@ -1,24 +1,35 @@
 import seedrandom from 'seedrandom';
 import Entity from './Entity';
-import { IEntityOptions } from '../types';
+import {
+  IEntityOptions,
+  IModelData,
+  TMazeObjects,
+  TMazeObjectsData,
+} from '../types';
 import Mesh from './Mesh';
 import Model from './Model';
+import LocateModel from './LocateModel';
 
 export default class Maze extends Entity {
-  public constructor(
-    mesh: Mesh,
-    image: HTMLImageElement,
-    options: IEntityOptions,
-  ) {
+  private objects: TMazeObjects = [];
+
+  public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {
     super(null);
-    this.make(mesh, image, options);
+    this.makeWalls(options.width, options.height, options.seed, objectData);
+    this.makeObjects(objectData);
   }
 
-  private make(
-    mesh: Mesh,
-    image: HTMLImageElement,
-    options: IEntityOptions,
+  public setObjectLocated(index: number): void {
+    this.objects[index].found = true;
+  }
+
+  private makeWalls(
+    width = 5,
+    height = 5,
+    seed: string,
+    objectData: TMazeObjectsData,
   ): void {
+    // Wall options
     const hOptions: IEntityOptions = {
       aabb: {
         min: [-1, -1, -0.1],
@@ -34,42 +45,95 @@ export default class Maze extends Entity {
       scale: [0.1, 1, 1],
     };
 
-    const { horizontal, vertical } = Maze.generate(
-      options.width,
-      options.height,
-      'hello',
-    );
+    const { mesh, image } = objectData.find((obj) => obj.name === 'wall');
+    const { horizontal, vertical } = Maze.generate(width, height, seed);
+
+    const centerX = 0.1;
+    const centerZ = 3;
+
     // Outer horizontal
-    const startRow = Array(options.width).fill(false);
+    const startRow = Array(width).fill(false);
     startRow[0] = true;
 
-    this.makeBlock(
+    this.makeWallSegment(
       mesh,
       image,
-      [startRow, Array(options.width).fill(false)],
+      [startRow, Array(width).fill(false)],
       hOptions,
-      0,
-      -2,
+      centerX,
+      centerZ - 2,
       2,
-      options.height * 2,
+      height * 2,
     );
     // Inner horizontal
-    this.makeBlock(mesh, image, horizontal, hOptions, 0, 0);
+    this.makeWallSegment(mesh, image, horizontal, hOptions, centerX, centerZ);
 
     // Outer vertical
-    this.makeBlock(
+    this.makeWallSegment(
       mesh,
       image,
-      Array(options.height).fill(Array(1).fill(false)),
+      Array(height).fill(Array(1).fill(false)),
       vOptions,
-      -1,
-      -1,
+      centerX - 1,
+      centerZ - 1,
     );
     // Inner vertical
-    this.makeBlock(mesh, image, vertical, vOptions, 1, -1);
+    this.makeWallSegment(
+      mesh,
+      image,
+      vertical,
+      vOptions,
+      centerX + 1,
+      centerZ - 1,
+    );
   }
 
-  private makeBlock(
+  private makeObjects(objectData: TMazeObjectsData): void {
+    const exclude = ['wall', 'holder'];
+    const holder = objectData.find((obj) => obj.name === 'holder');
+    const filtered = objectData.filter((obj) => !exclude.includes(obj.name));
+
+    filtered.forEach((obj, index) => {
+      this.objects.push({
+        name: obj.name,
+        found: false,
+      });
+
+      this.makeObjectSegment(index, obj, holder);
+    });
+  }
+
+  private makeObjectSegment(
+    id: number,
+    object: IModelData,
+    holder: IModelData,
+  ): void {
+    const hOptions: IEntityOptions = {
+      aabb: {
+        min: [-0.2, -1, -0.2],
+        max: [0.2, 1, 0.2],
+      },
+      scale: [0.2, 0.4, 0.2],
+    };
+    const [x, , z] = object.translation as Array<number>;
+
+    this.addChild(
+      new Model(holder.mesh, holder.image, {
+        ...hOptions,
+        translation: [x, hOptions.scale[1], z],
+      }),
+    );
+
+    this.addChild(
+      new LocateModel(id, object.mesh, object.image, {
+        translation: object.translation,
+        aabb: object.aabb,
+        scale: object.scale,
+      }),
+    );
+  }
+
+  private makeWallSegment(
     mesh: Mesh,
     image: HTMLImageElement,
     array: Array<Array<boolean>>,
@@ -81,6 +145,7 @@ export default class Maze extends Entity {
   ): void {
     let x = startX;
     let z = startZ;
+
     for (const row of array) {
       for (const hole of row) {
         if (!hole) {
@@ -110,8 +175,8 @@ export default class Maze extends Entity {
 
     const vertical = [];
     const horizontal = [];
-    const rand = seedrandom(seed).quick();
-    let here = [Math.floor(rand * x), Math.floor(rand * y)];
+    const rand = seedrandom(seed);
+    let here = [Math.floor(rand() * x), Math.floor(rand() * y)];
     const path = [here];
     const unvisited = [];
     let next = [];
@@ -147,7 +212,7 @@ export default class Maze extends Entity {
 
       if (neighbors.length) {
         n = n - 1;
-        next = neighbors[Math.floor(rand * neighbors.length)];
+        next = neighbors[Math.floor(rand() * neighbors.length)];
         unvisited[next[0] + 1][next[1] + 1] = false;
 
         if (next[0] == here[0]) {
