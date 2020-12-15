@@ -30,6 +30,10 @@ export default class Entity {
     this.updateTransform();
   }
 
+  public get getParent(): Entity {
+    return this.parent;
+  }
+
   public updateTransform(): void {
     const t = this.transform;
     const degrees = this.rotation.map((x: number) => (x * 180) / Math.PI);
