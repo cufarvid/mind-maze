@@ -7,10 +7,14 @@ import Model from './Model';
 export default class Maze extends Entity {
   public constructor(options: IEntityOptions, objectData: TMazeObjects) {
     super(null);
-    this.makeWalls(options, objectData);
+    this.makeWalls(options.width, options.height, objectData);
   }
 
-  private makeWalls(options: IEntityOptions, objectData: TMazeObjects): void {
+  private makeWalls(
+    width: number,
+    height: number,
+    objectData: TMazeObjects,
+  ): void {
     // Wall options
     const hOptions: IEntityOptions = {
       aabb: {
@@ -28,12 +32,7 @@ export default class Maze extends Entity {
     };
 
     const { mesh, image } = objectData.find((obj) => obj.name === 'wall');
-    const { width, height } = options;
-    const { horizontal, vertical } = Maze.generate(
-      options.width,
-      options.height,
-      'hello',
-    );
+    const { horizontal, vertical } = Maze.generate(width, height, 'hello');
 
     const centerX = 0.1;
     const centerZ = 3;
@@ -42,7 +41,7 @@ export default class Maze extends Entity {
     const startRow = Array(width).fill(false);
     startRow[0] = true;
 
-    this.makeBlock(
+    this.makeWallSegment(
       mesh,
       image,
       [startRow, Array(width).fill(false)],
@@ -53,10 +52,10 @@ export default class Maze extends Entity {
       height * 2,
     );
     // Inner horizontal
-    this.makeBlock(mesh, image, horizontal, hOptions, centerX, centerZ);
+    this.makeWallSegment(mesh, image, horizontal, hOptions, centerX, centerZ);
 
     // Outer vertical
-    this.makeBlock(
+    this.makeWallSegment(
       mesh,
       image,
       Array(height).fill(Array(1).fill(false)),
@@ -65,10 +64,17 @@ export default class Maze extends Entity {
       centerZ - 1,
     );
     // Inner vertical
-    this.makeBlock(mesh, image, vertical, vOptions, centerX + 1, centerZ - 1);
+    this.makeWallSegment(
+      mesh,
+      image,
+      vertical,
+      vOptions,
+      centerX + 1,
+      centerZ - 1,
+    );
   }
 
-  private makeBlock(
+  private makeWallSegment(
     mesh: Mesh,
     image: HTMLImageElement,
     array: Array<Array<boolean>>,
