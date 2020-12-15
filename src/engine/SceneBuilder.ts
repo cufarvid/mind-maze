@@ -1,4 +1,4 @@
-import { IEntityOptions, ISceneOptions, TMazeObjects } from '../types';
+import { IEntityOptions, ISceneOptions } from '../types';
 import Scene from './Scene';
 import Entity from './Entity';
 import Mesh from './Mesh';
@@ -19,27 +19,26 @@ export default class SceneBuilder {
     switch (options.type) {
       case 'camera':
         return new Camera(options);
-      case 'model': {
-        const mesh = this.getMesh(options.mesh);
-        const texture = this.getTexture(options.texture);
-        return new Model(mesh, texture, options);
-      }
-      case 'floor': {
-        const texture = this.getTexture(options.texture);
-        return new Floor(texture, options);
-      }
+      case 'floor':
+        return new Floor(this.getTexture(options.texture), options);
       case 'light':
         return new Light(options);
-      case 'maze': {
-        const objectData: TMazeObjects = options.objects.map((obj) => ({
-          name: obj.name,
-          mesh: this.getMesh(obj.mesh),
-          image: this.getTexture(obj.texture),
-          location: obj.location,
-        }));
-
-        return new Maze(options, objectData);
-      }
+      case 'model':
+        return new Model(
+          this.getMesh(options.mesh),
+          this.getTexture(options.texture),
+          options,
+        );
+      case 'maze':
+        return new Maze(
+          options,
+          options.objects.map((obj) => ({
+            name: obj.name,
+            mesh: this.getMesh(obj.mesh),
+            image: this.getTexture(obj.texture),
+            location: obj.location,
+          })),
+        );
     }
   }
 
