@@ -114,14 +114,23 @@ export interface IModelData {
   name?: string;
   mesh: Mesh;
   image: HTMLImageElement;
-  location?: vec3;
+  translation?: vec3;
+  aabb?: AABB;
+  scale?: vec3;
 }
 
 export interface IMazeObjectOptions {
   name: string;
   mesh: number;
   texture: number;
-  location?: vec3;
+  translation?: vec3;
+  aabb?: AABB;
+  scale?: vec3;
+}
+
+export interface IMazeObject {
+  name: string;
+  found: boolean;
 }
 
 /*
@@ -165,4 +174,6 @@ export type TShaders = Record<string, IShader>;
 
 export type TUniforms = Record<string, WebGLUniformLocation>;
 
-export type TMazeObjects = Array<IModelData>;
+export type TMazeObjectsData = Array<IModelData>;
+
+export type TMazeObjects = Array<IMazeObject>;

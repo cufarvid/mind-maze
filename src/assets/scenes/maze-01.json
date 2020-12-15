@@ -70,28 +70,60 @@
         },
         {
           "name": "first",
-          "mesh": 0,
-          "texture": 1,
-          "location": [1, 1, 1]
+          "mesh": 1,
+          "texture": 2,
+          "aabb": {
+            "min": [-0.3, -1, -0.3],
+            "max": [0.3, 1, 0.3]
+          },
+          "scale": [0.3, 0.3, 0.3],
+          "translation": [-1, 1, -1]
         },
         {
           "name": "second",
           "mesh": 1,
-          "texture": 1,
-          "location": [1, 1, 1]
+          "texture": 3,
+          "aabb": {
+            "min": [-0.3, -1, -0.3],
+            "max": [0.3, 1, 0.3]
+          },
+          "scale": [0.3, 0.3, 0.3],
+          "translation": [0, 1, -1]
+        },
+        {
+          "name": "third",
+          "mesh": 1,
+          "texture": 2,
+          "aabb": {
+            "min": [-0.3, -1, -0.3],
+            "max": [0.3, 1, 0.3]
+          },
+          "scale": [0.3, 0.3, 0.3],
+          "translation": [1, 1, -1]
+        },
+        {
+          "name": "fourth",
+          "mesh": 1,
+          "texture": 3,
+          "aabb": {
+            "min": [-0.3, -1, -0.3],
+            "max": [0.3, 1, 0.3]
+          },
+          "scale": [0.3, 0.3, 0.3],
+          "translation": [2, 1, -1]
+        },
+        {
+          "name": "fifth",
+          "mesh": 1,
+          "texture": 2,
+          "aabb": {
+            "min": [-0.3, -1, -0.3],
+            "max": [0.3, 1, 0.3]
+          },
+          "scale": [0.3, 0.3, 0.3],
+          "translation": [3, 1, -1]
         }
       ]
-    },
-    {
-      "type": "model",
-      "mesh": 0,
-      "texture": 1,
-      "aabb": {
-        "min": [-0.2, -1, -0.2],
-        "max": [0.2, 1, 0.2]
-      },
-      "translation": [-1, 0.4, -1],
-      "scale": [0.2, 0.4, 0.2]
     }
   ],
   "textures": [
