@@ -74,12 +74,17 @@ export default class Renderer {
             entity.props.texture || this.defaultTexture,
           );
           gl.uniform1i(program.uniforms.uTexture, 0);
-          gl.drawElements(
-            gl.TRIANGLES,
-            entity.props.indices,
-            gl.UNSIGNED_SHORT,
-            0,
-          );
+
+          if (entity.props.indices) {
+            gl.drawElements(
+              gl.TRIANGLES,
+              entity.props.indices,
+              gl.UNSIGNED_SHORT,
+              0,
+            );
+          } else {
+            gl.drawArrays(gl.TRIANGLES, 0, entity.props.count);
+          }
         } else if (entity instanceof Light) {
           let color: vec3 = vec3.clone(entity.ambientColor);
           vec3.scale(color, color, 1.0 / 255.0);
@@ -157,11 +162,18 @@ export default class Renderer {
 
     const indices: number = modelMesh.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(
-      gl.ELEMENT_ARRAY_BUFFER,
-      new Uint16Array(modelMesh.indices),
-      gl.STATIC_DRAW,
-    );
+
+    if (indices) {
+      gl.bufferData(
+        gl.ELEMENT_ARRAY_BUFFER,
+        new Uint16Array(modelMesh.indices),
+        gl.STATIC_DRAW,
+      );
+    } else {
+      const count = modelMesh.vertices.length / 3;
+
+      return { vao, count };
+    }
 
     return { vao, indices };
   }

@@ -99,7 +99,8 @@ export interface IEntityOptions {
 export interface IEntityGlProps {
   texture: WebGLTexture;
   vao: WebGLVertexArrayObject;
-  indices: number;
+  indices?: number;
+  count?: number;
 }
 
 export interface AABB {
@@ -160,7 +161,8 @@ export interface TraverseParams {
  */
 export interface ModelRecord {
   vao: WebGLVertexArrayObject;
-  indices: number;
+  indices?: number;
+  count?: number;
 }
 
 /*
