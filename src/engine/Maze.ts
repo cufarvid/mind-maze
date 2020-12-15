@@ -19,6 +19,10 @@ export default class Maze extends Entity {
     this.makeObjects(objectData);
   }
 
+  public setObjectLocated(index: number): void {
+    this.objects[index].found = true;
+  }
+
   private makeWalls(
     width = 5,
     height = 5,
@@ -89,17 +93,21 @@ export default class Maze extends Entity {
     const holder = objectData.find((obj) => obj.name === 'holder');
     const filtered = objectData.filter((obj) => !exclude.includes(obj.name));
 
-    filtered.forEach((obj) => {
+    filtered.forEach((obj, index) => {
       this.objects.push({
         name: obj.name,
         found: false,
       });
 
-      this.makeObjectSegment(obj, holder);
+      this.makeObjectSegment(index, obj, holder);
     });
   }
 
-  private makeObjectSegment(object: IModelData, holder: IModelData): void {
+  private makeObjectSegment(
+    id: number,
+    object: IModelData,
+    holder: IModelData,
+  ): void {
     const hOptions: IEntityOptions = {
       aabb: {
         min: [-0.2, -1, -0.2],
@@ -117,7 +125,7 @@ export default class Maze extends Entity {
     );
 
     this.addChild(
-      new LocateModel(object.mesh, object.image, {
+      new LocateModel(id, object.mesh, object.image, {
         translation: object.translation,
         aabb: object.aabb,
         scale: object.scale,

@@ -95,7 +95,6 @@ export default class Physics {
     if (!isColliding) return;
     else if (b instanceof LocateModel && !b.isLocated) {
       b.setLocated();
-      console.log(a, b);
     }
 
     // Move node A minimally to avoid collision
