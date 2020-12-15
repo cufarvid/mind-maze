@@ -1,20 +1,24 @@
 import seedrandom from 'seedrandom';
 import Entity from './Entity';
-import { IEntityOptions, TMazeObjects } from '../types';
+import {
+  IEntityOptions,
+  IModelData,
+  TMazeObjects,
+  TMazeObjectsData,
+} from '../types';
 import Mesh from './Mesh';
 import Model from './Model';
 
 export default class Maze extends Entity {
-  public constructor(options: IEntityOptions, objectData: TMazeObjects) {
+  private objects: TMazeObjects = [];
+
+  public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {
     super(null);
     this.makeWalls(options.width, options.height, objectData);
+    this.makeObjects(objectData);
   }
 
-  private makeWalls(
-    width: number,
-    height: number,
-    objectData: TMazeObjects,
-  ): void {
+  private makeWalls(width = 5, height = 5, objectData: TMazeObjectsData): void {
     // Wall options
     const hOptions: IEntityOptions = {
       aabb: {
@@ -74,6 +78,46 @@ export default class Maze extends Entity {
     );
   }
 
+  private makeObjects(objectData: TMazeObjectsData): void {
+    const exclude = ['wall', 'holder'];
+    const holder = objectData.find((obj) => obj.name === 'holder');
+    const filtered = objectData.filter((obj) => !exclude.includes(obj.name));
+
+    filtered.forEach((obj) => {
+      this.objects.push({
+        name: obj.name,
+        found: false,
+      });
+
+      this.makeObjectSegmet(obj, holder);
+    });
+  }
+
+  private makeObjectSegmet(object: IModelData, holder: IModelData): void {
+    const hOptions: IEntityOptions = {
+      aabb: {
+        min: [-0.2, -1, -0.2],
+        max: [0.2, 1, 0.2],
+      },
+      scale: [0.2, 0.4, 0.2],
+    };
+    const [x, , z] = object.translation as Array<number>;
+
+    this.addChild(
+      new Model(object.mesh, object.image, {
+        translation: object.translation,
+        aabb: object.aabb,
+        scale: object.scale,
+      }),
+    );
+    this.addChild(
+      new Model(holder.mesh, holder.image, {
+        ...hOptions,
+        translation: [x, 0.4, z],
+      }),
+    );
+  }
+
   private makeWallSegment(
     mesh: Mesh,
     image: HTMLImageElement,
@@ -86,6 +130,7 @@ export default class Maze extends Entity {
   ): void {
     let x = startX;
     let z = startZ;
+
     for (const row of array) {
       for (const hole of row) {
         if (!hole) {
