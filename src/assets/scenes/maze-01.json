@@ -69,61 +69,72 @@
           "texture": 1
         },
         {
-          "name": "first",
+          "name": "sphere",
           "mesh": 1,
           "texture": 2,
           "aabb": {
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.3, 0.3, 0.3],
+          "scale": [0.15, 0.15, 0.15],
           "translation": [-1, 1, -1]
         },
         {
-          "name": "second",
-          "mesh": 1,
+          "name": "cylinder",
+          "mesh": 2,
           "texture": 3,
           "aabb": {
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.3, 0.3, 0.3],
+          "scale": [0.15, 0.15, 0.15],
           "translation": [0, 1, -1]
         },
         {
-          "name": "third",
-          "mesh": 1,
+          "name": "cone",
+          "mesh": 3,
           "texture": 2,
           "aabb": {
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.3, 0.3, 0.3],
+          "scale": [0.15, 0.15, 0.15],
           "translation": [1, 1, -1]
         },
         {
-          "name": "fourth",
-          "mesh": 1,
+          "name": "cube",
+          "mesh": 4,
           "texture": 3,
           "aabb": {
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.3, 0.3, 0.3],
+          "scale": [0.15, 0.15, 0.15],
           "translation": [2, 1, -1]
         },
         {
-          "name": "fifth",
-          "mesh": 1,
+          "name": "pyramid",
+          "mesh": 5,
           "texture": 2,
           "aabb": {
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.3, 0.3, 0.3],
+          "scale": [0.15, 0.15, 0.15],
           "translation": [3, 1, -1]
         }
       ]
+    },
+    {
+      "type": "model",
+      "mesh": 3,
+      "color": 0,
+      "aabb": {
+        "min": [-1, -1, -1],
+        "max": [1, 1, 1]
+      },
+      "translation": [3, 1, -5],
+      "scale": [0.3, 0.3, 0.3]
     }
   ],
   "textures": [
@@ -134,6 +145,11 @@
   ],
   "meshes": [
     "./assets/meshes/square.json",
-    "./assets/meshes/triangle.json"
+    "./assets/meshes/sphere.json",
+    "./assets/meshes/cylinder.json",
+    "./assets/meshes/cone.json",
+    "./assets/meshes/cube.json",
+    "./assets/meshes/pyramid.json",
+    "./assets/meshes/monkey.json"
   ]
 }
