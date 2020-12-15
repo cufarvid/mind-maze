@@ -1,4 +1,4 @@
-import { IEntityOptions, IMazeBlockData, ISceneOptions } from '../types';
+import { IEntityOptions, ISceneOptions, TMazeObjects } from '../types';
 import Scene from './Scene';
 import Entity from './Entity';
 import Mesh from './Mesh';
@@ -31,18 +31,14 @@ export default class SceneBuilder {
       case 'light':
         return new Light(options);
       case 'maze': {
-        const mazeOptions: IMazeBlockData = {
-          wall: {
-            mesh: this.getMesh(options.blocks.wall.mesh),
-            image: this.getTexture(options.blocks.wall.texture),
-          },
-          holder: {
-            mesh: this.getMesh(options.blocks.holder.mesh),
-            image: this.getTexture(options.blocks.holder.texture),
-          },
-        };
+        const objectData: TMazeObjects = options.objects.map((obj) => ({
+          name: obj.name,
+          mesh: this.getMesh(obj.mesh),
+          image: this.getTexture(obj.texture),
+          location: obj.location,
+        }));
 
-        return new Maze(options, mazeOptions);
+        return new Maze(options, objectData);
       }
     }
   }

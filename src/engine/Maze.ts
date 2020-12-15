@@ -1,16 +1,16 @@
 import seedrandom from 'seedrandom';
 import Entity from './Entity';
-import { IEntityOptions, IMazeBlockData } from '../types';
+import { IEntityOptions, TMazeObjects } from '../types';
 import Mesh from './Mesh';
 import Model from './Model';
 
 export default class Maze extends Entity {
-  public constructor(options: IEntityOptions, blockData: IMazeBlockData) {
+  public constructor(options: IEntityOptions, objectData: TMazeObjects) {
     super(null);
-    this.make(options, blockData);
+    this.makeWalls(options, objectData);
   }
 
-  private make(options: IEntityOptions, blockData: IMazeBlockData): void {
+  private makeWalls(options: IEntityOptions, objectData: TMazeObjects): void {
     // Wall options
     const hOptions: IEntityOptions = {
       aabb: {
@@ -27,7 +27,7 @@ export default class Maze extends Entity {
       scale: [0.1, 1, 1],
     };
 
-    const { mesh, image } = blockData.wall;
+    const { mesh, image } = objectData.find((obj) => obj.name === 'wall');
     const { width, height } = options;
     const { horizontal, vertical } = Maze.generate(
       options.width,

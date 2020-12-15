@@ -57,17 +57,30 @@
       "texture": 0,
       "width": 5,
       "height": 5,
-      "objects": [],
-      "blocks": {
-        "wall": {
+      "objects": [
+        {
+          "name": "wall",
           "mesh": 0,
           "texture": 0
         },
-        "holder": {
+        {
+          "name": "holder",
           "mesh": 0,
           "texture": 1
+        },
+        {
+          "name": "first",
+          "mesh": 0,
+          "texture": 1,
+          "location": [1, 1, 1]
+        },
+        {
+          "name": "second",
+          "mesh": 1,
+          "texture": 1,
+          "location": [1, 1, 1]
         }
-      }
+      ]
     },
     {
       "type": "model",
