@@ -1,6 +1,7 @@
 import { mat4, vec3 } from 'gl-matrix';
 import Entity from './Entity';
 import Scene from './Scene';
+import LocateModel from './LocateModel';
 import { AABB } from '../types';
 
 export default class Physics {
@@ -92,8 +93,8 @@ export default class Physics {
     );
 
     if (!isColliding) return;
-    else {
-      console.log('Collision with');
+    else if (b instanceof LocateModel && !b.isLocated) {
+      b.setLocated();
       console.log(a, b);
     }
 

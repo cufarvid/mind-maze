@@ -8,6 +8,7 @@ import {
 } from '../types';
 import Mesh from './Mesh';
 import Model from './Model';
+import LocateModel from './LocateModel';
 
 export default class Maze extends Entity {
   private objects: TMazeObjects = [];
@@ -109,17 +110,17 @@ export default class Maze extends Entity {
     const [x, , z] = object.translation as Array<number>;
 
     this.addChild(
-      new Model(object.mesh, object.image, {
-        translation: object.translation,
-        aabb: object.aabb,
-        scale: object.scale,
+      new Model(holder.mesh, holder.image, {
+        ...hOptions,
+        translation: [x, hOptions.scale[1], z],
       }),
     );
 
     this.addChild(
-      new Model(holder.mesh, holder.image, {
-        ...hOptions,
-        translation: [x, hOptions.scale[1], z],
+      new LocateModel(object.mesh, object.image, {
+        translation: object.translation,
+        aabb: object.aabb,
+        scale: object.scale,
       }),
     );
   }
