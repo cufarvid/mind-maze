@@ -42,6 +42,10 @@ class App extends Application {
     this.rendererPrepare();
   }
 
+  private rotate(): void {
+    this.levels.current.nextStage();
+  }
+
   private rendererPrepare(): void {
     this.renderer.prepare(this.levels.current.scene);
     this.loading = false;
@@ -94,4 +98,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const gui = new dat.GUI();
   gui.add(app, 'enableCamera');
   gui.add(app, 'nextLevel');
+  gui.add(app, 'rotate');
 });

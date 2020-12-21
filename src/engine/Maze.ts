@@ -1,4 +1,5 @@
 import seedrandom from 'seedrandom';
+import { vec3 } from 'gl-matrix';
 import Entity from './Entity';
 import {
   IEntityOptions,
@@ -19,19 +20,19 @@ export enum MazeMode {
 
 export default class Maze extends Entity {
   private objects: TMazeObjects = [];
-  private mode: MazeMode = MazeMode.PickUpInOrder;
+  public mode: MazeMode = MazeMode.PickUpInOrder;
+  public posRotate: Record<string, vec3>;
 
   public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {
     super(null);
+    this.posRotate = options.posRotate;
+
     this.makeWalls(options.width, options.height, options.seed, objectData);
     this.makeObjects(objectData);
-
-    console.log(this.nextObject);
   }
 
   public setObjectLocated(index: number): void {
     this.objects[index].found = true;
-    console.log(this.nextObject);
   }
 
   public get nextObject(): IMazeObject {
@@ -48,10 +49,6 @@ export default class Maze extends Entity {
 
   public get mPickUpInOrder(): boolean {
     return this.mode === MazeMode.PickUpInOrder;
-  }
-
-  public set setMazeMode(mode: MazeMode) {
-    this.mode = mode;
   }
 
   private makeWalls(
