@@ -18,9 +18,14 @@ export default class PickUpModel extends Model {
 
   public pickUp(): void {
     const parent = this.getParent;
-    if (parent instanceof Maze && !parent.inspection) {
-      parent.setObjectLocated(this.id);
-      parent.removeChild(this);
+    if (parent instanceof Maze && !parent.mInspection) {
+      if (
+        parent.mPickUp ||
+        (parent.mPickUpInOrder && parent.nextObject.id == this.id)
+      ) {
+        parent.setObjectLocated(this.id);
+        parent.removeChild(this);
+      }
     }
   }
 }

@@ -132,6 +132,7 @@ export interface IMazeObjectOptions {
 }
 
 export interface IMazeObject {
+  id: number;
   name: string;
   found: boolean;
 }
