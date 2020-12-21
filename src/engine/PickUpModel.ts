@@ -3,9 +3,8 @@ import Mesh from './Mesh';
 import { IEntityOptions } from '../types';
 import Maze from './Maze';
 
-export default class LocateModel extends Model {
+export default class PickUpModel extends Model {
   private readonly id: number;
-  private located = false;
 
   constructor(
     id: number,
@@ -17,13 +16,16 @@ export default class LocateModel extends Model {
     this.id = id;
   }
 
-  public get isLocated(): boolean {
-    return this.located;
-  }
-
-  public setLocated(): void {
-    this.located = true;
+  public pickUp(): void {
     const parent = this.getParent;
-    if (parent instanceof Maze) parent.setObjectLocated(this.id);
+    if (parent instanceof Maze && !parent.mInspection) {
+      if (
+        parent.mPickUp ||
+        (parent.mPickUpInOrder && parent.nextObject.id == this.id)
+      ) {
+        parent.setObjectLocated(this.id);
+        parent.removeChild(this);
+      }
+    }
   }
 }

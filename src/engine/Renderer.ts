@@ -7,7 +7,6 @@ import Entity from './Entity';
 import Mesh from './Mesh';
 import Scene from './Scene';
 import Light from './Light';
-import LocateModel from './LocateModel';
 
 export default class Renderer {
   private readonly gl: WebGL2RenderingContext;
@@ -67,13 +66,7 @@ export default class Renderer {
         mat4.mul(matrix, matrix, entity.transform);
 
         if (entity.props?.vao) {
-          const modelLocated =
-            entity instanceof LocateModel && entity.isLocated;
           gl.bindVertexArray(entity.props.vao);
-          gl.uniform4fv(
-            program.uniforms.uColorSelected,
-            modelLocated ? [1, 0, 0, 1] : [1, 1, 1, 1],
-          );
           gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);
           gl.activeTexture(gl.TEXTURE0);
           gl.bindTexture(

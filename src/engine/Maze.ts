@@ -2,25 +2,56 @@ import seedrandom from 'seedrandom';
 import Entity from './Entity';
 import {
   IEntityOptions,
+  IMazeObject,
   IModelData,
   TMazeObjects,
   TMazeObjectsData,
 } from '../types';
 import Mesh from './Mesh';
 import Model from './Model';
-import LocateModel from './LocateModel';
+import PickUpModel from './PickUpModel';
+
+export enum MazeMode {
+  Inspection,
+  PickUp,
+  PickUpInOrder,
+}
 
 export default class Maze extends Entity {
   private objects: TMazeObjects = [];
+  private mode: MazeMode = MazeMode.PickUpInOrder;
 
   public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {
     super(null);
     this.makeWalls(options.width, options.height, options.seed, objectData);
     this.makeObjects(objectData);
+
+    console.log(this.nextObject);
   }
 
   public setObjectLocated(index: number): void {
     this.objects[index].found = true;
+    console.log(this.nextObject);
+  }
+
+  public get nextObject(): IMazeObject {
+    return this.objects.find((obj) => !obj.found);
+  }
+
+  public get mInspection(): boolean {
+    return this.mode === MazeMode.Inspection;
+  }
+
+  public get mPickUp(): boolean {
+    return this.mode === MazeMode.PickUp;
+  }
+
+  public get mPickUpInOrder(): boolean {
+    return this.mode === MazeMode.PickUpInOrder;
+  }
+
+  public set setMazeMode(mode: MazeMode) {
+    this.mode = mode;
   }
 
   private makeWalls(
@@ -95,6 +126,7 @@ export default class Maze extends Entity {
 
     filtered.forEach((obj, index) => {
       this.objects.push({
+        id: index,
         name: obj.name,
         found: false,
       });
@@ -125,7 +157,7 @@ export default class Maze extends Entity {
     );
 
     this.addChild(
-      new LocateModel(id, object.mesh, object.image, {
+      new PickUpModel(id, object.mesh, object.image, {
         translation: object.translation,
         aabb: object.aabb,
         scale: object.scale,
