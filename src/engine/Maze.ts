@@ -8,10 +8,11 @@ import {
 } from '../types';
 import Mesh from './Mesh';
 import Model from './Model';
-import LocateModel from './LocateModel';
+import PickUpModel from './PickUpModel';
 
 export default class Maze extends Entity {
   private objects: TMazeObjects = [];
+  public inspection = true;
 
   public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {
     super(null);
@@ -125,7 +126,7 @@ export default class Maze extends Entity {
     );
 
     this.addChild(
-      new LocateModel(id, object.mesh, object.image, {
+      new PickUpModel(id, object.mesh, object.image, {
         translation: object.translation,
         aabb: object.aabb,
         scale: object.scale,
