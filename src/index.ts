@@ -1,21 +1,16 @@
 import Application from './engine/Application';
 import Renderer from './engine/Renderer';
-import Physics from './engine/Physics';
-import Camera from './engine/Camera';
-import SceneLoader from './engine/SceneLoader';
-import SceneBuilder from './engine/SceneBuilder';
-import Scene from './engine/Scene';
-import Entity from './engine/Entity';
 import * as dat from 'dat.gui';
+import LevelManager from './engine/LevelManager';
 
 class App extends Application {
+  private loading = true;
   private renderer: Renderer;
-  private physics: Physics;
-  private scene: Scene;
-  private camera: Camera = null;
   private time: number = Date.now();
   private startTime: number = Date.now();
   private aspect = 1;
+
+  private levels: LevelManager;
 
   private pointerLockChangeHandler: EventListener;
 
@@ -28,25 +23,28 @@ class App extends Application {
       this.pointerLockChangeHandler,
     );
 
-    void this.load('./assets/scenes/maze-01.json');
+    this.levels = new LevelManager([
+      './assets/scenes/maze-01.json',
+      './assets/scenes/maze-02.json',
+    ]);
+
+    void this.init();
   }
 
-  private async load(uri: string): Promise<void> {
-    const scene = await new SceneLoader().loadScene(uri);
-    const builder = new SceneBuilder(scene);
-    this.scene = builder.build();
-    this.physics = new Physics(this.scene);
+  private async init(): Promise<void> {
+    await this.levels.init();
+    this.rendererPrepare();
+  }
 
-    this.scene.traverse({
-      before: (entity: Entity) => {
-        if (entity instanceof Camera) this.camera = entity;
-      },
-      after: null,
-    });
+  private async nextLevel(): Promise<void> {
+    this.loading = true;
+    await this.levels.next();
+    this.rendererPrepare();
+  }
 
-    this.camera.aspect = this.aspect;
-    this.camera.updateProjection();
-    this.renderer.prepare(this.scene);
+  private rendererPrepare(): void {
+    this.renderer.prepare(this.levels.current.scene);
+    this.loading = false;
   }
 
   protected enableCamera(): void {
@@ -54,10 +52,11 @@ class App extends Application {
   }
 
   protected pointerLockChange(): void {
-    if (!this.camera) return;
+    if (!this.levels.current.camera) return;
 
-    if (document.pointerLockElement === this.canvas) this.camera.enable();
-    else this.camera.disable();
+    if (document.pointerLockElement === this.canvas)
+      this.levels.current.camera.enable();
+    else this.levels.current.camera.disable();
   }
 
   protected update(): void {
@@ -65,22 +64,26 @@ class App extends Application {
     const dt = (this.time - this.startTime) * 0.001;
     this.startTime = this.time;
 
-    if (this.camera) this.camera.update(dt);
+    if (this.levels.current.camera) this.levels.current.camera.update(dt);
 
-    if (this.physics) this.physics.update(dt);
+    if (this.levels.current.physics) this.levels.current.physics.update(dt);
   }
 
   protected render(): void {
-    if (this.scene) this.renderer.render(this.scene, this.camera);
+    if (this.levels.current.scene)
+      this.renderer.render(
+        this.levels.current.scene,
+        this.levels.current.camera,
+      );
   }
 
   protected resize(): void {
     const w = this.canvas.clientWidth;
     const h = this.canvas.clientHeight;
     this.aspect = w / h;
-    if (this.camera) {
-      this.camera.aspect = this.aspect;
-      this.camera.updateProjection();
+    if (this.levels.current.camera) {
+      this.levels.current.camera.aspect = this.aspect;
+      this.levels.current.camera.updateProjection();
     }
   }
 }
@@ -90,4 +93,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const app = new App(canvas);
   const gui = new dat.GUI();
   gui.add(app, 'enableCamera');
+  gui.add(app, 'nextLevel');
 });
