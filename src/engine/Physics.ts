@@ -1,7 +1,7 @@
 import { mat4, vec3 } from 'gl-matrix';
 import Entity from './Entity';
 import Scene from './Scene';
-import LocateModel from './LocateModel';
+import PickUpModel from './PickUpModel';
 import { AABB } from '../types';
 
 export default class Physics {
@@ -93,8 +93,8 @@ export default class Physics {
     );
 
     if (!isColliding) return;
-    else if (b instanceof LocateModel && !b.isLocated) {
-      b.setLocated();
+    else if (b instanceof PickUpModel) {
+      b.pickUp();
     }
 
     // Move node A minimally to avoid collision
