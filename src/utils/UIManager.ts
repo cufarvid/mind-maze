@@ -6,10 +6,17 @@ export default class UIManager {
     customElements.define('ui-element', UIElement);
   }
 
-  private static element(text: string, className: string): UIElement {
+  private static element(
+    text: string,
+    className: string,
+    show = true,
+  ): UIElement {
     const element = new UIElement();
+
     element.className = className;
     element.appendChild(document.createTextNode(text));
+
+    if (!show) element.hide();
 
     return element;
   }
@@ -30,6 +37,10 @@ export default class UIManager {
 
   public static loadingScreen(text = 'Loading'): UIElement {
     return UIManager.element(text, 'loading');
+  }
+
+  public static timer(value: string): UIElement {
+    return UIManager.element(value, 'timer', false);
   }
 
   public static inject(element: HTMLElement): void {

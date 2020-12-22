@@ -41,8 +41,6 @@ export default class Level {
 
     this.camera.aspect = this.aspect;
     this.camera.updateProjection();
-
-    this.play();
   }
 
   public play(): void {
