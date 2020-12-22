@@ -5,8 +5,6 @@ export default class LevelManager {
 
   public constructor(sceneUris: Array<string>) {
     this.initLevels(sceneUris);
-    console.log(this.levels);
-    console.log(this.current);
   }
 
   public async init(): Promise<void> {

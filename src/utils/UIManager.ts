@@ -51,4 +51,12 @@ export default class UIManager {
   public static injectMultiple(elements: Array<HTMLElement>): void {
     elements.forEach((element) => UIManager.inject(element));
   }
+
+  public static replace(
+    oldElement: HTMLElement,
+    newElement: HTMLElement,
+  ): void {
+    oldElement.remove();
+    UIManager.inject(newElement);
+  }
 }

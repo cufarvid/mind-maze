@@ -6,6 +6,8 @@ import SceneBuilder from './SceneBuilder';
 import Entity from './Entity';
 import Maze, { MazeMode } from './Maze';
 import Timer from '../utils/Timer';
+import { IMazePosition } from '../types';
+import { vec3 } from 'gl-matrix';
 
 export default class Level {
   public id: number;
@@ -23,6 +25,7 @@ export default class Level {
   public constructor(id: number, sceneUri: string) {
     this.id = id;
     this.sceneUri = sceneUri;
+    this.timer = new Timer(5);
   }
 
   public async init(): Promise<void> {
@@ -44,7 +47,6 @@ export default class Level {
   }
 
   public play(): void {
-    this.timer = new Timer(5);
     this.timer.start();
   }
 
@@ -52,41 +54,53 @@ export default class Level {
     this.timer.stop();
   }
 
+  public resume(): void {
+    this.timer.resume();
+  }
+
   public get timerRunning(): boolean {
     return this.timer.isRunning;
   }
 
   public nextStage(): void {
-    const { translation, rotation } = this.maze.posRotate;
-
-    this.camera.translation = translation;
-    this.camera.rotation = rotation;
-    this.camera.updateProjection();
-
+    this.updateCamera(this.maze.posRotate);
     this.stage++;
     this.maze.mode = MazeMode.PickUp;
   }
 
   public nextMode(): void {
-    switch (this.maze.mode) {
+    switch (this.maze?.mode) {
       case MazeMode.Inspection:
+        this.timer.stop();
+        this.resetCamera();
         this.maze.mode = MazeMode.PickUp;
-        this.timer.reset();
         break;
       case MazeMode.PickUp:
+        this.timer.stop();
+        this.resetCamera();
         this.maze.mode = MazeMode.PickUpInOrder;
-        this.timer.reset();
         break;
       case MazeMode.PickUpInOrder:
         if (!this.stage) {
-          this.nextStage();
-          this.timer.reset();
-        } else {
-          this.completed = true;
           this.timer.stop();
+          this.resetCamera();
+          this.nextStage();
+        } else {
+          this.timer.stop();
+          this.completed = true;
         }
         break;
     }
-    console.log(this.maze.mode);
+  }
+
+  private resetCamera(): void {
+    if (!this.stage) this.updateCamera(this.maze.posInitial);
+    else this.updateCamera(this.maze.posRotate);
+  }
+
+  private updateCamera(position: IMazePosition): void {
+    vec3.copy(this.camera.translation, position.translation);
+    vec3.copy(this.camera.rotation, position.rotation);
+    this.camera.updateProjection();
   }
 }

@@ -3,9 +3,16 @@ import Renderer from './engine/Renderer';
 import LevelManager from './utils/LevelManager';
 import UIManager from './utils/UIManager';
 import UIElement from './utils/UIElement';
+import { IMenuItem } from './types';
+
+enum AppMode {
+  Idle,
+  Started,
+  Paused,
+}
 
 class App extends Application {
-  private started = false;
+  private mode = AppMode.Idle;
   private renderer: Renderer;
   private time: number = Date.now();
   private startTime: number = Date.now();
@@ -60,26 +67,68 @@ class App extends Application {
     );
 
     document.addEventListener('keydown', (event) => {
-      if (this.started && event.key === 'p') this.pause();
+      if (this.mode === AppMode.Started && event.key === 'p') this.pause();
     });
   }
 
   private play(): void {
-    this.started = true;
     this.enableCamera();
-    this.levels.current.play();
-    this.menu.hide();
+    this.levels.current.timer.setElement(this.timer);
+
+    switch (this.mode) {
+      case AppMode.Idle:
+        this.levels.current.play();
+        break;
+      case AppMode.Paused:
+        this.levels.current.resume();
+        break;
+    }
+
     this.timer.show();
+    this.menu.hide();
+    this.mode = AppMode.Started;
   }
 
   private pause(): void {
-    this.started = false;
     this.disableCamera();
     this.levels.current.pause();
     this.menu.show();
+    this.mode = AppMode.Paused;
   }
 
-  private async nextLevel(): Promise<void> {
+  private nextMode(): void {
+    this.levels.current.nextMode();
+    this.disableCamera();
+
+    const menuOptions = [
+      {
+        text: 'Continue',
+        callback: () => this.play(),
+      },
+      { text: 'Reset', callback: () => console.log('Resetting') },
+    ];
+    this.updateMenu(menuOptions);
+
+    this.mode = AppMode.Idle;
+  }
+
+  private nextLevel(): void {
+    void this.loadNextLevel();
+    this.disableCamera();
+
+    const menuOptions = [
+      {
+        text: 'Start',
+        callback: () => this.play(),
+      },
+      { text: 'Reset', callback: () => console.log('Resetting') },
+    ];
+    this.updateMenu(menuOptions);
+
+    this.mode = AppMode.Idle;
+  }
+
+  private async loadNextLevel(): Promise<void> {
     this.loading.show();
     await this.levels.next();
     this.rendererPrepare();
@@ -88,6 +137,12 @@ class App extends Application {
   private rendererPrepare(): void {
     this.renderer.prepare(this.levels.current.scene);
     this.loading.hide();
+  }
+
+  private updateMenu(options: Array<IMenuItem>): void {
+    const newMenu = UIManager.menu(options);
+    UIManager.replace(this.menu, newMenu);
+    this.menu = newMenu;
   }
 
   protected enableCamera(): void {
@@ -115,9 +170,13 @@ class App extends Application {
 
     if (this.levels.current.physics) this.levels.current.physics.update(dt);
 
-    // if (!this.levels.current.completed && this.levels.current.timer) {
-    //   if (!this.levels.current.timerRunning) this.levels.current.nextMode();
-    // }
+    if (this.mode == AppMode.Started) {
+      if (!this.levels.current.completed && !this.levels.current.timerRunning) {
+        this.nextMode();
+      } else if (this.levels.current.completed) {
+        this.nextLevel();
+      }
+    }
   }
 
   protected render(): void {

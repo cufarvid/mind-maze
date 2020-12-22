@@ -1,9 +1,9 @@
 import seedrandom from 'seedrandom';
-import { vec3 } from 'gl-matrix';
 import Entity from './Entity';
 import {
   IEntityOptions,
   IMazeObject,
+  IMazePosition,
   IModelData,
   TMazeObjects,
   TMazeObjectsData,
@@ -21,10 +21,12 @@ export enum MazeMode {
 export default class Maze extends Entity {
   private objects: TMazeObjects = [];
   public mode: MazeMode = MazeMode.Inspection;
-  public posRotate: Record<string, vec3>;
+  public posInitial: IMazePosition;
+  public posRotate: IMazePosition;
 
   public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {
     super(null);
+    this.posInitial = options.posInitial;
     this.posRotate = options.posRotate;
 
     this.makeWalls(options.width, options.height, options.seed, objectData);

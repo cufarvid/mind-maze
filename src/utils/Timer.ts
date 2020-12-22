@@ -1,20 +1,27 @@
+import UIElement from './UIElement';
+
 export default class Timer {
   private id: NodeJS.Timeout;
   private seconds: number;
   private readonly duration: number;
   private running = false;
+  private timerElement: UIElement;
 
   public constructor(duration: number) {
     this.duration = duration;
   }
 
-  public start(): void {
+  public setElement(element: UIElement): void {
+    this.timerElement = element;
+  }
+
+  public start(resume = false): void {
     this.running = true;
-    this.seconds = this.duration;
+    if (!resume) this.seconds = this.duration;
 
     const tick = () => {
-      console.log(this.countdown);
       this.seconds--;
+      this.timerElement.innerText = this.countdown;
 
       if (this.seconds > 0) {
         clearTimeout(this.id);
@@ -29,6 +36,10 @@ export default class Timer {
     this.running = false;
     clearTimeout(this.id);
     console.log(`timer finished in ${this.duration - this.seconds}s`);
+  }
+
+  public resume(): void {
+    this.start(true);
   }
 
   public reset(): void {
