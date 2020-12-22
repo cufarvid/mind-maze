@@ -1,4 +1,4 @@
-import Level from './Level';
+import Level from '../engine/Level';
 
 export default class LevelManager {
   private levels: Array<Level> = [];

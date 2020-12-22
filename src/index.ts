@@ -1,7 +1,7 @@
 import Application from './engine/Application';
 import Renderer from './engine/Renderer';
 import * as dat from 'dat.gui';
-import LevelManager from './engine/LevelManager';
+import LevelManager from './utils/LevelManager';
 
 class App extends Application {
   private loading = true;

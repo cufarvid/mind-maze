@@ -1,5 +1,5 @@
 import { vec3, mat4, quat } from 'gl-matrix';
-import Utils from './Utils';
+import Utils from '../utils/Utils';
 import {
   AABB,
   IEntityGlProps,

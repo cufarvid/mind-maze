@@ -5,7 +5,7 @@ import SceneLoader from './SceneLoader';
 import SceneBuilder from './SceneBuilder';
 import Entity from './Entity';
 import Maze, { MazeMode } from './Maze';
-import Timer from './Timer';
+import Timer from '../utils/Timer';
 
 export default class Level {
   public id: number;
