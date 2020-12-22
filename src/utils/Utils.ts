@@ -1,7 +1,7 @@
 import { clone } from 'lodash';
-import Entity from './Entity';
-import Camera from './Camera';
-import Model from './Model';
+import Entity from '../engine/Entity';
+import Camera from '../engine/Camera';
+import Model from '../engine/Model';
 import { IEntityOptions } from '../types';
 
 export default class Utils {

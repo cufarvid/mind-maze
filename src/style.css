@@ -6,10 +6,60 @@
 html, body {
   width: 100%;
   height: 100%;
+  font-family: 'Source Code Pro', sans-serif;
 }
 
 canvas {
-  height: 100vh;
   width: 100vw;
+  height: 100vh;
   display: block;
+}
+
+.container, .menu, .loading, .timer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading, .timer {
+  background: #454545;
+  color: #f2f2f2;
+}
+
+.menu, .loading {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+}
+
+.menu {
+  justify-content: center;
+  backdrop-filter: blur(20px);
+}
+
+.menu > button {
+  margin: 10px;
+  width: 20vw;
+}
+
+.menu-title, .menu-info {
+  margin: 10px;
+  color: #f2f2f2;
+}
+
+.menu-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.timer {
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 7rem;
+  height: 3rem;
+  font-size: 2rem;
+  font-weight: bold;
 }

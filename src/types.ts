@@ -96,6 +96,8 @@ export interface IEntityOptions {
   // Maze
   seed?: string;
   objects?: Array<IMazeObjectOptions>;
+  posInitial?: IMazePosition;
+  posRotate?: IMazePosition;
 }
 
 export interface IEntityGlProps {
@@ -137,6 +139,11 @@ export interface IMazeObject {
   found: boolean;
 }
 
+export interface IMazePosition {
+  translation: vec3;
+  rotation: vec3;
+}
+
 /*
  * Mesh
  */
@@ -166,6 +173,20 @@ export interface ModelRecord {
   vao: WebGLVertexArrayObject;
   indices?: number;
   count?: number;
+}
+
+/*
+ * User interface
+ */
+export interface IMenuItem {
+  text: string;
+  callback: () => void;
+}
+
+export interface IMenuOptions {
+  title?: string;
+  info?: string;
+  buttons: Array<IMenuItem>;
 }
 
 /*

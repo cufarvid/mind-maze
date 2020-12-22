@@ -1,5 +1,5 @@
 import { mat4, vec3 } from 'gl-matrix';
-import Utils from './Utils';
+import Utils from '../utils/Utils';
 import { IEntityOptions } from '../types';
 import Entity from './Entity';
 

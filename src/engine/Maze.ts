@@ -3,6 +3,7 @@ import Entity from './Entity';
 import {
   IEntityOptions,
   IMazeObject,
+  IMazePosition,
   IModelData,
   TMazeObjects,
   TMazeObjectsData,
@@ -19,19 +20,21 @@ export enum MazeMode {
 
 export default class Maze extends Entity {
   private objects: TMazeObjects = [];
-  private mode: MazeMode = MazeMode.PickUpInOrder;
+  public mode: MazeMode = MazeMode.Inspection;
+  public posInitial: IMazePosition;
+  public posRotate: IMazePosition;
 
   public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {
     super(null);
+    this.posInitial = options.posInitial;
+    this.posRotate = options.posRotate;
+
     this.makeWalls(options.width, options.height, options.seed, objectData);
     this.makeObjects(objectData);
-
-    console.log(this.nextObject);
   }
 
   public setObjectLocated(index: number): void {
     this.objects[index].found = true;
-    console.log(this.nextObject);
   }
 
   public get nextObject(): IMazeObject {
@@ -48,10 +51,6 @@ export default class Maze extends Entity {
 
   public get mPickUpInOrder(): boolean {
     return this.mode === MazeMode.PickUpInOrder;
-  }
-
-  public set setMazeMode(mode: MazeMode) {
-    this.mode = mode;
   }
 
   private makeWalls(
