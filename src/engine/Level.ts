@@ -5,6 +5,7 @@ import SceneLoader from './SceneLoader';
 import SceneBuilder from './SceneBuilder';
 import Entity from './Entity';
 import Maze, { MazeMode } from './Maze';
+import Timer from './Timer';
 
 export default class Level {
   public id: number;
@@ -12,6 +13,7 @@ export default class Level {
   private stage = 0;
   private maze: Maze;
   public completed = false;
+  public timer: Timer;
 
   public physics: Physics;
   public scene: Scene;
@@ -39,6 +41,21 @@ export default class Level {
 
     this.camera.aspect = this.aspect;
     this.camera.updateProjection();
+
+    this.play();
+  }
+
+  public play(): void {
+    this.timer = new Timer(5);
+    this.timer.start();
+  }
+
+  public pause(): void {
+    this.timer.stop();
+  }
+
+  public get timerRunning(): boolean {
+    return this.timer.isRunning;
   }
 
   public nextStage(): void {
@@ -56,14 +73,22 @@ export default class Level {
     switch (this.maze.mode) {
       case MazeMode.Inspection:
         this.maze.mode = MazeMode.PickUp;
+        this.timer.reset();
         break;
       case MazeMode.PickUp:
         this.maze.mode = MazeMode.PickUpInOrder;
+        this.timer.reset();
         break;
       case MazeMode.PickUpInOrder:
-        if (!this.stage) this.nextStage();
-        else this.completed = true;
+        if (!this.stage) {
+          this.nextStage();
+          this.timer.reset();
+        } else {
+          this.completed = true;
+          this.timer.stop();
+        }
         break;
     }
+    console.log(this.maze.mode);
   }
 }

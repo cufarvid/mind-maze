@@ -20,7 +20,7 @@ export enum MazeMode {
 
 export default class Maze extends Entity {
   private objects: TMazeObjects = [];
-  public mode: MazeMode = MazeMode.PickUpInOrder;
+  public mode: MazeMode = MazeMode.Inspection;
   public posRotate: Record<string, vec3>;
 
   public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {

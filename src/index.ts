@@ -71,6 +71,10 @@ class App extends Application {
     if (this.levels.current.camera) this.levels.current.camera.update(dt);
 
     if (this.levels.current.physics) this.levels.current.physics.update(dt);
+
+    if (!this.levels.current.completed && this.levels.current.timer) {
+      if (!this.levels.current.timerRunning) this.levels.current.nextMode();
+    }
   }
 
   protected render(): void {
