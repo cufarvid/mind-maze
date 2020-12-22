@@ -183,6 +183,12 @@ export interface IMenuItem {
   callback: () => void;
 }
 
+export interface IMenuOptions {
+  title?: string;
+  info?: string;
+  buttons: Array<IMenuItem>;
+}
+
 /*
  * Types
  */

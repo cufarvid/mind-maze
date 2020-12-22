@@ -43,6 +43,16 @@ canvas {
   width: 20vw;
 }
 
+.menu-title, .menu-info {
+  margin: 10px;
+  color: #f2f2f2;
+}
+
+.menu-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
 .timer {
   justify-content: center;
   position: absolute;

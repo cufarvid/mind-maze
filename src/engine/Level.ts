@@ -62,6 +62,10 @@ export default class Level {
     return this.timer.isRunning;
   }
 
+  public get number(): number {
+    return this.id + 1;
+  }
+
   public nextStage(): void {
     this.updateCamera(this.maze.posRotate);
     this.stage++;

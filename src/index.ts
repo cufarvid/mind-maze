@@ -3,7 +3,7 @@ import Renderer from './engine/Renderer';
 import LevelManager from './utils/LevelManager';
 import UIManager from './utils/UIManager';
 import UIElement from './utils/UIElement';
-import { IMenuItem } from './types';
+import { IMenuOptions } from './types';
 
 enum AppMode {
   Idle,
@@ -47,13 +47,18 @@ class App extends Application {
   private initUI(): void {
     UIManager.init();
 
-    const menuOptions = [
-      {
-        text: 'Start',
-        callback: () => this.play(),
-      },
-      { text: 'Info', callback: () => console.log('Info') },
-    ];
+    const menuOptions = {
+      title: 'Hello',
+      info:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eu nibh id nisi tincidunt aliquam.',
+      buttons: [
+        {
+          text: 'Start',
+          callback: () => this.play(),
+        },
+        { text: 'Info', callback: () => console.log('Info') },
+      ],
+    };
     this.menu = UIManager.menu(menuOptions);
     this.loading = UIManager.loadingScreen();
     this.timer = UIManager.timer('00:00');
@@ -100,13 +105,16 @@ class App extends Application {
     this.levels.current.nextMode();
     this.disableCamera();
 
-    const menuOptions = [
-      {
-        text: 'Continue',
-        callback: () => this.play(),
-      },
-      { text: 'Reset', callback: () => console.log('Resetting') },
-    ];
+    const menuOptions = {
+      title: `Congratulations! Next stage of level #${this.levels.current.number} is ahead of you.`,
+      buttons: [
+        {
+          text: 'Continue',
+          callback: () => this.play(),
+        },
+        { text: 'Info', callback: () => console.log('Info') },
+      ],
+    };
     this.updateMenu(menuOptions);
 
     this.mode = AppMode.Idle;
@@ -116,13 +124,16 @@ class App extends Application {
     void this.loadNextLevel();
     this.disableCamera();
 
-    const menuOptions = [
-      {
-        text: 'Start',
-        callback: () => this.play(),
-      },
-      { text: 'Reset', callback: () => console.log('Resetting') },
-    ];
+    const menuOptions = {
+      title: `Congratulations! Start with level #${this.levels.current.number}.`,
+      buttons: [
+        {
+          text: 'Start',
+          callback: () => this.play(),
+        },
+        { text: 'Info', callback: () => console.log('Info') },
+      ],
+    };
     this.updateMenu(menuOptions);
 
     this.mode = AppMode.Idle;
@@ -139,7 +150,7 @@ class App extends Application {
     this.loading.hide();
   }
 
-  private updateMenu(options: Array<IMenuItem>): void {
+  private updateMenu(options: IMenuOptions): void {
     const newMenu = UIManager.menu(options);
     UIManager.replace(this.menu, newMenu);
     this.menu = newMenu;

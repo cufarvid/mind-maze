@@ -1,5 +1,5 @@
 import UIElement from './UIElement';
-import { IMenuItem } from '../types';
+import { IMenuOptions } from '../types';
 
 export default class UIManager {
   public static init(): void {
@@ -21,11 +21,16 @@ export default class UIManager {
     return element;
   }
 
-  public static menu(options: Array<IMenuItem>): UIElement {
+  public static menu(options: IMenuOptions): UIElement {
     const menu = new UIElement();
     menu.className = 'menu';
 
-    options.forEach((option) => {
+    if (options.title)
+      menu.appendChild(UIManager.element(options.title, 'menu-title'));
+    if (options.info)
+      menu.appendChild(UIManager.element(options.info, 'menu-info'));
+
+    options.buttons.forEach((option) => {
       const button = document.createElement('button');
       button.appendChild(document.createTextNode(option.text));
       button.onclick = option.callback;
