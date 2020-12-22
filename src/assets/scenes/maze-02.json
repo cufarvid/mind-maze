@@ -59,6 +59,14 @@
       "seed": "4213963398",
       "width": 5,
       "height": 5,
+      "posInitial": {
+        "translation": [0, 1, 0],
+        "rotation": [0, 3.14, 0]
+      },
+      "posRotate": {
+        "translation": [10, 1, 10],
+        "rotation": [0, 1.57, 0]
+      },
       "objects": [
         {
           "name": "wall",

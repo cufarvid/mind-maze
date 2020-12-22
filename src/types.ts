@@ -96,7 +96,8 @@ export interface IEntityOptions {
   // Maze
   seed?: string;
   objects?: Array<IMazeObjectOptions>;
-  posRotate?: Record<string, vec3>;
+  posInitial?: IMazePosition;
+  posRotate?: IMazePosition;
 }
 
 export interface IEntityGlProps {
@@ -136,6 +137,11 @@ export interface IMazeObject {
   id: number;
   name: string;
   found: boolean;
+}
+
+export interface IMazePosition {
+  translation: vec3;
+  rotation: vec3;
 }
 
 /*
