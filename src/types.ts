@@ -170,6 +170,14 @@ export interface ModelRecord {
 }
 
 /*
+ * User interface
+ */
+export interface IMenuItem {
+  text: string;
+  callback: () => void;
+}
+
+/*
  * Types
  */
 export type TAttributes = Record<string, GLint>;
