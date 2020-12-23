@@ -1,14 +1,27 @@
 import UIElement from './UIElement';
 import { IMazeObject, IMenuOptions } from '../types';
+import { MENU_START, UI_DATA } from './constants';
 
 export default class UIManager {
-  static men: UIElement;
+  static menu: UIElement;
   static loading: UIElement;
+  static timer: UIElement;
+  static objectBox: UIElement;
 
   public static init(): void {
     customElements.define('ui-element', UIElement);
 
-    this.loading = UIManager.element('Loading', 'loading');
+    this.menu = UIManager.makeMenu(MENU_START);
+    this.loading = UIManager.element(UI_DATA.loading, 'loading');
+    this.timer = UIManager.makeTimer('00:00');
+    this.objectBox = UIManager.makeObjectBox([]);
+
+    UIManager.injectMultiple([
+      this.menu,
+      this.loading,
+      this.timer,
+      this.objectBox,
+    ]);
   }
 
   private static element(
@@ -26,7 +39,7 @@ export default class UIManager {
     return element;
   }
 
-  public static menu(options: IMenuOptions): UIElement {
+  public static makeMenu(options: IMenuOptions): UIElement {
     const menu = new UIElement();
     menu.className = 'menu';
 
@@ -45,19 +58,36 @@ export default class UIManager {
     return menu;
   }
 
-  public static timer(value: string): UIElement {
+  public static updateMenu(options: IMenuOptions): void {
+    const newMenu = UIManager.makeMenu(options);
+    UIManager.replace(UIManager.menu, newMenu);
+    UIManager.menu = newMenu;
+  }
+
+  public static makeTimer(value: string): UIElement {
     return UIManager.element(value, 'timer', false);
   }
 
-  public static objectBox(objects: Array<IMazeObject>): UIElement {
+  public static makeObjectBox(objects: Array<IMazeObject>): UIElement {
     const box = new UIElement();
     box.className = 'objects';
 
     objects.forEach((object) => {
-      box.appendChild(UIManager.element(object.name, 'object'));
+      box.appendChild(
+        UIManager.element(
+          object.name,
+          object.found ? 'object-located' : 'object',
+        ),
+      );
     });
 
     return box;
+  }
+
+  public static updateObjectBox(objects: Array<IMazeObject>): void {
+    const newBox = UIManager.makeObjectBox(objects);
+    UIManager.replace(UIManager.objectBox, newBox);
+    UIManager.objectBox = newBox;
   }
 
   public static inject(element: HTMLElement): void {
@@ -75,5 +105,15 @@ export default class UIManager {
   ): void {
     oldElement.remove();
     UIManager.inject(newElement);
+  }
+
+  public static showGameRow(): void {
+    UIManager.objectBox.show();
+    UIManager.timer.show();
+  }
+
+  public static hideGameRow(): void {
+    UIManager.objectBox.hide();
+    UIManager.timer.hide();
   }
 }

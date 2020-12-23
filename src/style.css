@@ -67,12 +67,18 @@ canvas {
 }
 
 .objects {
+  display: flex;
   left: 0;
   width: 20rem;
 }
 
-.object {
+.object, .object-located {
+  margin: 0 5px 0 5px;
   border: 1px solid black;
   width: 3rem;
   height: 3rem;
+}
+
+.object-located {
+  background: #242424;
 }

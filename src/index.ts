@@ -2,8 +2,6 @@ import Application from './engine/Application';
 import Renderer from './engine/Renderer';
 import LevelManager from './utils/LevelManager';
 import UIManager from './utils/UIManager';
-import UIElement from './utils/UIElement';
-import { IMenuOptions } from './types';
 
 enum AppMode {
   Idle,
@@ -19,11 +17,6 @@ class App extends Application {
   private aspect = 1;
 
   private levels: LevelManager;
-
-  private loading: UIElement;
-  private menu: UIElement;
-  private timer: UIElement;
-  private objectBox: UIElement;
 
   private pointerLockChangeHandler: EventListener;
 
@@ -60,12 +53,7 @@ class App extends Application {
         { text: 'Info', callback: () => console.log('Info') },
       ],
     };
-
-    this.menu = UIManager.menu(menuOptions);
-    this.loading = UIManager.loading;
-    this.timer = UIManager.timer('00:00');
-
-    UIManager.injectMultiple([this.menu, this.loading, this.timer]);
+    UIManager.updateMenu(menuOptions);
 
     this.pointerLockChangeHandler = () => this.pointerLockChange();
     document.addEventListener(
@@ -80,9 +68,7 @@ class App extends Application {
 
   private play(): void {
     this.enableCamera();
-    this.levels.current.timer.setElement(this.timer);
-    this.objectBox = UIManager.objectBox(this.levels.current.mazeObjects);
-    UIManager.inject(this.objectBox);
+    this.levels.current.timer.setElement(UIManager.timer);
 
     switch (this.mode) {
       case AppMode.Idle:
@@ -93,15 +79,16 @@ class App extends Application {
         break;
     }
 
-    this.timer.show();
-    this.menu.hide();
+    UIManager.showGameRow();
+    UIManager.menu.hide();
     this.mode = AppMode.Started;
   }
 
   private pause(): void {
     this.disableCamera();
     this.levels.current.pause();
-    this.menu.show();
+    UIManager.hideGameRow();
+    UIManager.menu.show();
     this.mode = AppMode.Paused;
   }
 
@@ -119,7 +106,8 @@ class App extends Application {
         { text: 'Info', callback: () => console.log('Info') },
       ],
     };
-    this.updateMenu(menuOptions);
+    UIManager.updateMenu(menuOptions);
+    UIManager.hideGameRow();
 
     this.mode = AppMode.Idle;
   }
@@ -138,26 +126,21 @@ class App extends Application {
         { text: 'Info', callback: () => console.log('Info') },
       ],
     };
-    this.updateMenu(menuOptions);
+    UIManager.updateMenu(menuOptions);
+    UIManager.hideGameRow();
 
     this.mode = AppMode.Idle;
   }
 
   private async loadNextLevel(): Promise<void> {
-    this.loading.show();
+    UIManager.loading.show();
     await this.levels.next();
     this.rendererPrepare();
   }
 
   private rendererPrepare(): void {
     this.renderer.prepare(this.levels.current.scene);
-    this.loading.hide();
-  }
-
-  private updateMenu(options: IMenuOptions): void {
-    const newMenu = UIManager.menu(options);
-    UIManager.replace(this.menu, newMenu);
-    this.menu = newMenu;
+    UIManager.loading.hide();
   }
 
   protected enableCamera(): void {

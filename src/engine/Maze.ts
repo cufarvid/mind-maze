@@ -11,6 +11,7 @@ import {
 import Mesh from './Mesh';
 import Model from './Model';
 import PickUpModel from './PickUpModel';
+import UIManager from '../utils/UIManager';
 
 export enum MazeMode {
   Inspection,
@@ -31,10 +32,14 @@ export default class Maze extends Entity {
 
     this.makeWalls(options.width, options.height, options.seed, objectData);
     this.makeObjects(objectData);
+
+    UIManager.updateObjectBox(this.objects);
+    UIManager.objectBox.hide();
   }
 
   public setObjectLocated(index: number): void {
     this.objects[index].found = true;
+    UIManager.updateObjectBox(this.objects);
   }
 
   public get nextObject(): IMazeObject {
