@@ -101,7 +101,11 @@ class App extends Application {
       ? `Congratulations! Level #${this.levels.current.number} successfully completed.`
       : `Congratulations! Previous mode completed in ${this.levels.current.timer.timeDiff}s.`;
 
-    const info = `${this.levels.current.mazeMode} mode is ahead of you!`;
+    const info = this.levels.current.lastMode
+      ? ``
+      : `${this.levels.current.mazeMode} mode is ahead of you!`;
+
+    const last = this.levels.current.lastMode && this.levels.isLastLevel;
 
     const menuOptions = {
       title,
@@ -109,7 +113,7 @@ class App extends Application {
       buttons: [
         {
           text: 'Continue',
-          callback: () => this.play(),
+          callback: () => (!last ? this.play() : console.log('Last!')),
         },
         { text: 'Reset', callback: () => console.log('Reset') },
       ],
@@ -183,6 +187,8 @@ class App extends Application {
         this.nextMode();
       } else if (this.levels.current.completed) {
         this.nextLevel();
+      } else if (this.levels.current.checkCompleted()) {
+        this.nextMode();
       }
     }
   }

@@ -22,7 +22,7 @@ export default class PickUpModel extends Model {
     if (parent instanceof Maze && !parent.mInspection) {
       if (
         parent.mPickUp ||
-        (parent.mPickUpInOrder && parent.nextObject.id == this.id)
+        (parent.mPickUpInOrder && parent.nextObject?.id == this.id)
       ) {
         parent.setObjectLocated(this.id);
         this.located = true;

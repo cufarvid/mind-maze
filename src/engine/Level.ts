@@ -25,7 +25,7 @@ export default class Level {
   public constructor(id: number, sceneUri: string) {
     this.id = id;
     this.sceneUri = sceneUri;
-    this.timer = new Timer(5);
+    this.timer = new Timer(1);
   }
 
   public async init(): Promise<void> {
@@ -97,11 +97,7 @@ export default class Level {
         this.prepareMode(MazeMode.PickUpInOrder);
         break;
       case MazeMode.PickUpInOrder:
-        if (!this.stage) this.nextStage();
-        else {
-          this.timer.stop();
-          this.completed = true;
-        }
+        this.stage ? this.setCompleted() : this.nextStage();
         break;
     }
   }
@@ -122,5 +118,14 @@ export default class Level {
     this.resetCamera();
     this.maze.resetObjects();
     this.maze.mode = mode;
+  }
+
+  public setCompleted(): void {
+    this.timer.stop();
+    this.completed = true;
+  }
+
+  public checkCompleted(): boolean {
+    return this.maze.getObjects.every((object) => object.located);
   }
 }

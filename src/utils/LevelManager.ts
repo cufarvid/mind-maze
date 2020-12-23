@@ -19,6 +19,10 @@ export default class LevelManager {
     return this.levels[0] || null;
   }
 
+  public get isLastLevel(): boolean {
+    return this.levels.length === 1;
+  }
+
   public async next(): Promise<Level> {
     this.levels.shift();
     await this.current.init();
