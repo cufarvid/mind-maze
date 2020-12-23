@@ -53,6 +53,10 @@ export default class Maze extends Entity {
     return this.mode === MazeMode.PickUpInOrder;
   }
 
+  public get getObjects(): Array<IMazeObject> {
+    return this.objects;
+  }
+
   private makeWalls(
     width = 5,
     height = 5,

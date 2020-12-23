@@ -23,6 +23,7 @@ class App extends Application {
   private loading: UIElement;
   private menu: UIElement;
   private timer: UIElement;
+  private objectBox: UIElement;
 
   private pointerLockChangeHandler: EventListener;
 
@@ -59,8 +60,9 @@ class App extends Application {
         { text: 'Info', callback: () => console.log('Info') },
       ],
     };
+
     this.menu = UIManager.menu(menuOptions);
-    this.loading = UIManager.loadingScreen();
+    this.loading = UIManager.loading;
     this.timer = UIManager.timer('00:00');
 
     UIManager.injectMultiple([this.menu, this.loading, this.timer]);
@@ -79,6 +81,8 @@ class App extends Application {
   private play(): void {
     this.enableCamera();
     this.levels.current.timer.setElement(this.timer);
+    this.objectBox = UIManager.objectBox(this.levels.current.mazeObjects);
+    UIManager.inject(this.objectBox);
 
     switch (this.mode) {
       case AppMode.Idle:

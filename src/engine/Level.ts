@@ -6,7 +6,7 @@ import SceneBuilder from './SceneBuilder';
 import Entity from './Entity';
 import Maze, { MazeMode } from './Maze';
 import Timer from '../utils/Timer';
-import { IMazePosition } from '../types';
+import { IMazeObject, IMazePosition } from '../types';
 import { vec3 } from 'gl-matrix';
 
 export default class Level {
@@ -64,6 +64,10 @@ export default class Level {
 
   public get number(): number {
     return this.id + 1;
+  }
+
+  public get mazeObjects(): Array<IMazeObject> {
+    return this.maze.getObjects;
   }
 
   public nextStage(): void {

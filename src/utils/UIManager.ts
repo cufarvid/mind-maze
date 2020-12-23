@@ -1,9 +1,14 @@
 import UIElement from './UIElement';
-import { IMenuOptions } from '../types';
+import { IMazeObject, IMenuOptions } from '../types';
 
 export default class UIManager {
+  static men: UIElement;
+  static loading: UIElement;
+
   public static init(): void {
     customElements.define('ui-element', UIElement);
+
+    this.loading = UIManager.element('Loading', 'loading');
   }
 
   private static element(
@@ -40,12 +45,19 @@ export default class UIManager {
     return menu;
   }
 
-  public static loadingScreen(text = 'Loading'): UIElement {
-    return UIManager.element(text, 'loading');
-  }
-
   public static timer(value: string): UIElement {
     return UIManager.element(value, 'timer', false);
+  }
+
+  public static objectBox(objects: Array<IMazeObject>): UIElement {
+    const box = new UIElement();
+    box.className = 'objects';
+
+    objects.forEach((object) => {
+      box.appendChild(UIManager.element(object.name, 'object'));
+    });
+
+    return box;
   }
 
   public static inject(element: HTMLElement): void {

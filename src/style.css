@@ -22,7 +22,7 @@ canvas {
   align-items: center;
 }
 
-.loading, .timer {
+.loading, .timer, .objects {
   background: #454545;
   color: #f2f2f2;
 }
@@ -53,13 +53,26 @@ canvas {
   font-weight: bold;
 }
 
-.timer {
-  justify-content: center;
+.timer, .objects {
   position: absolute;
+  justify-content: center;
   top: 0;
+  height: 3rem;
+}
+.timer {
   right: 0;
   width: 7rem;
-  height: 3rem;
   font-size: 2rem;
   font-weight: bold;
+}
+
+.objects {
+  left: 0;
+  width: 20rem;
+}
+
+.object {
+  border: 1px solid black;
+  width: 3rem;
+  height: 3rem;
 }
