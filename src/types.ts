@@ -189,6 +189,12 @@ export interface IMenuOptions {
   buttons: Array<IMenuItem>;
 }
 
+export interface IMenuPartial {
+  title: string;
+  okText: string;
+  cancelText: string;
+}
+
 /*
  * Types
  */

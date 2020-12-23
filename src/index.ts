@@ -2,6 +2,14 @@ import Application from './engine/Application';
 import Renderer from './engine/Renderer';
 import LevelManager from './utils/LevelManager';
 import UIManager from './utils/UIManager';
+import {
+  ButtonText,
+  InfoText,
+  MENU_PAUSE,
+  MENU_START,
+  TitleText,
+} from './utils/constants';
+import { IMenuPartial } from './types';
 
 enum AppMode {
   Idle,
@@ -31,6 +39,47 @@ class App extends Application {
 
     void this.init();
   }
+
+  /*
+   * Initialization
+   */
+
+  private async init(): Promise<void> {
+    UIManager.welcome.hide();
+    UIManager.menu.hide();
+
+    await this.levels.init();
+    this.resize();
+    this.rendererPrepare();
+
+    UIManager.welcome.show();
+  }
+
+  private initUI(): void {
+    UIManager.init();
+
+    this.makeWelcomeScreen();
+    this.setMenu(MENU_START);
+
+    this.pointerLockChangeHandler = () => this.pointerLockChange();
+    document.addEventListener(
+      'pointerlockchange',
+      this.pointerLockChangeHandler,
+    );
+
+    document.addEventListener('keydown', (event) => {
+      if (this.mode === AppMode.Started && event.key === 'p') this.pause();
+    });
+  }
+
+  private rendererPrepare(): void {
+    this.renderer.prepare(this.levels.current.scene);
+    UIManager.loading.hide();
+  }
+
+  /*
+   * Loop & rendering
+   */
 
   protected update(): void {
     if (this.mode == AppMode.Started) {
@@ -68,43 +117,6 @@ class App extends Application {
   }
 
   /*
-   * Initialization
-   */
-
-  private async init(): Promise<void> {
-    UIManager.welcome.hide();
-    UIManager.menu.hide();
-
-    await this.levels.init();
-    this.resize();
-    this.rendererPrepare();
-
-    UIManager.welcome.show();
-  }
-
-  private initUI(): void {
-    UIManager.init();
-
-    this.makeWelcomeScreen();
-    this.makeStartMenu();
-
-    this.pointerLockChangeHandler = () => this.pointerLockChange();
-    document.addEventListener(
-      'pointerlockchange',
-      this.pointerLockChangeHandler,
-    );
-
-    document.addEventListener('keydown', (event) => {
-      if (this.mode === AppMode.Started && event.key === 'p') this.pause();
-    });
-  }
-
-  private rendererPrepare(): void {
-    this.renderer.prepare(this.levels.current.scene);
-    UIManager.loading.hide();
-  }
-
-  /*
    * Game control
    */
 
@@ -123,23 +135,26 @@ class App extends Application {
 
     UIManager.showGameRow();
     UIManager.menu.hide();
+
     this.mode = AppMode.Started;
   }
 
   private pause(): void {
     this.disableCamera();
     this.levels.current.pause();
+    this.setMenu(MENU_PAUSE);
 
     UIManager.hideGameRow();
-    UIManager.menu.show();
 
     this.mode = AppMode.Paused;
   }
 
   private idle(): void {
     this.disableCamera();
+
     UIManager.menu.hide();
     UIManager.welcome.show();
+
     this.mode = AppMode.Idle;
   }
 
@@ -152,27 +167,30 @@ class App extends Application {
     await this.levels.init();
     this.resize();
     this.rendererPrepare();
-    this.makeStartMenu(false);
+    this.setMenu(MENU_START, false);
 
     UIManager.welcome.show();
+
     this.mode = AppMode.Idle;
   }
 
   private nextMode(): void {
     this.levels.current.nextMode();
     this.disableCamera();
-    this.makeModeMenu();
+    this.setModeMenu();
 
     UIManager.hideGameRow();
+
     this.mode = AppMode.Idle;
   }
 
   private nextLevel(): void {
     void this.loadNextLevel();
     this.disableCamera();
-    this.makeLevelMenu();
+    this.setLevelMenu();
 
     UIManager.hideGameRow();
+
     this.mode = AppMode.Idle;
   }
 
@@ -212,34 +230,33 @@ class App extends Application {
 
   private makeWelcomeScreen(): void {
     const welcomeOptions = {
-      title: 'Welcome to Mind Maze',
-      info:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eu nibh id nisi tincidunt aliquam.',
+      title: TitleText.Welcome,
+      info: InfoText.Welcome,
       buttons: [
         {
-          text: 'Start',
+          text: ButtonText.Start,
           callback: () => {
             UIManager.welcome.hide();
             UIManager.menu.show();
           },
         },
-        { text: 'Info', callback: () => console.log('Info') },
+        { text: ButtonText.Info, callback: () => console.log('Info') },
       ],
     };
 
     UIManager.updateWelcomeScreen(welcomeOptions);
   }
 
-  private makeStartMenu(show = true): void {
+  private setMenu(options: IMenuPartial, show = true): void {
     const menuOptions = {
-      title: 'Time to get started!',
+      title: options.title,
       info: '',
       buttons: [
         {
-          text: 'Start',
+          text: options.okText,
           callback: () => this.play(),
         },
-        { text: 'Reset', callback: () => this.reset() },
+        { text: options.cancelText, callback: () => this.reset() },
       ],
     };
 
@@ -248,41 +265,43 @@ class App extends Application {
     if (!show) UIManager.menu.hide();
   }
 
-  private makeModeMenu(): void {
-    const title = this.levels.current.lastMode
-      ? `Congratulations! Level #${this.levels.current.number} successfully completed.`
-      : `Congratulations! Previous mode completed in ${this.levels.current.timer.timeDiff}s.`;
+  private setModeMenu(): void {
+    const { lastMode } = this.levels.current;
 
-    const info = this.levels.current.lastMode
+    const title = lastMode
+      ? `Congratulations! Level #${this.levels.current.number} successfully completed.`
+      : `Congratulations! Previous mode completed in ${this.levels.current.timer.timeDiff} seconds.`;
+
+    const info = lastMode
       ? ``
       : `${this.levels.current.mazeMode} mode is ahead of you!`;
 
-    const last = this.levels.current.lastMode && this.levels.isLastLevel;
+    const last = lastMode && this.levels.isLastLevel;
 
     const menuOptions = {
       title,
       info,
       buttons: [
         {
-          text: 'Continue',
+          text: ButtonText.Continue,
           callback: () => (!last ? this.play() : this.idle()),
         },
-        { text: 'Reset', callback: () => this.reset() },
+        { text: ButtonText.Resume, callback: () => this.reset() },
       ],
     };
 
     UIManager.updateMenu(menuOptions);
   }
 
-  private makeLevelMenu(): void {
+  private setLevelMenu(): void {
     const menuOptions = {
       title: `Congratulations! Start with level #${this.levels.current.number}.`,
       buttons: [
         {
-          text: 'Start',
+          text: ButtonText.Start,
           callback: () => this.play(),
         },
-        { text: 'Reset', callback: () => this.reset() },
+        { text: ButtonText.Reset, callback: () => this.reset() },
       ],
     };
 

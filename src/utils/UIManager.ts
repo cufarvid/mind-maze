@@ -1,6 +1,6 @@
 import UIElement from './UIElement';
 import { IMazeObject, IMenuOptions } from '../types';
-import { MENU_START, SCREEN_WELCOME, UI_DATA } from './constants';
+import { MENU_DEFAULT, SCREEN_WELCOME, TitleText } from './constants';
 
 export default class UIManager {
   static menu: UIElement;
@@ -12,8 +12,8 @@ export default class UIManager {
   public static init(): void {
     customElements.define('ui-element', UIElement);
 
-    this.menu = UIManager.makeMenu(MENU_START);
-    this.loading = UIManager.element(UI_DATA.loading, 'loading');
+    this.menu = UIManager.makeMenu(MENU_DEFAULT);
+    this.loading = UIManager.element(TitleText.Loading, 'loading');
     this.welcome = UIManager.makeWelcomeScreen(SCREEN_WELCOME);
     this.timer = UIManager.makeTimer('00:00');
     this.objectBox = UIManager.makeObjectBox([]);
