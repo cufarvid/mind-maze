@@ -2,8 +2,10 @@ import Level from '../engine/Level';
 
 export default class LevelManager {
   private levels: Array<Level> = [];
+  private readonly sceneUris: Array<string>;
 
   public constructor(sceneUris: Array<string>) {
+    this.sceneUris = sceneUris;
     this.initLevels(sceneUris);
   }
 
@@ -27,5 +29,9 @@ export default class LevelManager {
     this.levels.shift();
     await this.current.init();
     return this.current;
+  }
+
+  public reset(): void {
+    this.initLevels(this.sceneUris);
   }
 }

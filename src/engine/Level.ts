@@ -25,7 +25,7 @@ export default class Level {
   public constructor(id: number, sceneUri: string) {
     this.id = id;
     this.sceneUri = sceneUri;
-    this.timer = new Timer(1);
+    this.timer = new Timer(5);
   }
 
   public async init(): Promise<void> {

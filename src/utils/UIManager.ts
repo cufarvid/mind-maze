@@ -1,10 +1,11 @@
 import UIElement from './UIElement';
 import { IMazeObject, IMenuOptions } from '../types';
-import { MENU_START, UI_DATA } from './constants';
+import { MENU_START, SCREEN_WELCOME, UI_DATA } from './constants';
 
 export default class UIManager {
   static menu: UIElement;
   static loading: UIElement;
+  static welcome: UIElement;
   static timer: UIElement;
   static objectBox: UIElement;
 
@@ -13,12 +14,14 @@ export default class UIManager {
 
     this.menu = UIManager.makeMenu(MENU_START);
     this.loading = UIManager.element(UI_DATA.loading, 'loading');
+    this.welcome = UIManager.makeWelcomeScreen(SCREEN_WELCOME);
     this.timer = UIManager.makeTimer('00:00');
     this.objectBox = UIManager.makeObjectBox([]);
 
     UIManager.injectMultiple([
       this.menu,
       this.loading,
+      this.welcome,
       this.timer,
       this.objectBox,
     ]);
@@ -88,6 +91,31 @@ export default class UIManager {
     const newBox = UIManager.makeObjectBox(objects);
     UIManager.replace(UIManager.objectBox, newBox);
     UIManager.objectBox = newBox;
+  }
+
+  public static makeWelcomeScreen(options: IMenuOptions): UIElement {
+    const screen = new UIElement();
+    screen.className = 'welcome';
+
+    if (options.title)
+      screen.appendChild(UIManager.element(options.title, 'welcome-title'));
+    if (options.info)
+      screen.appendChild(UIManager.element(options.info, 'welcome-info'));
+
+    options.buttons.forEach((option) => {
+      const button = document.createElement('button');
+      button.appendChild(document.createTextNode(option.text));
+      button.onclick = option.callback;
+      screen.appendChild(button);
+    });
+
+    return screen;
+  }
+
+  public static updateWelcomeScreen(options: IMenuOptions): void {
+    const newScreen = UIManager.makeWelcomeScreen(options);
+    UIManager.replace(UIManager.welcome, newScreen);
+    UIManager.welcome = newScreen;
   }
 
   public static inject(element: HTMLElement): void {

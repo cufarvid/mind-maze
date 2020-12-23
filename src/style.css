@@ -3,7 +3,8 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   font-family: 'Source Code Pro', sans-serif;
@@ -15,19 +16,28 @@ canvas {
   display: block;
 }
 
-.container, .menu, .loading, .timer {
+.container,
+.menu,
+.loading,
+.timer,
+.welcome {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.loading, .timer, .objects {
+.loading,
+.timer,
+.objects,
+.welcome {
   background: #454545;
   color: #f2f2f2;
 }
 
-.menu, .loading {
+.menu,
+.loading,
+.welcome {
   position: absolute;
   width: 100%;
   height: 100vh;
@@ -38,12 +48,14 @@ canvas {
   backdrop-filter: blur(20px);
 }
 
-.menu > button {
+.menu > button,
+.welcome > button {
   margin: 10px;
   width: 20vw;
 }
 
-.menu-title, .menu-info {
+.menu-title,
+.menu-info {
   margin: 10px;
   color: #f2f2f2;
 }
@@ -53,7 +65,17 @@ canvas {
   font-weight: bold;
 }
 
-.timer, .objects {
+.welcome-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.welcome-info {
+  font-size: 1.2rem;
+}
+
+.timer,
+.objects {
   position: absolute;
   justify-content: center;
   top: 0;
@@ -72,7 +94,8 @@ canvas {
   width: 20rem;
 }
 
-.object, .object-located {
+.object,
+.object-located {
   margin: 0 5px 0 5px;
   border: 1px solid black;
   width: 3rem;
