@@ -1,4 +1,5 @@
 import { IMenuOptions, IMenuPartial } from '../types';
+import { Cone, Cube, Cylinder, Pyramid, Sphere, Torus } from '../assets/svg';
 
 /*
  * Enums
@@ -51,4 +52,13 @@ export const SCREEN_WELCOME: IMenuOptions = {
   title: 'Welcome',
   info: '',
   buttons: [],
+};
+
+export const OBJECT_SVG: Record<string, string> = {
+  cone: Cone,
+  cube: Cube,
+  cylinder: Cylinder,
+  pyramid: Pyramid,
+  sphere: Sphere,
+  torus: Torus,
 };

@@ -1,6 +1,11 @@
 import UIElement from './UIElement';
 import { IMazeObject, IMenuOptions } from '../types';
-import { MENU_DEFAULT, SCREEN_WELCOME, TitleText } from './constants';
+import {
+  MENU_DEFAULT,
+  OBJECT_SVG,
+  SCREEN_WELCOME,
+  TitleText,
+} from './constants';
 
 export default class UIManager {
   static menu: UIElement;
@@ -35,8 +40,8 @@ export default class UIManager {
     const element = new UIElement();
 
     element.className = className;
-    element.appendChild(document.createTextNode(text));
 
+    if (text) element.appendChild(document.createTextNode(text));
     if (!show) element.hide();
 
     return element;
@@ -76,12 +81,12 @@ export default class UIManager {
     box.className = 'objects';
 
     objects.forEach((object) => {
-      box.appendChild(
-        UIManager.element(
-          object.name,
-          object.located ? 'object-located' : 'object',
-        ),
+      const element = UIManager.element(
+        null,
+        object.located ? 'object-located' : 'object',
       );
+      element.innerHTML = OBJECT_SVG[object.name];
+      box.appendChild(element);
     });
 
     return box;
