@@ -70,30 +70,35 @@ export default class Level {
     return this.maze.getObjects;
   }
 
+  public get lastMode(): boolean {
+    return (
+      this.completed && this.stage && this.maze.mode === MazeMode.PickUpInOrder
+    );
+  }
+
+  public get mazeMode(): string {
+    return this.maze.mode;
+  }
+
   public nextStage(): void {
-    this.updateCamera(this.maze.posRotate);
+    this.timer.stop();
     this.stage++;
+    this.resetCamera();
+    this.maze.resetObjects();
     this.maze.mode = MazeMode.PickUp;
   }
 
   public nextMode(): void {
     switch (this.maze?.mode) {
       case MazeMode.Inspection:
-        this.timer.stop();
-        this.resetCamera();
-        this.maze.mode = MazeMode.PickUp;
+        this.prepareMode(MazeMode.PickUp);
         break;
       case MazeMode.PickUp:
-        this.timer.stop();
-        this.resetCamera();
-        this.maze.mode = MazeMode.PickUpInOrder;
+        this.prepareMode(MazeMode.PickUpInOrder);
         break;
       case MazeMode.PickUpInOrder:
-        if (!this.stage) {
-          this.timer.stop();
-          this.resetCamera();
-          this.nextStage();
-        } else {
+        if (!this.stage) this.nextStage();
+        else {
           this.timer.stop();
           this.completed = true;
         }
@@ -110,5 +115,12 @@ export default class Level {
     vec3.copy(this.camera.translation, position.translation);
     vec3.copy(this.camera.rotation, position.rotation);
     this.camera.updateProjection();
+  }
+
+  private prepareMode(mode: MazeMode): void {
+    this.timer.stop();
+    this.resetCamera();
+    this.maze.resetObjects();
+    this.maze.mode = mode;
   }
 }

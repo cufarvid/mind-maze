@@ -33,6 +33,7 @@ class App extends Application {
   }
 
   private async init(): Promise<void> {
+    UIManager.menu.hide();
     await this.levels.init();
     this.resize();
     this.rendererPrepare();
@@ -96,14 +97,21 @@ class App extends Application {
     this.levels.current.nextMode();
     this.disableCamera();
 
+    const title = this.levels.current.lastMode
+      ? `Congratulations! Level #${this.levels.current.number} successfully completed.`
+      : `Congratulations! Previous mode completed in ${this.levels.current.timer.timeDiff}s.`;
+
+    const info = `${this.levels.current.mazeMode} mode is ahead of you!`;
+
     const menuOptions = {
-      title: `Congratulations! Next stage of level #${this.levels.current.number} is ahead of you.`,
+      title,
+      info,
       buttons: [
         {
           text: 'Continue',
           callback: () => this.play(),
         },
-        { text: 'Info', callback: () => console.log('Info') },
+        { text: 'Reset', callback: () => console.log('Reset') },
       ],
     };
     UIManager.updateMenu(menuOptions);
@@ -123,7 +131,7 @@ class App extends Application {
           text: 'Start',
           callback: () => this.play(),
         },
-        { text: 'Info', callback: () => console.log('Info') },
+        { text: 'Reset', callback: () => console.log('Reset') },
       ],
     };
     UIManager.updateMenu(menuOptions);
@@ -133,6 +141,7 @@ class App extends Application {
   }
 
   private async loadNextLevel(): Promise<void> {
+    UIManager.menu.hide();
     UIManager.loading.show();
     await this.levels.next();
     this.rendererPrepare();
@@ -141,6 +150,7 @@ class App extends Application {
   private rendererPrepare(): void {
     this.renderer.prepare(this.levels.current.scene);
     UIManager.loading.hide();
+    UIManager.menu.show();
   }
 
   protected enableCamera(): void {

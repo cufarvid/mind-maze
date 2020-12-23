@@ -76,7 +76,7 @@ export default class UIManager {
       box.appendChild(
         UIManager.element(
           object.name,
-          object.found ? 'object-located' : 'object',
+          object.located ? 'object-located' : 'object',
         ),
       );
     });

@@ -136,7 +136,7 @@ export interface IMazeObjectOptions {
 export interface IMazeObject {
   id: number;
   name: string;
-  found: boolean;
+  located: boolean;
 }
 
 export interface IMazePosition {
