@@ -110,6 +110,7 @@ export default class Level {
   private updateCamera(position: IMazePosition): void {
     vec3.copy(this.camera.translation, position.translation);
     vec3.copy(this.camera.rotation, position.rotation);
+    this.camera.velocity = [0, 0, 0];
     this.camera.updateProjection();
   }
 

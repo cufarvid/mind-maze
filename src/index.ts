@@ -83,15 +83,15 @@ class App extends Application {
    */
 
   protected update(): void {
+    this.time = Date.now();
+    const dt = (this.time - this.startTime) * 0.001;
+    this.startTime = this.time;
+
+    if (this.levels.current.camera) this.levels.current.camera.update(dt);
+
+    if (this.levels.current.physics) this.levels.current.physics.update(dt);
+
     if (this.mode == AppMode.Started) {
-      this.time = Date.now();
-      const dt = (this.time - this.startTime) * 0.001;
-      this.startTime = this.time;
-
-      if (this.levels.current.camera) this.levels.current.camera.update(dt);
-
-      if (this.levels.current.physics) this.levels.current.physics.update(dt);
-
       if (!this.levels.current.completed && !this.levels.current.timerRunning) {
         const mode = this.levels.current.mazeMode;
         this.nextMode(mode, mode === MazeMode.Inspection);
