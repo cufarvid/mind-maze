@@ -11,11 +11,12 @@ import {
 import Mesh from './Mesh';
 import Model from './Model';
 import PickUpModel from './PickUpModel';
+import UIManager from '../utils/UIManager';
 
 export enum MazeMode {
-  Inspection,
-  PickUp,
-  PickUpInOrder,
+  Inspection = 'Inspection',
+  PickUp = 'Pick up',
+  PickUpInOrder = 'Pick up in order',
 }
 
 export default class Maze extends Entity {
@@ -31,14 +32,18 @@ export default class Maze extends Entity {
 
     this.makeWalls(options.width, options.height, options.seed, objectData);
     this.makeObjects(objectData);
+
+    UIManager.updateObjectBox(this.objects);
+    UIManager.objectBox.hide();
   }
 
   public setObjectLocated(index: number): void {
-    this.objects[index].found = true;
+    this.objects[index].located = true;
+    UIManager.updateObjectBox(this.objects);
   }
 
   public get nextObject(): IMazeObject {
-    return this.objects.find((obj) => !obj.found);
+    return this.objects.find((obj) => !obj.located);
   }
 
   public get mInspection(): boolean {
@@ -51,6 +56,19 @@ export default class Maze extends Entity {
 
   public get mPickUpInOrder(): boolean {
     return this.mode === MazeMode.PickUpInOrder;
+  }
+
+  public get getObjects(): Array<IMazeObject> {
+    return this.objects;
+  }
+
+  public resetObjects(): void {
+    this.objects.forEach((object) => (object.located = false));
+    this.getChildren.forEach((child) => {
+      if (child instanceof PickUpModel) child.located = false;
+    });
+
+    UIManager.updateObjectBox(this.objects);
   }
 
   private makeWalls(
@@ -127,7 +145,7 @@ export default class Maze extends Entity {
       this.objects.push({
         id: index,
         name: obj.name,
-        found: false,
+        located: false,
       });
 
       this.makeObjectSegment(index, obj, holder);

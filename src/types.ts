@@ -136,7 +136,7 @@ export interface IMazeObjectOptions {
 export interface IMazeObject {
   id: number;
   name: string;
-  found: boolean;
+  located: boolean;
 }
 
 export interface IMazePosition {
@@ -187,6 +187,12 @@ export interface IMenuOptions {
   title?: string;
   info?: string;
   buttons: Array<IMenuItem>;
+}
+
+export interface IMenuPartial {
+  title: string;
+  okText: string;
+  cancelText: string;
 }
 
 /*

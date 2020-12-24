@@ -35,7 +35,6 @@ export default class Timer {
   public stop(): void {
     this.running = false;
     clearTimeout(this.id);
-    console.log(`timer finished in ${this.duration - this.seconds}s`);
   }
 
   public resume(): void {
@@ -60,5 +59,9 @@ export default class Timer {
     return this.seconds < 3600
       ? [minutes, this.seconds % 60].map(format).join(':')
       : [this.seconds / 3600, minutes, this.seconds % 60].map(format).join(':');
+  }
+
+  public get timeDiff(): number {
+    return this.duration - this.seconds;
   }
 }

@@ -5,6 +5,7 @@ import Maze from './Maze';
 
 export default class PickUpModel extends Model {
   private readonly id: number;
+  public located = false;
 
   constructor(
     id: number,
@@ -21,10 +22,10 @@ export default class PickUpModel extends Model {
     if (parent instanceof Maze && !parent.mInspection) {
       if (
         parent.mPickUp ||
-        (parent.mPickUpInOrder && parent.nextObject.id == this.id)
+        (parent.mPickUpInOrder && parent.nextObject?.id == this.id)
       ) {
         parent.setObjectLocated(this.id);
-        parent.removeChild(this);
+        this.located = true;
       }
     }
   }

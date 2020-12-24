@@ -6,7 +6,7 @@ import SceneBuilder from './SceneBuilder';
 import Entity from './Entity';
 import Maze, { MazeMode } from './Maze';
 import Timer from '../utils/Timer';
-import { IMazePosition } from '../types';
+import { IMazeObject, IMazePosition } from '../types';
 import { vec3 } from 'gl-matrix';
 
 export default class Level {
@@ -25,7 +25,7 @@ export default class Level {
   public constructor(id: number, sceneUri: string) {
     this.id = id;
     this.sceneUri = sceneUri;
-    this.timer = new Timer(5);
+    this.timer = new Timer(10);
   }
 
   public async init(): Promise<void> {
@@ -66,33 +66,38 @@ export default class Level {
     return this.id + 1;
   }
 
+  public get mazeObjects(): Array<IMazeObject> {
+    return this.maze.getObjects;
+  }
+
+  public get lastMode(): boolean {
+    return (
+      this.completed && this.stage && this.maze.mode === MazeMode.PickUpInOrder
+    );
+  }
+
+  public get mazeMode(): string {
+    return this.maze.mode;
+  }
+
   public nextStage(): void {
-    this.updateCamera(this.maze.posRotate);
+    this.timer.stop();
     this.stage++;
+    this.resetCamera();
+    this.maze.resetObjects();
     this.maze.mode = MazeMode.PickUp;
   }
 
   public nextMode(): void {
     switch (this.maze?.mode) {
       case MazeMode.Inspection:
-        this.timer.stop();
-        this.resetCamera();
-        this.maze.mode = MazeMode.PickUp;
+        this.prepareMode(MazeMode.PickUp);
         break;
       case MazeMode.PickUp:
-        this.timer.stop();
-        this.resetCamera();
-        this.maze.mode = MazeMode.PickUpInOrder;
+        this.prepareMode(MazeMode.PickUpInOrder);
         break;
       case MazeMode.PickUpInOrder:
-        if (!this.stage) {
-          this.timer.stop();
-          this.resetCamera();
-          this.nextStage();
-        } else {
-          this.timer.stop();
-          this.completed = true;
-        }
+        this.stage ? this.setCompleted() : this.nextStage();
         break;
     }
   }
@@ -106,5 +111,21 @@ export default class Level {
     vec3.copy(this.camera.translation, position.translation);
     vec3.copy(this.camera.rotation, position.rotation);
     this.camera.updateProjection();
+  }
+
+  private prepareMode(mode: MazeMode): void {
+    this.timer.stop();
+    this.resetCamera();
+    this.maze.resetObjects();
+    this.maze.mode = mode;
+  }
+
+  public setCompleted(): void {
+    this.timer.stop();
+    this.completed = true;
+  }
+
+  public checkCompleted(): boolean {
+    return this.maze.getObjects.every((object) => object.located);
   }
 }
