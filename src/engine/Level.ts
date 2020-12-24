@@ -76,7 +76,7 @@ export default class Level {
     );
   }
 
-  public get mazeMode(): string {
+  public get mazeMode(): MazeMode {
     return this.maze.mode;
   }
 
