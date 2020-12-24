@@ -7,6 +7,7 @@ import Entity from './Entity';
 import Mesh from './Mesh';
 import Scene from './Scene';
 import Light from './Light';
+import PickUpModel from './PickUpModel';
 
 export default class Renderer {
   private readonly gl: WebGL2RenderingContext;
@@ -64,6 +65,8 @@ export default class Renderer {
       before: (entity: Entity) => {
         matrixStack.push(mat4.clone(matrix));
         mat4.mul(matrix, matrix, entity.transform);
+
+        if (entity instanceof PickUpModel && entity.located) return;
 
         if (entity.props?.vao) {
           gl.bindVertexArray(entity.props.vao);

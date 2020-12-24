@@ -11,11 +11,13 @@ import {
 import Mesh from './Mesh';
 import Model from './Model';
 import PickUpModel from './PickUpModel';
+import UIManager from '../utils/UIManager';
+import Floor from './Floor';
 
 export enum MazeMode {
-  Inspection,
-  PickUp,
-  PickUpInOrder,
+  Inspection = 'Inspection',
+  PickUp = 'Pick up',
+  PickUpInOrder = 'Pick up in order',
 }
 
 export default class Maze extends Entity {
@@ -23,22 +25,29 @@ export default class Maze extends Entity {
   public mode: MazeMode = MazeMode.Inspection;
   public posInitial: IMazePosition;
   public posRotate: IMazePosition;
+  public duration: number;
 
   public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {
     super(null);
     this.posInitial = options.posInitial;
     this.posRotate = options.posRotate;
+    this.duration = options.duration;
 
     this.makeWalls(options.width, options.height, options.seed, objectData);
     this.makeObjects(objectData);
+    this.makeFloor(options.width, options.height, objectData);
+
+    UIManager.updateObjectBox(this.objects);
+    UIManager.objectBox.hide();
   }
 
   public setObjectLocated(index: number): void {
-    this.objects[index].found = true;
+    this.objects[index].located = true;
+    UIManager.updateObjectBox(this.objects);
   }
 
   public get nextObject(): IMazeObject {
-    return this.objects.find((obj) => !obj.found);
+    return this.objects.find((obj) => !obj.located);
   }
 
   public get mInspection(): boolean {
@@ -51,6 +60,19 @@ export default class Maze extends Entity {
 
   public get mPickUpInOrder(): boolean {
     return this.mode === MazeMode.PickUpInOrder;
+  }
+
+  public get getObjects(): Array<IMazeObject> {
+    return this.objects;
+  }
+
+  public resetObjects(): void {
+    this.objects.forEach((object) => (object.located = false));
+    this.getChildren.forEach((child) => {
+      if (child instanceof PickUpModel) child.located = false;
+    });
+
+    UIManager.updateObjectBox(this.objects);
   }
 
   private makeWalls(
@@ -119,7 +141,7 @@ export default class Maze extends Entity {
   }
 
   private makeObjects(objectData: TMazeObjectsData): void {
-    const exclude = ['wall', 'holder'];
+    const exclude = ['wall', 'holder', 'floor'];
     const holder = objectData.find((obj) => obj.name === 'holder');
     const filtered = objectData.filter((obj) => !exclude.includes(obj.name));
 
@@ -127,7 +149,7 @@ export default class Maze extends Entity {
       this.objects.push({
         id: index,
         name: obj.name,
-        found: false,
+        located: false,
       });
 
       this.makeObjectSegment(index, obj, holder);
@@ -194,6 +216,21 @@ export default class Maze extends Entity {
     }
   }
 
+  private makeFloor(
+    width: number,
+    height: number,
+    objectData: TMazeObjectsData,
+  ): void {
+    const floor = objectData.find((obj) => obj.name === 'holder');
+    this.addChild(
+      new Floor(floor.image, {
+        width: width * 2,
+        height: height * 2,
+        translation: [width - 1, 0, height + 1],
+      }),
+    );
+  }
+
   public static generate(
     x: number,
     y: number,
@@ -257,8 +294,6 @@ export default class Maze extends Entity {
         here = path.pop();
       }
     }
-
-    console.log(Maze.display(x, y, vertical, horizontal));
 
     return {
       horizontal: Maze.fixEmpty(horizontal),
