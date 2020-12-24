@@ -10,6 +10,7 @@ export enum TitleText {
   Welcome = 'Welcome to Mind Maze',
   Pause = 'Game paused',
   Loading = 'Loading',
+  Failed = 'You ran out of time!',
 }
 
 export enum InfoText {
@@ -22,6 +23,7 @@ export enum ButtonText {
   Start = 'Start',
   Reset = 'Reset',
   Resume = 'Resume',
+  Restart = 'Restart',
   Continue = 'Continue',
   Info = 'Info',
 }

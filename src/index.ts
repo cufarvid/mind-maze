@@ -10,6 +10,7 @@ import {
   TitleText,
 } from './utils/constants';
 import { IMenuPartial } from './types';
+import { MazeMode } from './engine/Maze';
 
 enum AppMode {
   Idle,
@@ -91,10 +92,13 @@ class App extends Application {
 
       if (this.levels.current.physics) this.levels.current.physics.update(dt);
 
-      if (!this.levels.current.completed && !this.levels.current.timerRunning)
+      if (!this.levels.current.completed && !this.levels.current.timerRunning) {
+        this.nextMode(this.levels.current.mazeMode === MazeMode.Inspection);
+      } else if (this.levels.current.completed) {
+        this.nextLevel();
+      } else if (this.levels.current.checkCompleted()) {
         this.nextMode();
-      else if (this.levels.current.completed) this.nextLevel();
-      else if (this.levels.current.checkCompleted()) this.nextMode();
+      }
     }
   }
 
@@ -174,10 +178,10 @@ class App extends Application {
     this.mode = AppMode.Idle;
   }
 
-  private nextMode(): void {
+  private nextMode(success = true): void {
     this.levels.current.nextMode();
     this.disableCamera();
-    this.setModeMenu();
+    this.setModeMenu(success);
 
     UIManager.hideGameRow();
 
@@ -229,7 +233,7 @@ class App extends Application {
    */
 
   private makeWelcomeScreen(): void {
-    const welcomeOptions = {
+    UIManager.updateWelcomeScreen({
       title: TitleText.Welcome,
       info: InfoText.Welcome,
       buttons: [
@@ -242,13 +246,11 @@ class App extends Application {
         },
         { text: ButtonText.Info, callback: () => console.log('Info') },
       ],
-    };
-
-    UIManager.updateWelcomeScreen(welcomeOptions);
+    });
   }
 
   private setMenu(options: IMenuPartial, show = true): void {
-    const menuOptions = {
+    UIManager.updateMenu({
       title: options.title,
       info: '',
       buttons: [
@@ -258,43 +260,45 @@ class App extends Application {
         },
         { text: options.cancelText, callback: () => this.reset() },
       ],
-    };
-
-    UIManager.updateMenu(menuOptions);
+    });
 
     if (!show) UIManager.menu.hide();
   }
 
-  private setModeMenu(): void {
+  private setModeMenu(success: boolean): void {
     const { lastMode } = this.levels.current;
+    const lastLevel = lastMode && this.levels.isLastLevel;
+    let title: string;
 
-    const title = lastMode
-      ? `Congratulations! Level #${this.levels.current.number} successfully completed.`
-      : `Congratulations! Previous mode completed in ${this.levels.current.timer.timeDiff} seconds.`;
+    if (success) {
+      title = lastMode
+        ? `Congratulations! Level #${this.levels.current.number} successfully completed.`
+        : `Congratulations! Previous mode completed in ${this.levels.current.timer.timeDiff} seconds.`;
+    } else {
+      title = TitleText.Failed;
+    }
 
     const info = lastMode
       ? ``
       : `${this.levels.current.mazeMode} mode is ahead of you!`;
 
-    const last = lastMode && this.levels.isLastLevel;
+    const buttons = [
+      {
+        text: ButtonText.Continue,
+        callback: () => (lastLevel ? this.idle() : this.play()),
+      },
+      { text: ButtonText.Resume, callback: () => this.reset() },
+    ];
 
-    const menuOptions = {
+    UIManager.updateMenu({
       title,
       info,
-      buttons: [
-        {
-          text: ButtonText.Continue,
-          callback: () => (!last ? this.play() : this.idle()),
-        },
-        { text: ButtonText.Resume, callback: () => this.reset() },
-      ],
-    };
-
-    UIManager.updateMenu(menuOptions);
+      buttons,
+    });
   }
 
   private setLevelMenu(): void {
-    const menuOptions = {
+    UIManager.updateMenu({
       title: `Congratulations! Start with level #${this.levels.current.number}.`,
       buttons: [
         {
@@ -303,9 +307,7 @@ class App extends Application {
         },
         { text: ButtonText.Reset, callback: () => this.reset() },
       ],
-    };
-
-    UIManager.updateMenu(menuOptions);
+    });
   }
 }
 
