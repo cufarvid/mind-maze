@@ -112,3 +112,16 @@ canvas {
 .object-located {
   background: #242424;
 }
+
+.scale-1,
+.scale-2 {
+  transform-origin: center;
+}
+
+.scale-1 {
+  transform: scale(1.5);
+}
+
+.scale-2 {
+  transform: scale(2);
+}
