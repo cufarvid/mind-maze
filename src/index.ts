@@ -11,6 +11,7 @@ import {
 } from './utils/constants';
 import { IMenuPartial } from './types';
 import { MazeMode } from './engine/Maze';
+import ScoreManager from './utils/ScoreManager';
 
 enum AppMode {
   Idle,
@@ -180,6 +181,15 @@ class App extends Application {
   }
 
   private nextMode(currentMode: MazeMode, success = true): void {
+    if (currentMode !== MazeMode.Inspection) {
+      const { objectsLocated, timeDiff } = this.levels.current;
+
+      ScoreManager.addScore(this.levels.current.number, {
+        objectsLocated,
+        timeDiff,
+      });
+    }
+
     this.levels.current.nextMode();
     this.setModeMenu(currentMode, success);
     this.disableCamera();
@@ -267,23 +277,23 @@ class App extends Application {
   }
 
   private setModeMenu(currentMode: MazeMode, success: boolean): void {
-    const { lastMode } = this.levels.current;
+    const { lastMode, mazeMode } = this.levels.current;
     const lastLevel = lastMode && this.levels.isLastLevel;
     let title: string;
 
     if (success) {
+      const { number, timeDiff } = this.levels.current;
+
       title = lastMode
-        ? `Level #${this.levels.current.number} successfully completed.`
+        ? `Level #${number} successfully completed.`
         : currentMode === MazeMode.Inspection
         ? `${currentMode} mode has ended.`
-        : `${currentMode} completed in ${this.levels.current.timer.timeDiff} seconds.`;
+        : `${currentMode} completed in ${timeDiff} seconds.`;
     } else {
       title = TitleText.Failed;
     }
 
-    const info = lastMode
-      ? ``
-      : `${this.levels.current.mazeMode} mode is ahead of you!`;
+    const info = lastMode ? `` : `${mazeMode} mode is ahead of you!`;
 
     const buttons = [
       {
