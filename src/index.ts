@@ -9,8 +9,9 @@ import {
   MENU_START,
   TitleText,
 } from './utils/constants';
-import { IMenuPartial } from './types';
+import { IMenuItem, IMenuPartial } from './types';
 import { MazeMode } from './engine/Maze';
+import ScoreManager from './utils/ScoreManager';
 
 enum AppMode {
   Idle,
@@ -48,6 +49,7 @@ class App extends Application {
   private async init(): Promise<void> {
     UIManager.welcome.hide();
     UIManager.menu.hide();
+    UIManager.scoreBoard.hide();
 
     await this.levels.init();
     this.resize();
@@ -140,6 +142,7 @@ class App extends Application {
 
     UIManager.showGameRow();
     UIManager.menu.hide();
+    UIManager.scoreBoard.hide();
 
     this.mode = AppMode.Started;
   }
@@ -158,6 +161,7 @@ class App extends Application {
     this.disableCamera();
 
     UIManager.menu.hide();
+    UIManager.scoreBoard.hide();
     UIManager.welcome.show();
 
     this.mode = AppMode.Idle;
@@ -166,7 +170,11 @@ class App extends Application {
   private async reset(): Promise<void> {
     this.disableCamera();
     this.levels.reset();
+
+    ScoreManager.reset();
+
     UIManager.menu.hide();
+    UIManager.scoreBoard.hide();
     UIManager.loading.show();
 
     await this.levels.init();
@@ -180,6 +188,15 @@ class App extends Application {
   }
 
   private nextMode(currentMode: MazeMode, success = true): void {
+    if (currentMode !== MazeMode.Inspection) {
+      const { objectsLocated, timeDiff } = this.levels.current;
+
+      ScoreManager.addScore(this.levels.current.number, {
+        objectsLocated,
+        timeDiff,
+      });
+    }
+
     this.levels.current.nextMode();
     this.setModeMenu(currentMode, success);
     this.disableCamera();
@@ -201,6 +218,7 @@ class App extends Application {
 
   private async loadNextLevel(): Promise<void> {
     UIManager.menu.hide();
+    UIManager.scoreBoard.hide();
     UIManager.loading.show();
 
     await this.levels.next();
@@ -267,31 +285,49 @@ class App extends Application {
   }
 
   private setModeMenu(currentMode: MazeMode, success: boolean): void {
-    const { lastMode } = this.levels.current;
+    const {
+      lastMode,
+      mazeMode,
+      number,
+      objectsTotal,
+      timeDiff,
+    } = this.levels.current;
     const lastLevel = lastMode && this.levels.isLastLevel;
+    const inspectionMode = currentMode === MazeMode.Inspection;
     let title: string;
+    let buttons: Array<IMenuItem>;
 
     if (success) {
       title = lastMode
-        ? `Level #${this.levels.current.number} successfully completed.`
-        : currentMode === MazeMode.Inspection
+        ? `Level #${number} successfully completed.`
+        : inspectionMode
         ? `${currentMode} mode has ended.`
-        : `${currentMode} completed in ${this.levels.current.timer.timeDiff} seconds.`;
+        : `${currentMode} completed in ${timeDiff} seconds.`;
     } else {
       title = TitleText.Failed;
     }
 
-    const info = lastMode
-      ? ``
-      : `${this.levels.current.mazeMode} mode is ahead of you!`;
+    const info = lastMode ? `` : `Next mode: ${mazeMode}`;
 
-    const buttons = [
-      {
-        text: ButtonText.Continue,
-        callback: () => (lastLevel ? this.idle() : this.play()),
-      },
-      { text: ButtonText.Reset, callback: () => this.reset() },
-    ];
+    if (lastMode) {
+      UIManager.updateScoreBoard(
+        { objectsTotal, number },
+        ScoreManager.levelScores(this.levels.current.number),
+      );
+    }
+
+    if (lastLevel) {
+      title = 'Last level completed.';
+      buttons = [{ text: ButtonText.Continue, callback: () => this.reset() }];
+    } else {
+      buttons = [
+        {
+          text: ButtonText.Continue,
+          callback: () => this.play(),
+        },
+        { text: ButtonText.Reset, callback: () => this.reset() },
+      ];
+    }
 
     UIManager.updateMenu({
       title,

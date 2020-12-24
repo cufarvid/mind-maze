@@ -197,6 +197,19 @@ export interface IMenuPartial {
 }
 
 /*
+ * Score manager
+ */
+
+export interface IScores {
+  [key: number]: Array<IScoreData>;
+}
+
+export interface IScoreData {
+  objectsLocated: number;
+  timeDiff: number;
+}
+
+/*
  * Types
  */
 export type TAttributes = Record<string, GLint>;

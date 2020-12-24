@@ -71,6 +71,18 @@ export default class Level {
     return this.maze.getObjects;
   }
 
+  public get objectsLocated(): number {
+    return this.maze.getObjects.filter((object) => object.located).length;
+  }
+
+  public get objectsTotal(): number {
+    return this.maze.getObjects.length;
+  }
+
+  public get timeDiff(): number {
+    return this.timer.timeDiff;
+  }
+
   public get lastMode(): boolean {
     return (
       this.completed && this.stage && this.maze.mode === MazeMode.PickUpInOrder
