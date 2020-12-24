@@ -20,7 +20,8 @@ canvas {
 .menu,
 .loading,
 .timer,
-.welcome {
+.welcome,
+.score-board {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -115,6 +116,19 @@ canvas {
 
 .object-located {
   background: #242424;
+}
+
+.score-board {
+  position: absolute;
+  top: 20vh;
+  z-index: 1;
+  color: #f2f2f2;
+}
+
+.score-board > div {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 10px;
 }
 
 .scale-1,

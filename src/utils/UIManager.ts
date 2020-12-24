@@ -1,5 +1,5 @@
 import UIElement from './UIElement';
-import { IMazeObject, IMenuOptions } from '../types';
+import { IMazeObject, IMenuOptions, IScoreData } from '../types';
 import {
   MENU_DEFAULT,
   OBJECT_SVG,
@@ -13,6 +13,7 @@ export default class UIManager {
   static welcome: UIElement;
   static timer: UIElement;
   static objectBox: UIElement;
+  static scoreBoard: UIElement;
 
   public static init(): void {
     customElements.define('ui-element', UIElement);
@@ -22,6 +23,8 @@ export default class UIManager {
     this.welcome = UIManager.makeWelcomeScreen(SCREEN_WELCOME);
     this.timer = UIManager.makeTimer('00:00');
     this.objectBox = UIManager.makeObjectBox([]);
+    this.scoreBoard = UIManager.makeScoreBoard({}, []);
+    this.scoreBoard.hide();
 
     UIManager.injectMultiple([
       this.menu,
@@ -29,6 +32,7 @@ export default class UIManager {
       this.welcome,
       this.timer,
       this.objectBox,
+      this.scoreBoard,
     ]);
   }
 
@@ -121,6 +125,44 @@ export default class UIManager {
     const newScreen = UIManager.makeWelcomeScreen(options);
     UIManager.replace(UIManager.welcome, newScreen);
     UIManager.welcome = newScreen;
+  }
+
+  public static makeScoreBoard(
+    data: Record<string, number>,
+    scores: Array<IScoreData>,
+  ): UIElement {
+    const board = new UIElement();
+    board.className = 'score-board';
+
+    const title = document.createElement('div');
+    title.appendChild(
+      document.createTextNode(`Level #${data.number} results:`),
+    );
+
+    const list = document.createElement('ol');
+
+    scores.forEach((option) => {
+      const row = document.createElement('li');
+      row.appendChild(
+        document.createTextNode(
+          `Located ${option.objectsLocated}/${data.objectsTotal} objects in ${option.timeDiff}s`,
+        ),
+      );
+      list.appendChild(row);
+    });
+
+    board.append(...[title, list]);
+
+    return board;
+  }
+
+  public static updateScoreBoard(
+    data: Record<string, number>,
+    scores: Array<IScoreData>,
+  ): void {
+    const newBoard = UIManager.makeScoreBoard(data, scores);
+    UIManager.replace(UIManager.scoreBoard, newBoard);
+    UIManager.scoreBoard = newBoard;
   }
 
   public static inject(element: HTMLElement): void {
