@@ -25,7 +25,6 @@ export default class Level {
   public constructor(id: number, sceneUri: string) {
     this.id = id;
     this.sceneUri = sceneUri;
-    this.timer = new Timer(10);
   }
 
   public async init(): Promise<void> {
@@ -44,6 +43,8 @@ export default class Level {
 
     this.camera.aspect = this.aspect;
     this.camera.updateProjection();
+
+    this.timer = new Timer(this.maze.duration);
   }
 
   public play(): void {

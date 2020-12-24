@@ -25,11 +25,13 @@ export default class Maze extends Entity {
   public mode: MazeMode = MazeMode.Inspection;
   public posInitial: IMazePosition;
   public posRotate: IMazePosition;
+  public duration: number;
 
   public constructor(options: IEntityOptions, objectData: TMazeObjectsData) {
     super(null);
     this.posInitial = options.posInitial;
     this.posRotate = options.posRotate;
+    this.duration = options.duration;
 
     this.makeWalls(options.width, options.height, options.seed, objectData);
     this.makeObjects(objectData);
@@ -292,8 +294,6 @@ export default class Maze extends Entity {
         here = path.pop();
       }
     }
-
-    console.log(Maze.display(x, y, vertical, horizontal));
 
     return {
       horizontal: Maze.fixEmpty(horizontal),

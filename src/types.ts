@@ -98,6 +98,7 @@ export interface IEntityOptions {
   objects?: Array<IMazeObjectOptions>;
   posInitial?: IMazePosition;
   posRotate?: IMazePosition;
+  duration?: number;
 }
 
 export interface IEntityGlProps {
