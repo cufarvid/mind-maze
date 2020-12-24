@@ -4,7 +4,7 @@ import Mesh from './Mesh';
 
 export default class Floor extends Entity {
   public constructor(image: HTMLImageElement, options: IEntityOptions) {
-    super(null);
+    super(options);
     this.image = image;
     this.mesh = Floor.generate(
       options.width,

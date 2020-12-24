@@ -12,6 +12,7 @@ import Mesh from './Mesh';
 import Model from './Model';
 import PickUpModel from './PickUpModel';
 import UIManager from '../utils/UIManager';
+import Floor from './Floor';
 
 export enum MazeMode {
   Inspection = 'Inspection',
@@ -32,6 +33,7 @@ export default class Maze extends Entity {
 
     this.makeWalls(options.width, options.height, options.seed, objectData);
     this.makeObjects(objectData);
+    this.makeFloor(options.width, options.height, objectData);
 
     UIManager.updateObjectBox(this.objects);
     UIManager.objectBox.hide();
@@ -137,7 +139,7 @@ export default class Maze extends Entity {
   }
 
   private makeObjects(objectData: TMazeObjectsData): void {
-    const exclude = ['wall', 'holder'];
+    const exclude = ['wall', 'holder', 'floor'];
     const holder = objectData.find((obj) => obj.name === 'holder');
     const filtered = objectData.filter((obj) => !exclude.includes(obj.name));
 
@@ -210,6 +212,21 @@ export default class Maze extends Entity {
       x = startX;
       z += offsetZ;
     }
+  }
+
+  private makeFloor(
+    width: number,
+    height: number,
+    objectData: TMazeObjectsData,
+  ): void {
+    const floor = objectData.find((obj) => obj.name === 'holder');
+    this.addChild(
+      new Floor(floor.image, {
+        width: width * 2,
+        height: height * 2,
+        translation: [width - 1, 0, height + 1],
+      }),
+    );
   }
 
   public static generate(
