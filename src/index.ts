@@ -83,21 +83,22 @@ class App extends Application {
    */
 
   protected update(): void {
+    this.time = Date.now();
+    const dt = (this.time - this.startTime) * 0.001;
+    this.startTime = this.time;
+
+    if (this.levels.current.camera) this.levels.current.camera.update(dt);
+
+    if (this.levels.current.physics) this.levels.current.physics.update(dt);
+
     if (this.mode == AppMode.Started) {
-      this.time = Date.now();
-      const dt = (this.time - this.startTime) * 0.001;
-      this.startTime = this.time;
-
-      if (this.levels.current.camera) this.levels.current.camera.update(dt);
-
-      if (this.levels.current.physics) this.levels.current.physics.update(dt);
-
       if (!this.levels.current.completed && !this.levels.current.timerRunning) {
-        this.nextMode(this.levels.current.mazeMode === MazeMode.Inspection);
+        const mode = this.levels.current.mazeMode;
+        this.nextMode(mode, mode === MazeMode.Inspection);
       } else if (this.levels.current.completed) {
         this.nextLevel();
       } else if (this.levels.current.checkCompleted()) {
-        this.nextMode();
+        this.nextMode(this.levels.current.mazeMode);
       }
     }
   }
@@ -178,10 +179,10 @@ class App extends Application {
     this.mode = AppMode.Idle;
   }
 
-  private nextMode(success = true): void {
+  private nextMode(currentMode: MazeMode, success = true): void {
     this.levels.current.nextMode();
+    this.setModeMenu(currentMode, success);
     this.disableCamera();
-    this.setModeMenu(success);
 
     UIManager.hideGameRow();
 
@@ -265,15 +266,17 @@ class App extends Application {
     if (!show) UIManager.menu.hide();
   }
 
-  private setModeMenu(success: boolean): void {
+  private setModeMenu(currentMode: MazeMode, success: boolean): void {
     const { lastMode } = this.levels.current;
     const lastLevel = lastMode && this.levels.isLastLevel;
     let title: string;
 
     if (success) {
       title = lastMode
-        ? `Congratulations! Level #${this.levels.current.number} successfully completed.`
-        : `Congratulations! Previous mode completed in ${this.levels.current.timer.timeDiff} seconds.`;
+        ? `Level #${this.levels.current.number} successfully completed.`
+        : currentMode === MazeMode.Inspection
+        ? `${currentMode} mode has ended.`
+        : `${currentMode} completed in ${this.levels.current.timer.timeDiff} seconds.`;
     } else {
       title = TitleText.Failed;
     }
@@ -287,7 +290,7 @@ class App extends Application {
         text: ButtonText.Continue,
         callback: () => (lastLevel ? this.idle() : this.play()),
       },
-      { text: ButtonText.Resume, callback: () => this.reset() },
+      { text: ButtonText.Reset, callback: () => this.reset() },
     ];
 
     UIManager.updateMenu({
@@ -299,7 +302,7 @@ class App extends Application {
 
   private setLevelMenu(): void {
     UIManager.updateMenu({
-      title: `Congratulations! Start with level #${this.levels.current.number}.`,
+      title: `Start with level #${this.levels.current.number}.`,
       buttons: [
         {
           text: ButtonText.Start,
