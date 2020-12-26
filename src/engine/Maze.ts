@@ -102,6 +102,7 @@ export default class Maze extends Entity {
 
     const centerX = 0.1;
     const centerZ = 3;
+    const blockSize = 2;
 
     // Outer horizontal
     const startRow = Array(width).fill(false);
@@ -113,8 +114,8 @@ export default class Maze extends Entity {
       [startRow, Array(width).fill(false)],
       hOptions,
       centerX,
-      centerZ - 2,
-      2,
+      centerZ - blockSize,
+      blockSize,
       height * 2,
     );
     // Inner horizontal
@@ -124,7 +125,7 @@ export default class Maze extends Entity {
     this.makeWallSegment(
       mesh,
       image,
-      Array(height).fill(Array(1).fill(false)),
+      Array(height).fill([false]),
       vOptions,
       centerX - 1,
       centerZ - 1,
@@ -137,6 +138,28 @@ export default class Maze extends Entity {
       vOptions,
       centerX + 1,
       centerZ - 1,
+    );
+
+    // Invisible horizontal
+    this.makeWallSegment(
+      mesh,
+      null,
+      Array(2).fill(Array(width + 2).fill(false)),
+      { ...hOptions, scale: [0, 0.1, 0] },
+      centerX - blockSize,
+      centerZ - blockSize * 2,
+      blockSize,
+      height * 2 + blockSize * 2,
+    );
+    // Invisible vertical
+    this.makeWallSegment(
+      mesh,
+      null,
+      Array(height + 2).fill([false, false]),
+      { ...vOptions, scale: [0, 0.1, 0] },
+      centerX - 3,
+      0,
+      width * 2 + blockSize * 2,
     );
   }
 
