@@ -221,7 +221,7 @@ export default class Maze extends Entity {
     height: number,
     objectData: TMazeObjectsData,
   ): void {
-    const floor = objectData.find((obj) => obj.name === 'holder');
+    const floor = objectData.find((obj) => obj.name === 'floor');
     this.addChild(
       new Floor(floor.image, {
         width: width * 2,
