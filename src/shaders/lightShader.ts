@@ -69,6 +69,36 @@ void main() {
 }
 `;
 
+// language=GLSL
+const skyVertex = `#version 300 es
+in vec4 aPosition;
+out vec4 vPosition;
+
+void main() {
+  vPosition = aPosition;
+  gl_Position = aPosition;
+  gl_Position.z = 1.0;
+}
+`;
+
+// language=GLSL
+const skyFragment = `#version 300 es
+precision mediump float;
+ 
+uniform samplerCube uSkybox;
+uniform mat4 uVDPInverse;
+
+layout(location = 0) out vec4 diffuseColor;
+ 
+in vec4 vPosition;
+
+void main() {
+  vec4 t = uVDPInverse * vPosition;
+  diffuseColor = texture(uSkybox, normalize(t.xyz / t.w));
+}
+`;
+
 export default {
   simple: { vertex, fragment },
+  skybox: { vertex: skyVertex, fragment: skyFragment },
 };

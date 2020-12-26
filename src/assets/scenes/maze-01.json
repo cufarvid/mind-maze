@@ -14,14 +14,6 @@
       "rotation": [0, 3.14, 0]
     },
     {
-      "type": "floor",
-      "mesh": 0,
-      "texture": 2,
-      "width": 12,
-      "height": 12,
-      "translation": [4, -0.01, 6]
-    },
-    {
       "type": "light",
       "translation": [-7, 5, -7]
     },
@@ -125,13 +117,49 @@
       "mesh": 7,
       "color": 0,
       "translation": [4, -0.02, 6]
+    },
+    {
+      "type": "model",
+      "name": "tree-lg-1",
+      "mesh": 8,
+      "texture": 4,
+      "translation": [4, -0.02, 6]
+    },
+    {
+      "type": "model",
+      "name": "tree-lg-2",
+      "mesh": 9,
+      "texture": 4,
+      "translation": [4, -0.02, 6]
+    },
+    {
+      "type": "model",
+      "name": "tree-lg-3",
+      "mesh": 10,
+      "texture": 4,
+      "translation": [20, -0.02, 2]
+    },
+    {
+      "type": "model",
+      "name": "tree-md-1",
+      "mesh": 11,
+      "texture": 4,
+      "translation": [4, -0.02, 6]
+    },
+    {
+      "type": "model",
+      "name": "tree-sm-1",
+      "mesh": 12,
+      "texture": 4,
+      "translation": [-5, -0.02, 7]
     }
   ],
   "textures": [
     "./assets/textures/crate-wooden.jpg",
     "./assets/textures/sumerian.png",
     "./assets/textures/concrete.png",
-    "./assets/textures/steel.png"
+    "./assets/textures/steel.png",
+    "./assets/textures/grass-1.png"
   ],
   "meshes": [
     "./assets/meshes/square.json",
@@ -141,6 +169,11 @@
     "./assets/meshes/cube.json",
     "./assets/meshes/pyramid.json",
     "./assets/meshes/monkey.json",
-    "./assets/meshes/world-min.json"
+    "./assets/meshes/world-min.json",
+    "./assets/meshes/trees/tree-lg-1.json",
+    "./assets/meshes/trees/tree-lg-2.json",
+    "./assets/meshes/trees/tree-lg-3.json",
+    "./assets/meshes/trees/tree-md-1.json",
+    "./assets/meshes/trees/tree-sm-1.json"
   ]
 }
