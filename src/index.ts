@@ -106,7 +106,7 @@ class App extends Application {
   }
 
   protected render(): void {
-    if (this.levels.current.scene)
+    if (this.mode === AppMode.Started && this.levels.current.scene)
       this.renderer.render(
         this.levels.current.scene,
         this.levels.current.camera,

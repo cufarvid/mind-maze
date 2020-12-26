@@ -15,7 +15,7 @@ export enum TitleText {
 
 export enum InfoText {
   Start = '',
-  Welcome = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eu nibh id nisi tincidunt aliquam.',
+  Welcome = '',
   Pause = '',
 }
 
