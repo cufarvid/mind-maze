@@ -5,6 +5,12 @@ import { Cone, Cube, Cylinder, Pyramid, Sphere, Torus } from '../assets/svg';
  * Enums
  */
 
+export enum MazeMode {
+  Inspection,
+  PickUp,
+  PickUpInOrder,
+}
+
 export enum TitleText {
   Start = 'Time to get started!',
   Welcome = 'Welcome to Mind Maze',
@@ -32,6 +38,25 @@ export enum ButtonText {
  * Constants
  */
 
+export const MODE_TEXT: Record<
+  number,
+  { name: string; description: string }
+> = {
+  0: {
+    name: 'Inspection',
+    description: 'Locate all hidden objects and remember their locations.',
+  },
+  1: {
+    name: 'Pick up',
+    description: 'Pick up the objects you located in inspection mode.',
+  },
+  2: {
+    name: 'Pick up in order',
+    description:
+      'Pick up the objects in specific order, it will be shown when you start.',
+  },
+};
+
 export const MENU_DEFAULT: IMenuOptions = {
   title: TitleText.Start,
   info: '',
@@ -40,6 +65,9 @@ export const MENU_DEFAULT: IMenuOptions = {
 
 export const MENU_START: IMenuPartial = {
   title: TitleText.Start,
+  info: `${MODE_TEXT[MazeMode.Inspection].name} mode: ${
+    MODE_TEXT[MazeMode.Inspection].description
+  }`,
   okText: ButtonText.Start,
   cancelText: ButtonText.Reset,
 };

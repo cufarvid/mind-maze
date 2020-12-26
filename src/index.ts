@@ -5,12 +5,13 @@ import UIManager from './utils/UIManager';
 import {
   ButtonText,
   InfoText,
+  MazeMode,
   MENU_PAUSE,
   MENU_START,
+  MODE_TEXT,
   TitleText,
 } from './utils/constants';
 import { IMenuItem, IMenuPartial } from './types';
-import { MazeMode } from './engine/Maze';
 import ScoreManager from './utils/ScoreManager';
 
 enum AppMode {
@@ -271,7 +272,7 @@ class App extends Application {
   private setMenu(options: IMenuPartial, show = true): void {
     UIManager.updateMenu({
       title: options.title,
-      info: '',
+      info: options.info,
       buttons: [
         {
           text: options.okText,
@@ -286,6 +287,7 @@ class App extends Application {
 
   private setModeMenu(currentMode: MazeMode, success: boolean): void {
     const {
+      isNextStage,
       lastMode,
       mazeMode,
       number,
@@ -294,20 +296,27 @@ class App extends Application {
     } = this.levels.current;
     const lastLevel = lastMode && this.levels.isLastLevel;
     const inspectionMode = currentMode === MazeMode.Inspection;
+
     let title: string;
     let buttons: Array<IMenuItem>;
 
     if (success) {
+      const { name } = MODE_TEXT[currentMode];
       title = lastMode
         ? `Level #${number} successfully completed.`
         : inspectionMode
-        ? `${currentMode} mode has ended.`
-        : `${currentMode} completed in ${timeDiff} seconds.`;
+        ? `${name} mode has ended.`
+        : `${name} completed in ${timeDiff} seconds.`;
     } else {
       title = TitleText.Failed;
     }
 
-    const info = lastMode ? `` : `Next mode: ${mazeMode}`;
+    const { name, description } = MODE_TEXT[mazeMode];
+    const info = isNextStage
+      ? `First stage completed. Maze will rotate, objects locations won't change. Next mode:${name}. ${description}`
+      : lastMode
+      ? ``
+      : `Next mode: ${name}. ${description}`;
 
     if (lastMode) {
       UIManager.updateScoreBoard(

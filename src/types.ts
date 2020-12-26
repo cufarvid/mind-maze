@@ -192,6 +192,7 @@ export interface IMenuOptions {
 
 export interface IMenuPartial {
   title: string;
+  info?: string;
   okText: string;
   cancelText: string;
 }

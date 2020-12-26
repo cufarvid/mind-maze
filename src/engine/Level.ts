@@ -1,13 +1,14 @@
+import { vec3 } from 'gl-matrix';
+import SceneLoader from './SceneLoader';
+import SceneBuilder from './SceneBuilder';
+import Timer from '../utils/Timer';
+import { IMazeObject, IMazePosition } from '../types';
+import { MazeMode } from '../utils/constants';
 import Physics from './Physics';
 import Scene from './Scene';
 import Camera from './Camera';
-import SceneLoader from './SceneLoader';
-import SceneBuilder from './SceneBuilder';
 import Entity from './Entity';
-import Maze, { MazeMode } from './Maze';
-import Timer from '../utils/Timer';
-import { IMazeObject, IMazePosition } from '../types';
-import { vec3 } from 'gl-matrix';
+import Maze from './Maze';
 
 export default class Level {
   public id: number;
@@ -91,6 +92,10 @@ export default class Level {
 
   public get mazeMode(): MazeMode {
     return this.maze.mode;
+  }
+
+  public get isNextStage(): boolean {
+    return this.stage && this.maze.mode === MazeMode.PickUp;
   }
 
   public nextStage(): void {

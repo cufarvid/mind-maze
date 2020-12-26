@@ -1,4 +1,6 @@
 import seedrandom from 'seedrandom';
+import UIManager from '../utils/UIManager';
+import { MazeMode } from '../utils/constants';
 import Entity from './Entity';
 import {
   IEntityOptions,
@@ -11,14 +13,7 @@ import {
 import Mesh from './Mesh';
 import Model from './Model';
 import PickUpModel from './PickUpModel';
-import UIManager from '../utils/UIManager';
 import Floor from './Floor';
-
-export enum MazeMode {
-  Inspection = 'Inspection',
-  PickUp = 'Pick up',
-  PickUpInOrder = 'Pick up in order',
-}
 
 export default class Maze extends Entity {
   private objects: TMazeObjects = [];
