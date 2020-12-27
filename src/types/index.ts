@@ -1,6 +1,6 @@
-import Entity from './engine/Entity';
+import Entity from '../engine/Entity';
 import { vec3, vec4 } from 'gl-matrix';
-import Mesh from './engine/Mesh';
+import Mesh from '../engine/Mesh';
 
 /*
  * Interfaces

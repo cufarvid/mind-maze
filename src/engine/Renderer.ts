@@ -1,5 +1,5 @@
 import { mat4, vec3, vec4 } from 'gl-matrix';
-import WebGLUtils from './WebGLUtils';
+import WebGLUtils from '../utils/WebGLUtils';
 import shaders from '../shaders';
 import { IEntityGlProps, IProgram, ModelRecord, TPrograms } from '../types';
 import Camera from './Camera';

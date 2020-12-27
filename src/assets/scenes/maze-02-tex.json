@@ -194,7 +194,7 @@
     "./assets/meshes/objects/cone.json",
     "./assets/meshes/objects/cube.json",
     "./assets/meshes/objects/pyramid.json",
-    "./assets/meshes/objects/monkey.json",
+    "./assets/meshes/objects/ico-sphere.json",
     "./assets/meshes/world/world-min.json",
     "./assets/meshes/world/tree-lg-1.json",
     "./assets/meshes/world/tree-lg-2.json",
