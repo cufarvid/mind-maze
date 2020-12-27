@@ -62,9 +62,9 @@
       "type": "maze",
       "mesh": 0,
       "texture": 0,
-      "name": "Level 1",
+      "name": "Level 2",
       "duration": 120,
-      "seed": "3077658364",
+      "seed": "4213963398",
       "width": 5,
       "height": 5,
       "posInitial": {
@@ -100,7 +100,18 @@
             "max": [0.3, 1, 0.3]
           },
           "scale": [1, 1, 1],
-          "translation": [8, 1, 2]
+          "translation": [-1, 1, -1]
+        },
+        {
+          "name": "cylinder",
+          "mesh": 2,
+          "texture": 3,
+          "aabb": {
+            "min": [-0.3, -1, -0.3],
+            "max": [0.3, 1, 0.3]
+          },
+          "scale": [1, 1, 1],
+          "translation": [0, 1, -1]
         },
         {
           "name": "cone",
@@ -111,7 +122,7 @@
             "max": [0.3, 1, 0.3]
           },
           "scale": [1, 1, 1],
-          "translation": [2, 1, 6]
+          "translation": [1, 1, -1]
         },
         {
           "name": "cube",
@@ -122,7 +133,18 @@
             "max": [0.3, 1, 0.3]
           },
           "scale": [1, 1, 1],
-          "translation": [4, 1, 4]
+          "translation": [2, 1, -1]
+        },
+        {
+          "name": "pyramid",
+          "mesh": 5,
+          "texture": 3,
+          "aabb": {
+            "min": [-0.3, -1, -0.3],
+            "max": [0.3, 1, 0.3]
+          },
+          "scale": [1, 1, 1],
+          "translation": [3, 1, -1]
         }
       ]
     },
