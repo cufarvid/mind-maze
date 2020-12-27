@@ -1,5 +1,5 @@
 import Entity from './engine/Entity';
-import { vec3 } from 'gl-matrix';
+import { vec3, vec4 } from 'gl-matrix';
 import Mesh from './engine/Mesh';
 
 /*
@@ -83,6 +83,7 @@ export interface IEntityOptions {
   scale?: vec3;
   mesh?: number;
   texture?: number;
+  color?: vec4;
   // Floor
   width?: number;
   height?: number;

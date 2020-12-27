@@ -128,8 +128,9 @@
     },
     {
       "type": "model",
+      "name": "hills",
       "mesh": 7,
-      "color": 0,
+      "color": [200, 200, 200, 255],
       "translation": [4, -0.02, 6]
     },
     {

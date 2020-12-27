@@ -1,4 +1,4 @@
-import { mat4, vec3 } from 'gl-matrix';
+import { mat4, vec3, vec4 } from 'gl-matrix';
 import WebGLUtils from './WebGLUtils';
 import shaders from '../shaders/lightShader';
 import { IEntityGlProps, IProgram, ModelRecord, TPrograms } from '../types';
@@ -23,11 +23,7 @@ export default class Renderer {
 
     this.programs = WebGLUtils.buildPrograms(gl, shaders);
 
-    this.defaultTexture = WebGLUtils.createTexture(gl, {
-      width: 1,
-      height: 1,
-      data: new Uint8Array([255, 255, 255, 255]),
-    });
+    this.defaultTexture = this.createColorTexture([255, 255, 255, 255]);
   }
 
   public prepare(scene: Scene): void {
@@ -38,6 +34,11 @@ export default class Renderer {
           Object.assign(entity.props, this.createModel(entity.mesh));
         if (entity.image)
           entity.props.texture = this.createTexture(entity.image);
+        if (entity.color) {
+          console.log('entity with color');
+          console.log(entity);
+          entity.props.texture = this.createColorTexture(entity.color);
+        }
       },
       after: null,
     });
@@ -186,6 +187,14 @@ export default class Renderer {
       image: texture,
       min: this.gl.NEAREST,
       mag: this.gl.NEAREST,
+    });
+  }
+
+  private createColorTexture(color: vec4): WebGLTexture {
+    return WebGLUtils.createTexture(this.gl, {
+      width: 1,
+      height: 1,
+      data: new Uint8Array(color),
     });
   }
 }

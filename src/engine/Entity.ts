@@ -1,4 +1,4 @@
-import { vec3, mat4, quat } from 'gl-matrix';
+import { vec3, mat4, quat, vec4 } from 'gl-matrix';
 import Utils from '../utils/Utils';
 import {
   AABB,
@@ -23,6 +23,7 @@ export default class Entity {
 
   public mesh?: Mesh;
   public image?: HTMLImageElement;
+  public color?: vec4;
   public props?: IEntityGlProps;
 
   public constructor(options: IEntityOptions) {
