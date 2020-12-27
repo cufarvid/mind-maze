@@ -1,5 +1,5 @@
-import Entity from '../engine/Entity';
 import { vec3, vec4 } from 'gl-matrix';
+import Entity from '../engine/Entity';
 import Mesh from '../engine/Mesh';
 
 /*

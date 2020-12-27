@@ -1,10 +1,10 @@
 import {
-  TAttributes,
   IProgram,
-  TPrograms,
   IShader,
-  TShaders,
   ITextureOptions,
+  TAttributes,
+  TPrograms,
+  TShaders,
   TUniforms,
 } from '../types';
 

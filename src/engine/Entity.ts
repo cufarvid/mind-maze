@@ -1,4 +1,4 @@
-import { vec3, mat4, quat, vec4 } from 'gl-matrix';
+import { mat4, quat, vec3, vec4 } from 'gl-matrix';
 import Utils from '../utils/Utils';
 import {
   AABB,
