@@ -14,6 +14,7 @@ import Mesh from './Mesh';
 import Model from './Model';
 import PickUpModel from './PickUpModel';
 import Floor from './Floor';
+import { vec3 } from 'gl-matrix';
 
 export default class Maze extends Entity {
   private objects: TMazeObjects = [];
@@ -85,13 +86,18 @@ export default class Maze extends Entity {
     const centerZ = 3;
     const blockSize = 2;
 
+    const hTex = color ? null : { scale: [1, 1, 0.1] as vec3 };
+    const vTex = color
+      ? { rotation: [0, 1.57, 0] as vec3 }
+      : { scale: [0.1, 1, 1] as vec3 };
+
     // Wall options
     const hOptions: IEntityOptions = {
       aabb: {
         min: [-1, -1, -0.1],
         max: [1, 1, 0.1],
       },
-      scale: [1, 1, 0.1],
+      ...hTex,
       color,
     };
     const vOptions: IEntityOptions = {
@@ -99,7 +105,7 @@ export default class Maze extends Entity {
         min: [-0.1, -1, -1],
         max: [0.1, 1, 1],
       },
-      scale: [0.1, 1, 1],
+      ...vTex,
       color,
     };
 

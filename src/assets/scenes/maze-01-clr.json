@@ -63,7 +63,7 @@
       "mesh": 0,
       "texture": 0,
       "name": "Level 1",
-      "duration": 1,
+      "duration": 60,
       "seed": "3077658364",
       "width": 5,
       "height": 5,
@@ -78,8 +78,8 @@
       "objects": [
         {
           "name": "wall",
-          "mesh": 0,
-          "color": [255, 255, 255, 200]
+          "mesh": 13,
+          "color": [120, 120, 120, 255]
         },
         {
           "name": "floor",
@@ -169,13 +169,7 @@
       "translation": [-5, -0.02, 7]
     }
   ],
-  "textures": [
-    "./assets/textures/crate-wooden.jpg",
-    "./assets/textures/sumerian.png",
-    "./assets/textures/concrete.png",
-    "./assets/textures/steel.png",
-    "./assets/textures/grass-1.png"
-  ],
+  "textures": [],
   "meshes": [
     "./assets/meshes/square.json",
     "./assets/meshes/objects/sphere.json",
