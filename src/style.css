@@ -60,6 +60,10 @@ button:hover {
   height: 100vh;
 }
 
+.loading {
+  z-index: 1;
+}
+
 .menu > button,
 .welcome > button {
   margin: 10px;
