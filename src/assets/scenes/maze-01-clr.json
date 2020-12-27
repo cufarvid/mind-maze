@@ -16,7 +16,7 @@
     {
       "type": "light",
       "shininess": 10,
-      "ambientColor": [50, 50, 50],
+      "ambientColor": [75, 75, 75],
       "diffuseColor": [200, 200, 200],
       "attenuation": [1, 0, 0.02],
       "specularColor": [255, 0, 0],
@@ -25,7 +25,7 @@
     {
       "type": "light",
       "shininess": 10,
-      "ambientColor": [50, 50, 50],
+      "ambientColor": [75, 75, 75],
       "diffuseColor": [200, 200, 200],
       "attenuation": [1, 0, 0.02],
       "specularColor": [0, 255, 0],
@@ -34,7 +34,7 @@
     {
       "type": "light",
       "shininess": 10,
-      "ambientColor": [50, 50, 50],
+      "ambientColor": [75, 75, 75],
       "diffuseColor": [200, 200, 200],
       "attenuation": [1, 0, 0.02],
       "specularColor": [0, 0, 255],
@@ -43,7 +43,7 @@
     {
       "type": "light",
       "shininess": 10,
-      "ambientColor": [50, 50, 50],
+      "ambientColor": [100, 100, 100],
       "diffuseColor": [200, 200, 200],
       "attenuation": [1, 0, 0.02],
       "specularColor": [0, 255, 255],
@@ -51,12 +51,12 @@
     },
     {
       "type": "light",
-      "shininess": 5,
+      "shininess": 10,
       "ambientColor": [200, 200, 200],
       "diffuseColor": [200, 200, 200],
       "attenuation": [1, 0, 0.02],
-      "specularColor": [255, 255, 255],
-      "translation": [0, 10, 0]
+      "specularColor": [200, 200, 200],
+      "translation": [0, 8, 0]
     },
     {
       "type": "maze",
@@ -79,7 +79,7 @@
         {
           "name": "wall",
           "mesh": 13,
-          "color": [120, 120, 120, 255]
+          "color": [100, 100, 100, 255]
         },
         {
           "name": "floor",
@@ -89,7 +89,7 @@
         {
           "name": "holder",
           "mesh": 0,
-          "color": [103, 103, 103, 255]
+          "color": [150, 150, 150, 255]
         },
         {
           "name": "sphere",
@@ -100,7 +100,7 @@
             "max": [0.3, 1, 0.3]
           },
           "scale": [1, 1, 1],
-          "translation": [-1, 1, -1]
+          "translation": [8, 1, 2]
         },
         {
           "name": "cone",
@@ -111,18 +111,18 @@
             "max": [0.3, 1, 0.3]
           },
           "scale": [1, 1, 1],
-          "translation": [1, 1, -1]
+          "translation": [2, 1, 6]
         },
         {
           "name": "cube",
           "mesh": 4,
-          "color": [0, 0, 255, 255],
+          "color": [0, 255, 255, 255],
           "aabb": {
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
           "scale": [1, 1, 1],
-          "translation": [2, 1, -1]
+          "translation": [4, 1, 4]
         }
       ]
     },
@@ -171,19 +171,19 @@
   ],
   "textures": [],
   "meshes": [
-    "./assets/meshes/square.json",
+    "./assets/meshes/objects/holder.json",
     "./assets/meshes/objects/sphere.json",
     "./assets/meshes/objects/cylinder.json",
     "./assets/meshes/objects/cone.json",
     "./assets/meshes/objects/cube.json",
     "./assets/meshes/objects/pyramid.json",
     "./assets/meshes/objects/monkey.json",
-    "./assets/meshes/world-min.json",
-    "./assets/meshes/trees/tree-lg-1.json",
-    "./assets/meshes/trees/tree-lg-2.json",
-    "./assets/meshes/trees/tree-lg-3.json",
-    "./assets/meshes/trees/tree-md-1.json",
-    "./assets/meshes/trees/tree-sm-1.json",
+    "./assets/meshes/world/world-min.json",
+    "./assets/meshes/world/tree-lg-1.json",
+    "./assets/meshes/world/tree-lg-2.json",
+    "./assets/meshes/world/tree-lg-3.json",
+    "./assets/meshes/world/tree-md-1.json",
+    "./assets/meshes/world/tree-sm-1.json",
     "./assets/meshes/wall.json"
   ]
 }

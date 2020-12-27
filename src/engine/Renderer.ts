@@ -17,7 +17,7 @@ export default class Renderer {
   public constructor(gl: WebGL2RenderingContext) {
     this.gl = gl;
 
-    gl.clearColor(1, 1, 1, 1);
+    gl.clearColor(0.8, 0.9, 1, 1);
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
 

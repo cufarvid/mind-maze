@@ -194,14 +194,13 @@ export default class Maze extends Entity {
         min: [-0.2, -1, -0.2],
         max: [0.2, 1, 0.2],
       },
-      scale: [0.2, 0.4, 0.2],
     };
     const [x, , z] = object.translation as Array<number>;
 
     this.addChild(
       new Model(holder.mesh, holder.image, {
         ...hOptions,
-        translation: [x, hOptions.scale[1], z],
+        translation: [x, 0.4, z],
         color: holder.color,
       }),
     );

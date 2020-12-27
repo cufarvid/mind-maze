@@ -36,7 +36,7 @@ class App extends Application {
     this.renderer = new Renderer(this.gl);
 
     this.levels = new LevelManager([
-      './assets/scenes/maze-01-clr.json',
+      './assets/scenes/maze-02-tex.json',
       './assets/scenes/maze-02-tex.json',
     ]);
 
