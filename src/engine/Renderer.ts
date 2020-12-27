@@ -34,11 +34,8 @@ export default class Renderer {
           Object.assign(entity.props, this.createModel(entity.mesh));
         if (entity.image)
           entity.props.texture = this.createTexture(entity.image);
-        if (entity.color) {
-          console.log('entity with color');
-          console.log(entity);
+        if (entity.color)
           entity.props.texture = this.createColorTexture(entity.color);
-        }
       },
       after: null,
     });

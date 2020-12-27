@@ -121,6 +121,7 @@ export interface IModelData {
   name?: string;
   mesh: Mesh;
   image: HTMLImageElement;
+  color?: vec4;
   translation?: vec3;
   aabb?: AABB;
   scale?: vec3;
@@ -130,6 +131,7 @@ export interface IMazeObjectOptions {
   name: string;
   mesh: number;
   texture: number;
+  color?: vec4;
   translation?: vec3;
   aabb?: AABB;
   scale?: vec3;

@@ -76,6 +76,15 @@ export default class Maze extends Entity {
     seed: string,
     objectData: TMazeObjectsData,
   ): void {
+    const { mesh, image, color } = objectData.find(
+      (obj) => obj.name === 'wall',
+    );
+    const { horizontal, vertical } = Maze.generate(width, height, seed);
+
+    const centerX = 0.1;
+    const centerZ = 3;
+    const blockSize = 2;
+
     // Wall options
     const hOptions: IEntityOptions = {
       aabb: {
@@ -83,6 +92,7 @@ export default class Maze extends Entity {
         max: [1, 1, 0.1],
       },
       scale: [1, 1, 0.1],
+      color,
     };
     const vOptions: IEntityOptions = {
       aabb: {
@@ -90,14 +100,8 @@ export default class Maze extends Entity {
         max: [0.1, 1, 1],
       },
       scale: [0.1, 1, 1],
+      color,
     };
-
-    const { mesh, image } = objectData.find((obj) => obj.name === 'wall');
-    const { horizontal, vertical } = Maze.generate(width, height, seed);
-
-    const centerX = 0.1;
-    const centerZ = 3;
-    const blockSize = 2;
 
     // Outer horizontal
     const startRow = Array(width).fill(false);
@@ -192,6 +196,7 @@ export default class Maze extends Entity {
       new Model(holder.mesh, holder.image, {
         ...hOptions,
         translation: [x, hOptions.scale[1], z],
+        color: holder.color,
       }),
     );
 
@@ -200,6 +205,7 @@ export default class Maze extends Entity {
         translation: object.translation,
         aabb: object.aabb,
         scale: object.scale,
+        color: object.color,
       }),
     );
   }
@@ -224,6 +230,7 @@ export default class Maze extends Entity {
             new Model(mesh, image, {
               ...modelOptions,
               translation: [x, 1, z],
+              color: modelOptions.color,
             }),
           );
         }
@@ -245,6 +252,7 @@ export default class Maze extends Entity {
         width: width * 2,
         height: height * 2,
         translation: [width - 1, 0, height + 1],
+        color: floor.color,
       }),
     );
   }
