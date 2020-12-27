@@ -61,7 +61,7 @@ export default class UIManager {
     if (options.title)
       menu.appendChild(UIManager.element(options.title, 'menu-title'));
     if (options.info)
-      menu.appendChild(UIManager.element(options.info, 'menu-about'));
+      menu.appendChild(UIManager.element(options.info, 'menu-info'));
     if (options.html) menu.innerHTML += options.html;
 
     options.buttons.forEach((option) => {
@@ -113,7 +113,7 @@ export default class UIManager {
     if (options.title)
       screen.appendChild(UIManager.element(options.title, 'welcome-title'));
     if (options.info)
-      screen.appendChild(UIManager.element(options.info, 'welcome-about'));
+      screen.appendChild(UIManager.element(options.info, 'welcome-info'));
 
     options.buttons.forEach((option) => {
       const button = document.createElement('button');

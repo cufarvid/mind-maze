@@ -305,7 +305,7 @@ class App extends Application {
 
     const { name, description } = MODE_TEXT[mazeMode];
     const info = isNextStage
-      ? `First stage completed. Maze will rotate, objects locations won't change. Next mode:${name}. ${description}`
+      ? `First stage completed. Maze will rotate, objects locations won't change. Next mode: ${name}. ${description}`
       : lastMode
       ? ``
       : `Next mode: ${name}. ${description}`;
