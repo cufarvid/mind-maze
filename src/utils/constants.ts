@@ -17,12 +17,28 @@ export enum TitleText {
   Pause = 'Game paused',
   Loading = 'Loading',
   Failed = 'You ran out of time!',
+  About = 'About',
 }
 
 export enum InfoText {
   Start = '',
   Welcome = '',
   Pause = '',
+  About = `<div class="menu-info">
+            WebGL game for Computer Graphics course, written in Typescript.<br>
+            <div class="controls">
+            Controls:
+              <ul>
+                <li>mouse</li>
+                <li><b>W</b> - forward</li>
+                <li><b>A</b> - left</li>
+                <li><b>D</b> - right</li>
+                <li><b>S</b> - back</li>
+                <li><b>P</b> - pause</li>
+              </ul>
+            </div>
+            More information will be displayed before each level.
+           </div>`,
 }
 
 export enum ButtonText {
@@ -31,7 +47,8 @@ export enum ButtonText {
   Resume = 'Resume',
   Restart = 'Restart',
   Continue = 'Continue',
-  Info = 'Info',
+  Back = 'Back',
+  About = 'About',
 }
 
 /*

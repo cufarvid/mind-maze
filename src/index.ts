@@ -65,6 +65,7 @@ class App extends Application {
 
     this.makeWelcomeScreen();
     this.setMenu(MENU_START);
+    this.setAboutMenu();
 
     this.pointerLockChangeHandler = () => this.pointerLockChange();
     document.addEventListener(
@@ -157,16 +158,6 @@ class App extends Application {
     UIManager.hideGameRow();
 
     this.mode = AppMode.Paused;
-  }
-
-  private idle(): void {
-    this.disableCamera();
-
-    UIManager.menu.hide();
-    UIManager.scoreBoard.hide();
-    UIManager.welcome.show();
-
-    this.mode = AppMode.Idle;
   }
 
   private async reset(): Promise<void> {
@@ -265,7 +256,7 @@ class App extends Application {
             UIManager.menu.show();
           },
         },
-        { text: ButtonText.Info, callback: () => console.log('Info') },
+        { text: ButtonText.About, callback: () => UIManager.about.show() },
       ],
     });
   }
@@ -357,6 +348,24 @@ class App extends Application {
         { text: ButtonText.Reset, callback: () => this.reset() },
       ],
     });
+  }
+
+  private setAboutMenu(): void {
+    UIManager.updateAbout({
+      title: TitleText.About,
+      html: InfoText.About,
+      buttons: [
+        {
+          text: ButtonText.Back,
+          callback: () => {
+            UIManager.about.hide();
+            UIManager.welcome.show();
+          },
+        },
+      ],
+    });
+
+    UIManager.about.hide();
   }
 }
 

@@ -191,6 +191,7 @@ export interface IMenuOptions {
   title?: string;
   info?: string;
   buttons: Array<IMenuItem>;
+  html?: string;
 }
 
 export interface IMenuPartial {

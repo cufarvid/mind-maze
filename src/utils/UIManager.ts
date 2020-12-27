@@ -14,6 +14,7 @@ export default class UIManager {
   static timer: UIElement;
   static objectBox: UIElement;
   static scoreBoard: UIElement;
+  static about: UIElement;
 
   public static init(): void {
     customElements.define('ui-element', UIElement);
@@ -24,6 +25,8 @@ export default class UIManager {
     this.timer = UIManager.makeTimer('00:00');
     this.objectBox = UIManager.makeObjectBox([]);
     this.scoreBoard = UIManager.makeScoreBoard({}, []);
+    this.about = UIManager.makeMenu(MENU_DEFAULT);
+
     this.scoreBoard.hide();
 
     UIManager.injectMultiple([
@@ -58,7 +61,8 @@ export default class UIManager {
     if (options.title)
       menu.appendChild(UIManager.element(options.title, 'menu-title'));
     if (options.info)
-      menu.appendChild(UIManager.element(options.info, 'menu-info'));
+      menu.appendChild(UIManager.element(options.info, 'menu-about'));
+    if (options.html) menu.innerHTML += options.html;
 
     options.buttons.forEach((option) => {
       const button = document.createElement('button');
@@ -109,7 +113,7 @@ export default class UIManager {
     if (options.title)
       screen.appendChild(UIManager.element(options.title, 'welcome-title'));
     if (options.info)
-      screen.appendChild(UIManager.element(options.info, 'welcome-info'));
+      screen.appendChild(UIManager.element(options.info, 'welcome-about'));
 
     options.buttons.forEach((option) => {
       const button = document.createElement('button');
@@ -163,6 +167,12 @@ export default class UIManager {
     const newBoard = UIManager.makeScoreBoard(data, scores);
     UIManager.replace(UIManager.scoreBoard, newBoard);
     UIManager.scoreBoard = newBoard;
+  }
+
+  public static updateAbout(options: IMenuOptions): void {
+    const newInfo = UIManager.makeMenu(options);
+    UIManager.replace(UIManager.about, newInfo);
+    UIManager.about = newInfo;
   }
 
   public static inject(element: HTMLElement): void {
