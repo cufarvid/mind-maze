@@ -99,7 +99,7 @@
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.15, 0.15, 0.15],
+          "scale": [1, 1, 1],
           "translation": [-1, 1, -1]
         },
         {
@@ -110,7 +110,7 @@
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.15, 0.15, 0.15],
+          "scale": [1, 1, 1],
           "translation": [0, 1, -1]
         },
         {
@@ -121,7 +121,7 @@
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.15, 0.15, 0.15],
+          "scale": [1, 1, 1],
           "translation": [1, 1, -1]
         },
         {
@@ -132,7 +132,7 @@
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.15, 0.15, 0.15],
+          "scale": [1, 1, 1],
           "translation": [2, 1, -1]
         },
         {
@@ -143,7 +143,7 @@
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.15, 0.15, 0.15],
+          "scale": [1, 1, 1],
           "translation": [3, 1, -1]
         }
       ]
@@ -200,17 +200,18 @@
   ],
   "meshes": [
     "./assets/meshes/square.json",
-    "./assets/meshes/sphere.json",
-    "./assets/meshes/cylinder.json",
-    "./assets/meshes/cone.json",
-    "./assets/meshes/cube.json",
-    "./assets/meshes/pyramid.json",
-    "./assets/meshes/monkey.json",
+    "./assets/meshes/objects/sphere.json",
+    "./assets/meshes/objects/cylinder.json",
+    "./assets/meshes/objects/cone.json",
+    "./assets/meshes/objects/cube.json",
+    "./assets/meshes/objects/pyramid.json",
+    "./assets/meshes/objects/monkey.json",
     "./assets/meshes/world-min.json",
     "./assets/meshes/trees/tree-lg-1.json",
     "./assets/meshes/trees/tree-lg-2.json",
     "./assets/meshes/trees/tree-lg-3.json",
     "./assets/meshes/trees/tree-md-1.json",
-    "./assets/meshes/trees/tree-sm-1.json"
+    "./assets/meshes/trees/tree-sm-1.json",
+    "./assets/meshes/wall.json"
   ]
 }

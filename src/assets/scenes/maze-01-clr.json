@@ -63,7 +63,7 @@
       "mesh": 0,
       "texture": 0,
       "name": "Level 1",
-      "duration": 120,
+      "duration": 1,
       "seed": "3077658364",
       "width": 5,
       "height": 5,
@@ -94,34 +94,34 @@
         {
           "name": "sphere",
           "mesh": 1,
-          "color": [150, 0, 0, 255],
+          "color": [255, 0, 0, 255],
           "aabb": {
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.15, 0.15, 0.15],
+          "scale": [1, 1, 1],
           "translation": [-1, 1, -1]
         },
         {
           "name": "cone",
           "mesh": 3,
-          "color": [0, 150, 0, 255],
+          "color": [0, 255, 0, 255],
           "aabb": {
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.15, 0.15, 0.15],
+          "scale": [1, 1, 1],
           "translation": [1, 1, -1]
         },
         {
           "name": "cube",
           "mesh": 4,
-          "color": [0, 0, 150, 255],
+          "color": [0, 0, 255, 255],
           "aabb": {
             "min": [-0.3, -1, -0.3],
             "max": [0.3, 1, 0.3]
           },
-          "scale": [0.15, 0.15, 0.15],
+          "scale": [1, 1, 1],
           "translation": [2, 1, -1]
         }
       ]
@@ -178,17 +178,18 @@
   ],
   "meshes": [
     "./assets/meshes/square.json",
-    "./assets/meshes/sphere.json",
-    "./assets/meshes/cylinder.json",
-    "./assets/meshes/cone.json",
-    "./assets/meshes/cube.json",
-    "./assets/meshes/pyramid.json",
-    "./assets/meshes/monkey.json",
+    "./assets/meshes/objects/sphere.json",
+    "./assets/meshes/objects/cylinder.json",
+    "./assets/meshes/objects/cone.json",
+    "./assets/meshes/objects/cube.json",
+    "./assets/meshes/objects/pyramid.json",
+    "./assets/meshes/objects/monkey.json",
     "./assets/meshes/world-min.json",
     "./assets/meshes/trees/tree-lg-1.json",
     "./assets/meshes/trees/tree-lg-2.json",
     "./assets/meshes/trees/tree-lg-3.json",
     "./assets/meshes/trees/tree-md-1.json",
-    "./assets/meshes/trees/tree-sm-1.json"
+    "./assets/meshes/trees/tree-sm-1.json",
+    "./assets/meshes/wall.json"
   ]
 }
