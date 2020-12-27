@@ -28,13 +28,13 @@ precision mediump float;
 uniform mat4 uViewModel;
 uniform mediump sampler2D uTexture;
 
-uniform vec3 uAmbientColor[4];
-uniform vec3 uDiffuseColor[4];
-uniform vec3 uSpecularColor[4];
+uniform vec3 uAmbientColor[5];
+uniform vec3 uDiffuseColor[5];
+uniform vec3 uSpecularColor[5];
 
-uniform float uShininess[4];
-uniform vec3 uLightPosition[4];
-uniform vec3 uLightAttenuation[4];
+uniform float uShininess[5];
+uniform vec3 uLightPosition[5];
+uniform vec3 uLightAttenuation[5];
 
 in vec3 vNormal;
 in vec2 vTexCoord;
@@ -45,7 +45,7 @@ out vec4 oColor;
 void main() {
   oColor = vec4(0.0);
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 5; i++) {
     vec3 lightPosition = (uViewModel * vec4(uLightPosition[i], 1)).xyz;
     float d = distance(vVertexPosition, lightPosition);
     float attenuation = 1.0 / dot(uLightAttenuation[i] * vec3(1, d, d * d), vec3(1, 1, 1));
