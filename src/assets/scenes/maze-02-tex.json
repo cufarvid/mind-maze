@@ -174,18 +174,18 @@
     },
     {
       "type": "model",
-      "name": "tree-sm-1",
-      "mesh": 12,
+      "name": "tree-lg-1.1",
+      "mesh": 8,
       "texture": 4,
-      "translation": [-5, -0.02, 7]
+      "translation": [-20, -0.02, -5]
     }
   ],
   "textures": [
     "./assets/textures/brick-white.jpg",
     "./assets/textures/brick-grey.jpg",
-    "./assets/textures/concrete.png",
-    "./assets/textures/copper.png",
-    "./assets/textures/tree.png"
+    "./assets/textures/concrete.jpg",
+    "./assets/textures/copper.jpg",
+    "./assets/textures/tree.jpg"
   ],
   "meshes": [
     "./assets/meshes/square.json",

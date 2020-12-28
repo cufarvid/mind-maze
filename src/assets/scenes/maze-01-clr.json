@@ -163,10 +163,10 @@
     },
     {
       "type": "model",
-      "name": "tree-sm-1",
-      "mesh": 12,
-      "color": [141, 182, 0, 255],
-      "translation": [-5, -0.02, 7]
+      "name": "tree-lg-1.1",
+      "mesh": 8,
+      "texture": [141, 182, 0, 255],
+      "translation": [-20, -0.02, -5]
     }
   ],
   "textures": [],
