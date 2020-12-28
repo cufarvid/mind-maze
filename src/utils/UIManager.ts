@@ -212,6 +212,9 @@ export default class UIManager {
     this.objectBox.show();
     this.timer.show();
 
+    this.menu.hide();
+    this.scoreBoard.hide();
+
     this.fullscreenBtn.hide();
   }
 
@@ -220,5 +223,31 @@ export default class UIManager {
     this.timer.hide();
 
     this.fullscreenBtn.show();
+  }
+
+  public static showLoading(): void {
+    this.loading.show();
+
+    this.menu.hide();
+    this.scoreBoard.hide();
+    this.fullscreenBtn.hide();
+  }
+
+  public static showMenu(): void {
+    this.menu.show();
+    this.fullscreenBtn.show();
+
+    this.welcome.hide();
+  }
+
+  public static showWelcome(): void {
+    this.welcome.show();
+    this.fullscreenBtn.show();
+  }
+
+  public static hideMenu(): void {
+    this.welcome.hide();
+    this.menu.hide();
+    this.fullscreenBtn.hide();
   }
 }
