@@ -1,11 +1,6 @@
 import UIElement from './UIElement';
 import { IMazeObject, IMenuOptions, IScoreData, IScores } from '../types';
-import {
-  MENU_DEFAULT,
-  OBJECT_SVG,
-  SCREEN_WELCOME,
-  TitleText,
-} from './constants';
+import { OBJECT_SVG, SCREEN_WELCOME, TitleText } from './constants';
 
 export default class UIManager {
   static menu: UIElement;
@@ -15,28 +10,17 @@ export default class UIManager {
   static objectBox: UIElement;
   static scoreBoard: UIElement;
   static about: UIElement;
+  static fullscreenBtn: UIElement;
 
   public static init(): void {
     customElements.define('ui-element', UIElement);
 
-    this.menu = UIManager.makeMenu(MENU_DEFAULT);
-    this.loading = UIManager.element(TitleText.Loading, 'loading');
-    this.welcome = UIManager.makeWelcomeScreen(SCREEN_WELCOME);
-    this.timer = UIManager.makeTimer('00:00');
-    this.objectBox = UIManager.makeObjectBox([]);
-    this.scoreBoard = UIManager.makeScoreBoard({}, []);
-    this.about = UIManager.makeMenu(MENU_DEFAULT);
+    this.loading = this.element(TitleText.Loading, 'loading');
+    this.welcome = this.makeWelcomeScreen(SCREEN_WELCOME);
+    this.timer = this.makeTimer('00:00');
+    this.scoreBoard = this.makeScoreBoard({}, []);
 
-    this.scoreBoard.hide();
-
-    UIManager.injectMultiple([
-      this.menu,
-      this.loading,
-      this.welcome,
-      this.timer,
-      this.objectBox,
-      this.scoreBoard,
-    ]);
+    this.injectMultiple([this.loading, this.welcome, this.timer]);
   }
 
   private static element(
@@ -62,26 +46,20 @@ export default class UIManager {
       menu.appendChild(UIManager.element(options.title, 'menu-title'));
     if (options.info)
       menu.appendChild(UIManager.element(options.info, 'menu-info'));
-    if (options.html) menu.innerHTML += options.html;
 
-    options.buttons.forEach((option) => {
-      const button = document.createElement('button');
-      button.appendChild(document.createTextNode(option.text));
-      button.onclick = option.callback;
-      menu.appendChild(button);
-    });
+    this.appendOptions(menu, options);
 
     return menu;
   }
 
   public static updateMenu(options: IMenuOptions): void {
-    const newMenu = UIManager.makeMenu(options);
-    UIManager.replace(UIManager.menu, newMenu);
-    UIManager.menu = newMenu;
+    const newMenu = this.makeMenu(options);
+    this.replace(this.menu, newMenu);
+    this.menu = newMenu;
   }
 
   public static makeTimer(value: string): UIElement {
-    return UIManager.element(value, 'timer', false);
+    return this.element(value, 'timer', false);
   }
 
   public static makeObjectBox(objects: Array<IMazeObject>): UIElement {
@@ -89,7 +67,7 @@ export default class UIManager {
     box.className = 'objects';
 
     objects.forEach((object) => {
-      const element = UIManager.element(
+      const element = this.element(
         null,
         object.located ? 'object-located' : 'object',
       );
@@ -101,9 +79,9 @@ export default class UIManager {
   }
 
   public static updateObjectBox(objects: Array<IMazeObject>): void {
-    const newBox = UIManager.makeObjectBox(objects);
-    UIManager.replace(UIManager.objectBox, newBox);
-    UIManager.objectBox = newBox;
+    const newBox = this.makeObjectBox(objects);
+    this.replace(this.objectBox, newBox);
+    this.objectBox = newBox;
   }
 
   public static makeWelcomeScreen(options: IMenuOptions): UIElement {
@@ -111,24 +89,30 @@ export default class UIManager {
     screen.className = 'welcome';
 
     if (options.title)
-      screen.appendChild(UIManager.element(options.title, 'welcome-title'));
+      screen.appendChild(this.element(options.title, 'welcome-title'));
     if (options.info)
-      screen.appendChild(UIManager.element(options.info, 'welcome-info'));
+      screen.appendChild(this.element(options.info, 'welcome-info'));
+
+    this.appendOptions(screen, options);
+
+    return screen;
+  }
+
+  private static appendOptions(parent: UIElement, options: IMenuOptions): void {
+    if (options.html) parent.innerHTML += options.html;
 
     options.buttons.forEach((option) => {
       const button = document.createElement('button');
       button.appendChild(document.createTextNode(option.text));
       button.onclick = option.callback;
-      screen.appendChild(button);
+      parent.appendChild(button);
     });
-
-    return screen;
   }
 
   public static updateWelcomeScreen(options: IMenuOptions): void {
-    const newScreen = UIManager.makeWelcomeScreen(options);
-    UIManager.replace(UIManager.welcome, newScreen);
-    UIManager.welcome = newScreen;
+    const newScreen = this.makeWelcomeScreen(options);
+    this.replace(this.welcome, newScreen);
+    this.welcome = newScreen;
   }
 
   public static makeScoreBoard(
@@ -165,9 +149,9 @@ export default class UIManager {
     data: Record<string, number>,
     scores: Array<IScoreData>,
   ): void {
-    const newBoard = UIManager.makeScoreBoard(data, scores);
-    UIManager.replace(UIManager.scoreBoard, newBoard);
-    UIManager.scoreBoard = newBoard;
+    const newBoard = this.makeScoreBoard(data, scores);
+    this.replace(this.scoreBoard, newBoard);
+    this.scoreBoard = newBoard;
   }
 
   public static finalScoreBoard(
@@ -179,21 +163,32 @@ export default class UIManager {
 
     for (const level in scores) {
       newBoard.appendChild(
-        UIManager.makeScoreBoard(
+        this.makeScoreBoard(
           { number: Number(level), ...data },
           scores[level],
           true,
         ),
       );
     }
-    UIManager.replace(UIManager.scoreBoard, newBoard);
-    UIManager.scoreBoard = newBoard;
+    this.replace(this.scoreBoard, newBoard);
+    this.scoreBoard = newBoard;
   }
 
   public static updateAbout(options: IMenuOptions): void {
-    const newInfo = UIManager.makeMenu(options);
-    UIManager.replace(UIManager.about, newInfo);
-    UIManager.about = newInfo;
+    const newInfo = this.makeMenu(options);
+    this.replace(this.about, newInfo);
+    this.about = newInfo;
+  }
+
+  public static setFullscreenBtn(inner: string, callback: () => boolean): void {
+    const button = new UIElement();
+    button.className = 'btn-fullscreen';
+
+    if (inner) button.innerHTML = inner;
+    if (callback) button.onclick = callback;
+
+    this.replace(this.fullscreenBtn, button);
+    this.fullscreenBtn = button;
   }
 
   public static inject(element: HTMLElement): void {
@@ -202,24 +197,57 @@ export default class UIManager {
   }
 
   public static injectMultiple(elements: Array<HTMLElement>): void {
-    elements.forEach((element) => UIManager.inject(element));
+    elements.forEach((element) => this.inject(element));
   }
 
   public static replace(
     oldElement: HTMLElement,
     newElement: HTMLElement,
   ): void {
-    oldElement.remove();
-    UIManager.inject(newElement);
+    if (oldElement) oldElement.remove();
+    this.inject(newElement);
   }
 
   public static showGameRow(): void {
-    UIManager.objectBox.show();
-    UIManager.timer.show();
+    this.objectBox.show();
+    this.timer.show();
+
+    this.menu.hide();
+    this.scoreBoard.hide();
+
+    this.fullscreenBtn.hide();
   }
 
   public static hideGameRow(): void {
-    UIManager.objectBox.hide();
-    UIManager.timer.hide();
+    this.objectBox.hide();
+    this.timer.hide();
+
+    this.fullscreenBtn.show();
+  }
+
+  public static showLoading(): void {
+    this.loading.show();
+
+    this.menu.hide();
+    this.scoreBoard.hide();
+    this.fullscreenBtn.hide();
+  }
+
+  public static showMenu(): void {
+    this.menu.show();
+    this.fullscreenBtn.show();
+
+    this.welcome.hide();
+  }
+
+  public static showWelcome(): void {
+    this.welcome.show();
+    this.fullscreenBtn.show();
+  }
+
+  public static hideMenu(): void {
+    this.welcome.hide();
+    this.menu.hide();
+    this.fullscreenBtn.hide();
   }
 }
