@@ -1,5 +1,7 @@
 import { IMenuOptions, IMenuPartial } from '../types';
 import { Cone, Cube, Cylinder, Pyramid, Sphere, Torus } from '../assets/svg';
+import { FullscreenEnable } from '../assets/svg/fullscreen-enable';
+import { FullscreenDisable } from '../assets/svg/fullscreen-disable';
 
 /*
  * Enums
@@ -113,4 +115,9 @@ export const OBJECT_SVG: Record<string, string> = {
   pyramid: Pyramid,
   sphere: Sphere,
   torus: Torus,
+};
+
+export const MENU_SVG: Record<string, string> = {
+  fullscreenEnable: FullscreenEnable,
+  fullscreenDisable: FullscreenDisable,
 };

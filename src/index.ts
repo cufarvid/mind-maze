@@ -8,6 +8,7 @@ import {
   MazeMode,
   MENU_PAUSE,
   MENU_START,
+  MENU_SVG,
   MenuHtml,
   MODE_TEXT,
   TitleText,
@@ -27,6 +28,7 @@ class App extends Application {
   private time: number = Date.now();
   private startTime: number = Date.now();
   private aspect = 1;
+  private fullscreen = false;
 
   private levels: LevelManager;
 
@@ -66,6 +68,7 @@ class App extends Application {
     this.makeWelcomeScreen();
     this.setMenu(MENU_START);
     this.setAboutMenu();
+    this.setFullscreenButton();
 
     this.pointerLockChangeHandler = () => this.pointerLockChange();
     document.addEventListener(
@@ -242,11 +245,27 @@ class App extends Application {
     else this.levels.current.camera.disable();
   }
 
-  private async enableFullScreen(): Promise<void> {
+  private async enableFullscreen(): Promise<void> {
     try {
       await document.body.requestFullscreen();
+      this.fullscreen = true;
+      this.setFullscreenButton(true);
     } catch (e) {
       console.error(e);
+    }
+  }
+
+  private disableFullscreen(): void {
+    void document.exitFullscreen();
+    this.fullscreen = false;
+    this.setFullscreenButton(false);
+  }
+
+  private toggleFullscreen(): void {
+    if (this.fullscreen) {
+      this.disableFullscreen();
+    } else {
+      void this.enableFullscreen();
     }
   }
 
@@ -258,7 +277,6 @@ class App extends Application {
     UIManager.updateWelcomeScreen({
       title: TitleText.Welcome,
       info: InfoText.Welcome,
-      html: MenuHtml.ButtonFullscreen,
       buttons: [
         {
           text: ButtonText.Start,
@@ -381,6 +399,14 @@ class App extends Application {
     });
 
     UIManager.about.hide();
+  }
+
+  private setFullscreenButton(enabled = false): void {
+    const svg: string = enabled
+      ? MENU_SVG.fullscreenDisable
+      : MENU_SVG.fullscreenEnable;
+
+    UIManager.setFullscreenBtn(svg, this.toggleFullscreen.bind(this));
   }
 }
 

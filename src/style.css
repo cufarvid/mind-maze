@@ -38,8 +38,12 @@ button:hover {
   right: 0;
   position: absolute;
   margin: 20px;
+  width: 20px;
   z-index: 1;
-  color: #f2f2f2;
+}
+
+.btn-fullscreen > svg {
+  fill: #f2f2f2;
 }
 
 /*

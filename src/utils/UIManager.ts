@@ -10,6 +10,7 @@ export default class UIManager {
   static objectBox: UIElement;
   static scoreBoard: UIElement;
   static about: UIElement;
+  static fullscreenBtn: UIElement;
 
   public static init(): void {
     customElements.define('ui-element', UIElement);
@@ -19,12 +20,7 @@ export default class UIManager {
     this.timer = this.makeTimer('00:00');
     this.scoreBoard = this.makeScoreBoard({}, []);
 
-    this.injectMultiple([
-      this.loading,
-      this.welcome,
-      this.timer,
-      this.fullscreenBtn,
-    ]);
+    this.injectMultiple([this.loading, this.welcome, this.timer]);
   }
 
   private static element(
@@ -184,6 +180,17 @@ export default class UIManager {
     this.about = newInfo;
   }
 
+  public static setFullscreenBtn(inner: string, callback: () => boolean): void {
+    const button = new UIElement();
+    button.className = 'btn-fullscreen';
+
+    if (inner) button.innerHTML = inner;
+    if (callback) button.onclick = callback;
+
+    this.replace(this.fullscreenBtn, button);
+    this.fullscreenBtn = button;
+  }
+
   public static inject(element: HTMLElement): void {
     const app: HTMLElement = document.getElementById('app');
     app.appendChild(element);
@@ -204,10 +211,14 @@ export default class UIManager {
   public static showGameRow(): void {
     this.objectBox.show();
     this.timer.show();
+
+    this.fullscreenBtn.hide();
   }
 
   public static hideGameRow(): void {
     this.objectBox.hide();
     this.timer.hide();
+
+    this.fullscreenBtn.show();
   }
 }
