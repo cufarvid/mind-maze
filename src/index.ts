@@ -8,6 +8,7 @@ import {
   MazeMode,
   MENU_PAUSE,
   MENU_START,
+  MenuHtml,
   MODE_TEXT,
   TitleText,
 } from './utils/constants';
@@ -51,7 +52,6 @@ class App extends Application {
   private async init(): Promise<void> {
     UIManager.welcome.hide();
     UIManager.menu.hide();
-    UIManager.scoreBoard.hide();
 
     await this.levels.init();
     this.resize();
@@ -74,7 +74,8 @@ class App extends Application {
     );
 
     document.addEventListener('keydown', (event) => {
-      if (this.mode === AppMode.Started && event.key === 'p') this.pause();
+      if (this.mode === AppMode.Started && ['p', 'Escape'].includes(event.key))
+        this.pause();
     });
   }
 
@@ -241,6 +242,14 @@ class App extends Application {
     else this.levels.current.camera.disable();
   }
 
+  private async enableFullScreen(): Promise<void> {
+    try {
+      await document.body.requestFullscreen();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   /*
    * User interface
    */
@@ -249,6 +258,7 @@ class App extends Application {
     UIManager.updateWelcomeScreen({
       title: TitleText.Welcome,
       info: InfoText.Welcome,
+      html: MenuHtml.ButtonFullscreen,
       buttons: [
         {
           text: ButtonText.Start,
@@ -358,7 +368,7 @@ class App extends Application {
   private setAboutMenu(): void {
     UIManager.updateAbout({
       title: TitleText.About,
-      html: InfoText.About,
+      html: MenuHtml.About,
       buttons: [
         {
           text: ButtonText.Back,

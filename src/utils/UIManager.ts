@@ -1,11 +1,6 @@
 import UIElement from './UIElement';
 import { IMazeObject, IMenuOptions, IScoreData, IScores } from '../types';
-import {
-  MENU_DEFAULT,
-  OBJECT_SVG,
-  SCREEN_WELCOME,
-  TitleText,
-} from './constants';
+import { OBJECT_SVG, SCREEN_WELCOME, TitleText } from './constants';
 
 export default class UIManager {
   static menu: UIElement;
@@ -19,24 +14,12 @@ export default class UIManager {
   public static init(): void {
     customElements.define('ui-element', UIElement);
 
-    this.menu = UIManager.makeMenu(MENU_DEFAULT);
     this.loading = UIManager.element(TitleText.Loading, 'loading');
     this.welcome = UIManager.makeWelcomeScreen(SCREEN_WELCOME);
     this.timer = UIManager.makeTimer('00:00');
-    this.objectBox = UIManager.makeObjectBox([]);
     this.scoreBoard = UIManager.makeScoreBoard({}, []);
-    this.about = UIManager.makeMenu(MENU_DEFAULT);
 
-    this.scoreBoard.hide();
-
-    UIManager.injectMultiple([
-      this.menu,
-      this.loading,
-      this.welcome,
-      this.timer,
-      this.objectBox,
-      this.scoreBoard,
-    ]);
+    UIManager.injectMultiple([this.loading, this.welcome, this.timer]);
   }
 
   private static element(
@@ -62,14 +45,8 @@ export default class UIManager {
       menu.appendChild(UIManager.element(options.title, 'menu-title'));
     if (options.info)
       menu.appendChild(UIManager.element(options.info, 'menu-info'));
-    if (options.html) menu.innerHTML += options.html;
 
-    options.buttons.forEach((option) => {
-      const button = document.createElement('button');
-      button.appendChild(document.createTextNode(option.text));
-      button.onclick = option.callback;
-      menu.appendChild(button);
-    });
+    UIManager.appendOptions(menu, options);
 
     return menu;
   }
@@ -115,14 +92,20 @@ export default class UIManager {
     if (options.info)
       screen.appendChild(UIManager.element(options.info, 'welcome-info'));
 
+    UIManager.appendOptions(screen, options);
+
+    return screen;
+  }
+
+  private static appendOptions(parent: UIElement, options: IMenuOptions): void {
+    if (options.html) parent.innerHTML += options.html;
+
     options.buttons.forEach((option) => {
       const button = document.createElement('button');
       button.appendChild(document.createTextNode(option.text));
       button.onclick = option.callback;
-      screen.appendChild(button);
+      parent.appendChild(button);
     });
-
-    return screen;
   }
 
   public static updateWelcomeScreen(options: IMenuOptions): void {
@@ -209,7 +192,7 @@ export default class UIManager {
     oldElement: HTMLElement,
     newElement: HTMLElement,
   ): void {
-    oldElement.remove();
+    if (oldElement) oldElement.remove();
     UIManager.inject(newElement);
   }
 

@@ -33,6 +33,15 @@ button:hover {
   background-color: #acacac;
 }
 
+.btn-fullscreen {
+  top: 0;
+  right: 0;
+  position: absolute;
+  margin: 20px;
+  z-index: 1;
+  color: #f2f2f2;
+}
+
 /*
  * Containers
  */
