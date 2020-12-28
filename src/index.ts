@@ -8,6 +8,8 @@ import {
   MazeMode,
   MENU_PAUSE,
   MENU_START,
+  MENU_SVG,
+  MenuHtml,
   MODE_TEXT,
   TitleText,
 } from './utils/constants';
@@ -26,6 +28,7 @@ class App extends Application {
   private time: number = Date.now();
   private startTime: number = Date.now();
   private aspect = 1;
+  private fullscreen = false;
 
   private levels: LevelManager;
 
@@ -49,15 +52,13 @@ class App extends Application {
    */
 
   private async init(): Promise<void> {
-    UIManager.welcome.hide();
-    UIManager.menu.hide();
-    UIManager.scoreBoard.hide();
+    UIManager.hideMenu();
 
     await this.levels.init();
     this.resize();
     this.rendererPrepare();
 
-    UIManager.welcome.show();
+    UIManager.showWelcome();
   }
 
   private initUI(): void {
@@ -66,6 +67,7 @@ class App extends Application {
     this.makeWelcomeScreen();
     this.setMenu(MENU_START);
     this.setAboutMenu();
+    this.setFullscreenButton();
 
     this.pointerLockChangeHandler = () => this.pointerLockChange();
     document.addEventListener(
@@ -74,7 +76,8 @@ class App extends Application {
     );
 
     document.addEventListener('keydown', (event) => {
-      if (this.mode === AppMode.Started && event.key === 'p') this.pause();
+      if (this.mode === AppMode.Started && ['p', 'Escape'].includes(event.key))
+        this.pause();
     });
   }
 
@@ -144,8 +147,6 @@ class App extends Application {
     }
 
     UIManager.showGameRow();
-    UIManager.menu.hide();
-    UIManager.scoreBoard.hide();
 
     this.mode = AppMode.Started;
   }
@@ -166,16 +167,14 @@ class App extends Application {
 
     ScoreManager.reset();
 
-    UIManager.menu.hide();
-    UIManager.scoreBoard.hide();
-    UIManager.loading.show();
+    UIManager.showLoading();
 
     await this.levels.init();
     this.resize();
     this.rendererPrepare();
     this.setMenu(MENU_START, false);
 
-    UIManager.welcome.show();
+    UIManager.showWelcome();
 
     this.mode = AppMode.Idle;
   }
@@ -210,15 +209,13 @@ class App extends Application {
   }
 
   private async loadNextLevel(): Promise<void> {
-    UIManager.menu.hide();
-    UIManager.scoreBoard.hide();
-    UIManager.loading.show();
+    UIManager.showLoading();
 
     await this.levels.next();
     this.rendererPrepare();
     this.resize();
 
-    UIManager.menu.show();
+    UIManager.showMenu();
   }
 
   /*
@@ -241,6 +238,30 @@ class App extends Application {
     else this.levels.current.camera.disable();
   }
 
+  private async enableFullscreen(): Promise<void> {
+    try {
+      await document.body.requestFullscreen();
+      this.fullscreen = true;
+      this.setFullscreenButton(true);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  private disableFullscreen(): void {
+    void document.exitFullscreen();
+    this.fullscreen = false;
+    this.setFullscreenButton(false);
+  }
+
+  private toggleFullscreen(): void {
+    if (this.fullscreen) {
+      this.disableFullscreen();
+    } else {
+      void this.enableFullscreen();
+    }
+  }
+
   /*
    * User interface
    */
@@ -252,10 +273,7 @@ class App extends Application {
       buttons: [
         {
           text: ButtonText.Start,
-          callback: () => {
-            UIManager.welcome.hide();
-            UIManager.menu.show();
-          },
+          callback: () => UIManager.showMenu(),
         },
         { text: ButtonText.About, callback: () => UIManager.about.show() },
       ],
@@ -358,7 +376,7 @@ class App extends Application {
   private setAboutMenu(): void {
     UIManager.updateAbout({
       title: TitleText.About,
-      html: InfoText.About,
+      html: MenuHtml.About,
       buttons: [
         {
           text: ButtonText.Back,
@@ -371,6 +389,14 @@ class App extends Application {
     });
 
     UIManager.about.hide();
+  }
+
+  private setFullscreenButton(enabled = false): void {
+    const svg: string = enabled
+      ? MENU_SVG.fullscreenDisable
+      : MENU_SVG.fullscreenEnable;
+
+    UIManager.setFullscreenBtn(svg, this.toggleFullscreen.bind(this));
   }
 }
 

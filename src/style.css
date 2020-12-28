@@ -33,6 +33,21 @@ button:hover {
   background-color: #acacac;
 }
 
+.btn-fullscreen {
+  top: 0;
+  right: 0;
+  position: absolute;
+  margin: 20px;
+  z-index: 1;
+}
+
+.btn-fullscreen > svg {
+  fill: #f2f2f2;
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
 /*
  * Containers
  */

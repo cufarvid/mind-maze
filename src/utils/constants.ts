@@ -1,5 +1,7 @@
 import { IMenuOptions, IMenuPartial } from '../types';
 import { Cone, Cube, Cylinder, Pyramid, Sphere, Torus } from '../assets/svg';
+import { FullscreenEnable } from '../assets/svg/fullscreen-enable';
+import { FullscreenDisable } from '../assets/svg/fullscreen-disable';
 
 /*
  * Enums
@@ -24,6 +26,21 @@ export enum InfoText {
   Start = '',
   Welcome = '',
   Pause = '',
+  About = '',
+}
+
+export enum ButtonText {
+  Start = 'Start',
+  Reset = 'Reset',
+  Resume = 'Resume',
+  Restart = 'Restart',
+  Continue = 'Continue',
+  Back = 'Back',
+  About = 'About',
+}
+
+export enum MenuHtml {
+  ButtonFullscreen = `<div class="btn-fullscreen">Fullscreen</div>`,
   About = `<div class="menu-info">
             WebGL game for Computer Graphics course, written in Typescript.<br>
             <div class="controls">
@@ -39,16 +56,6 @@ export enum InfoText {
             </div>
             More information will be displayed before each level.
            </div>`,
-}
-
-export enum ButtonText {
-  Start = 'Start',
-  Reset = 'Reset',
-  Resume = 'Resume',
-  Restart = 'Restart',
-  Continue = 'Continue',
-  Back = 'Back',
-  About = 'About',
 }
 
 /*
@@ -108,4 +115,9 @@ export const OBJECT_SVG: Record<string, string> = {
   pyramid: Pyramid,
   sphere: Sphere,
   torus: Torus,
+};
+
+export const MENU_SVG: Record<string, string> = {
+  fullscreenEnable: FullscreenEnable,
+  fullscreenDisable: FullscreenDisable,
 };
