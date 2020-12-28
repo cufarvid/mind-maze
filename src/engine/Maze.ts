@@ -1,4 +1,6 @@
 import seedrandom from 'seedrandom';
+import UIManager from '../utils/UIManager';
+import { MazeMode } from '../utils/constants';
 import Entity from './Entity';
 import {
   IEntityOptions,
@@ -11,14 +13,8 @@ import {
 import Mesh from './Mesh';
 import Model from './Model';
 import PickUpModel from './PickUpModel';
-import UIManager from '../utils/UIManager';
 import Floor from './Floor';
-
-export enum MazeMode {
-  Inspection = 'Inspection',
-  PickUp = 'Pick up',
-  PickUpInOrder = 'Pick up in order',
-}
+import { vec3 } from 'gl-matrix';
 
 export default class Maze extends Entity {
   private objects: TMazeObjects = [];
@@ -81,27 +77,37 @@ export default class Maze extends Entity {
     seed: string,
     objectData: TMazeObjectsData,
   ): void {
+    const { mesh, image, color } = objectData.find(
+      (obj) => obj.name === 'wall',
+    );
+    const { horizontal, vertical } = Maze.generate(width, height, seed);
+
+    const centerX = 0.1;
+    const centerZ = 3;
+    const blockSize = 2;
+
+    const hTex = color ? null : { scale: [1, 1, 0.1] as vec3 };
+    const vTex = color
+      ? { rotation: [0, 1.57, 0] as vec3 }
+      : { scale: [0.1, 1, 1] as vec3 };
+
     // Wall options
     const hOptions: IEntityOptions = {
       aabb: {
         min: [-1, -1, -0.1],
         max: [1, 1, 0.1],
       },
-      scale: [1, 1, 0.1],
+      ...hTex,
+      color,
     };
     const vOptions: IEntityOptions = {
       aabb: {
         min: [-0.1, -1, -1],
         max: [0.1, 1, 1],
       },
-      scale: [0.1, 1, 1],
+      ...vTex,
+      color,
     };
-
-    const { mesh, image } = objectData.find((obj) => obj.name === 'wall');
-    const { horizontal, vertical } = Maze.generate(width, height, seed);
-
-    const centerX = 0.1;
-    const centerZ = 3;
 
     // Outer horizontal
     const startRow = Array(width).fill(false);
@@ -113,8 +119,8 @@ export default class Maze extends Entity {
       [startRow, Array(width).fill(false)],
       hOptions,
       centerX,
-      centerZ - 2,
-      2,
+      centerZ - blockSize,
+      blockSize,
       height * 2,
     );
     // Inner horizontal
@@ -124,7 +130,7 @@ export default class Maze extends Entity {
     this.makeWallSegment(
       mesh,
       image,
-      Array(height).fill(Array(1).fill(false)),
+      Array(height).fill([false]),
       vOptions,
       centerX - 1,
       centerZ - 1,
@@ -137,6 +143,28 @@ export default class Maze extends Entity {
       vOptions,
       centerX + 1,
       centerZ - 1,
+    );
+
+    // Invisible horizontal
+    this.makeWallSegment(
+      mesh,
+      null,
+      Array(2).fill(Array(width + 2).fill(false)),
+      { ...hOptions, scale: [0, 0.1, 0] },
+      centerX - blockSize,
+      centerZ - blockSize * 2,
+      blockSize,
+      height * 2 + blockSize * 2,
+    );
+    // Invisible vertical
+    this.makeWallSegment(
+      mesh,
+      null,
+      Array(height + 2).fill([false, false]),
+      { ...vOptions, scale: [0, 0.1, 0] },
+      centerX - 3,
+      0,
+      width * 2 + blockSize * 2,
     );
   }
 
@@ -166,14 +194,14 @@ export default class Maze extends Entity {
         min: [-0.2, -1, -0.2],
         max: [0.2, 1, 0.2],
       },
-      scale: [0.2, 0.4, 0.2],
     };
     const [x, , z] = object.translation as Array<number>;
 
     this.addChild(
       new Model(holder.mesh, holder.image, {
         ...hOptions,
-        translation: [x, hOptions.scale[1], z],
+        translation: [x, 0.4, z],
+        color: holder.color,
       }),
     );
 
@@ -182,6 +210,7 @@ export default class Maze extends Entity {
         translation: object.translation,
         aabb: object.aabb,
         scale: object.scale,
+        color: object.color,
       }),
     );
   }
@@ -206,6 +235,7 @@ export default class Maze extends Entity {
             new Model(mesh, image, {
               ...modelOptions,
               translation: [x, 1, z],
+              color: modelOptions.color,
             }),
           );
         }
@@ -221,12 +251,13 @@ export default class Maze extends Entity {
     height: number,
     objectData: TMazeObjectsData,
   ): void {
-    const floor = objectData.find((obj) => obj.name === 'holder');
+    const floor = objectData.find((obj) => obj.name === 'floor');
     this.addChild(
       new Floor(floor.image, {
         width: width * 2,
         height: height * 2,
         translation: [width - 1, 0, height + 1],
+        color: floor.color,
       }),
     );
   }

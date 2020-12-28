@@ -1,5 +1,5 @@
 import UIElement from './UIElement';
-import { IMazeObject, IMenuOptions, IScoreData } from '../types';
+import { IMazeObject, IMenuOptions, IScoreData, IScores } from '../types';
 import {
   MENU_DEFAULT,
   OBJECT_SVG,
@@ -14,6 +14,7 @@ export default class UIManager {
   static timer: UIElement;
   static objectBox: UIElement;
   static scoreBoard: UIElement;
+  static about: UIElement;
 
   public static init(): void {
     customElements.define('ui-element', UIElement);
@@ -24,6 +25,8 @@ export default class UIManager {
     this.timer = UIManager.makeTimer('00:00');
     this.objectBox = UIManager.makeObjectBox([]);
     this.scoreBoard = UIManager.makeScoreBoard({}, []);
+    this.about = UIManager.makeMenu(MENU_DEFAULT);
+
     this.scoreBoard.hide();
 
     UIManager.injectMultiple([
@@ -59,6 +62,7 @@ export default class UIManager {
       menu.appendChild(UIManager.element(options.title, 'menu-title'));
     if (options.info)
       menu.appendChild(UIManager.element(options.info, 'menu-info'));
+    if (options.html) menu.innerHTML += options.html;
 
     options.buttons.forEach((option) => {
       const button = document.createElement('button');
@@ -130,9 +134,10 @@ export default class UIManager {
   public static makeScoreBoard(
     data: Record<string, number>,
     scores: Array<IScoreData>,
+    multiple = false,
   ): UIElement {
     const board = new UIElement();
-    board.className = 'score-board';
+    board.className = multiple ? 'score-board-multi' : 'score-board';
 
     const title = document.createElement('div');
     title.appendChild(
@@ -163,6 +168,32 @@ export default class UIManager {
     const newBoard = UIManager.makeScoreBoard(data, scores);
     UIManager.replace(UIManager.scoreBoard, newBoard);
     UIManager.scoreBoard = newBoard;
+  }
+
+  public static finalScoreBoard(
+    data: Record<string, number>,
+    scores: IScores,
+  ): void {
+    const newBoard = new UIElement();
+    newBoard.className = 'scores';
+
+    for (const level in scores) {
+      newBoard.appendChild(
+        UIManager.makeScoreBoard(
+          { number: Number(level), ...data },
+          scores[level],
+          true,
+        ),
+      );
+    }
+    UIManager.replace(UIManager.scoreBoard, newBoard);
+    UIManager.scoreBoard = newBoard;
+  }
+
+  public static updateAbout(options: IMenuOptions): void {
+    const newInfo = UIManager.makeMenu(options);
+    UIManager.replace(UIManager.about, newInfo);
+    UIManager.about = newInfo;
   }
 
   public static inject(element: HTMLElement): void {

@@ -1,6 +1,6 @@
-import { mat4, vec3 } from 'gl-matrix';
-import WebGLUtils from './WebGLUtils';
-import shaders from '../shaders/lightShader';
+import { mat4, vec3, vec4 } from 'gl-matrix';
+import WebGLUtils from '../utils/WebGLUtils';
+import shaders from '../shaders';
 import { IEntityGlProps, IProgram, ModelRecord, TPrograms } from '../types';
 import Camera from './Camera';
 import Entity from './Entity';
@@ -17,17 +17,13 @@ export default class Renderer {
   public constructor(gl: WebGL2RenderingContext) {
     this.gl = gl;
 
-    gl.clearColor(1, 1, 1, 1);
+    gl.clearColor(0.8, 0.9, 1, 1);
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
 
     this.programs = WebGLUtils.buildPrograms(gl, shaders);
 
-    this.defaultTexture = WebGLUtils.createTexture(gl, {
-      width: 1,
-      height: 1,
-      data: new Uint8Array([255, 255, 255, 255]),
-    });
+    this.defaultTexture = this.createColorTexture([255, 255, 255, 255]);
   }
 
   public prepare(scene: Scene): void {
@@ -38,6 +34,8 @@ export default class Renderer {
           Object.assign(entity.props, this.createModel(entity.mesh));
         if (entity.image)
           entity.props.texture = this.createTexture(entity.image);
+        if (entity.color)
+          entity.props.texture = this.createColorTexture(entity.color);
       },
       after: null,
     });
@@ -186,6 +184,14 @@ export default class Renderer {
       image: texture,
       min: this.gl.NEAREST,
       mag: this.gl.NEAREST,
+    });
+  }
+
+  private createColorTexture(color: vec4): WebGLTexture {
+    return WebGLUtils.createTexture(this.gl, {
+      width: 1,
+      height: 1,
+      data: new Uint8Array(color),
     });
   }
 }

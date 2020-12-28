@@ -1,12 +1,10 @@
 import { TraverseParams } from '../types';
-import Camera from './Camera';
 import Entity from './Entity';
-import Model from './Model';
 
 export default class Scene {
-  public entities: Array<Entity | Camera | Model> = [];
+  public entities: Array<Entity> = [];
 
-  public addEntity(entity: Entity | Camera | Model): void {
+  public addEntity(entity: Entity): void {
     this.entities.push(entity);
   }
 
