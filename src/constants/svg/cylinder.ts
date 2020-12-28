@@ -1,6 +1,5 @@
 // language=SVG
 export const Cylinder = `
-<?xml version='1.0' encoding='ascii'?>
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="48" height="48">
   <g id="View Layer_LineSet">
     <g id="strokes">

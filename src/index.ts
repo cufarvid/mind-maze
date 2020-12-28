@@ -12,7 +12,7 @@ import {
   MenuHtml,
   MODE_TEXT,
   TitleText,
-} from './utils/constants';
+} from './constants';
 import { IMenuItem, IMenuPartial } from './types';
 import ScoreManager from './utils/ScoreManager';
 

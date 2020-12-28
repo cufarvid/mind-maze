@@ -1,7 +1,7 @@
 import { IMenuOptions, IMenuPartial } from '../types';
-import { Cone, Cube, Cylinder, Pyramid, Sphere, Torus } from '../assets/svg';
-import { FullscreenEnable } from '../assets/svg/fullscreen-enable';
-import { FullscreenDisable } from '../assets/svg/fullscreen-disable';
+import { Cone, Cube, Cylinder, Pyramid, Sphere, Torus } from './svg';
+import { FullscreenEnable } from './svg/fullscreen-enable';
+import { FullscreenDisable } from './svg/fullscreen-disable';
 
 /*
  * Enums

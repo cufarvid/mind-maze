@@ -3,7 +3,7 @@ import SceneLoader from './SceneLoader';
 import SceneBuilder from './SceneBuilder';
 import Timer from '../utils/Timer';
 import { IMazeObject, IMazePosition } from '../types';
-import { MazeMode } from '../utils/constants';
+import { MazeMode } from '../constants';
 import Physics from './Physics';
 import Scene from './Scene';
 import Camera from './Camera';
