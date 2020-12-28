@@ -1,5 +1,5 @@
 import UIElement from './UIElement';
-import { IMazeObject, IMenuOptions, IScoreData } from '../types';
+import { IMazeObject, IMenuOptions, IScoreData, IScores } from '../types';
 import {
   MENU_DEFAULT,
   OBJECT_SVG,
@@ -134,9 +134,10 @@ export default class UIManager {
   public static makeScoreBoard(
     data: Record<string, number>,
     scores: Array<IScoreData>,
+    multiple = false,
   ): UIElement {
     const board = new UIElement();
-    board.className = 'score-board';
+    board.className = multiple ? 'score-board-multi' : 'score-board';
 
     const title = document.createElement('div');
     title.appendChild(
@@ -165,6 +166,26 @@ export default class UIManager {
     scores: Array<IScoreData>,
   ): void {
     const newBoard = UIManager.makeScoreBoard(data, scores);
+    UIManager.replace(UIManager.scoreBoard, newBoard);
+    UIManager.scoreBoard = newBoard;
+  }
+
+  public static finalScoreBoard(
+    data: Record<string, number>,
+    scores: IScores,
+  ): void {
+    const newBoard = new UIElement();
+    newBoard.className = 'scores';
+
+    for (const level in scores) {
+      newBoard.appendChild(
+        UIManager.makeScoreBoard(
+          { number: Number(level), ...data },
+          scores[level],
+          true,
+        ),
+      );
+    }
     UIManager.replace(UIManager.scoreBoard, newBoard);
     UIManager.scoreBoard = newBoard;
   }

@@ -311,10 +311,14 @@ class App extends Application {
       : `Next mode: ${name}. ${description}`;
 
     if (lastMode) {
-      UIManager.updateScoreBoard(
-        { objectsTotal, number },
-        ScoreManager.levelScores(this.levels.current.number),
-      );
+      if (lastLevel) {
+        UIManager.finalScoreBoard({ objectsTotal }, ScoreManager.getScores);
+      } else {
+        UIManager.updateScoreBoard(
+          { objectsTotal, number },
+          ScoreManager.levelScores(this.levels.current.number),
+        );
+      }
     }
 
     if (lastLevel) {

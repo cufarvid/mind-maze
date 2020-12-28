@@ -41,8 +41,7 @@ button:hover {
 .menu,
 .loading,
 .timer,
-.welcome,
-.score-board {
+.welcome {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -151,6 +150,17 @@ button:hover {
  * Score board
  */
 
+.scores {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  position: absolute;
+  top: 20vh;
+  width: 100%;
+  color: #f2f2f2;
+  z-index: 1;
+}
+
 .score-board {
   position: absolute;
   top: 20vh;
@@ -158,7 +168,14 @@ button:hover {
   color: #f2f2f2;
 }
 
-.score-board > div {
+.score-board-multi {
+  margin: 0 20px 0 20px;
+  padding: 0 20px 0 20px;
+  text-align: center;
+}
+
+.score-board > div,
+.score-board-multi > div {
   font-size: 1.2rem;
   font-weight: bold;
   margin: 10px;
