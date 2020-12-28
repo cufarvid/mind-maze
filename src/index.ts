@@ -5,12 +5,13 @@ import UIManager from './utils/UIManager';
 import {
   ButtonText,
   InfoText,
+  MazeMode,
   MENU_PAUSE,
   MENU_START,
+  MODE_TEXT,
   TitleText,
 } from './utils/constants';
 import { IMenuItem, IMenuPartial } from './types';
-import { MazeMode } from './engine/Maze';
 import ScoreManager from './utils/ScoreManager';
 
 enum AppMode {
@@ -35,8 +36,9 @@ class App extends Application {
     this.renderer = new Renderer(this.gl);
 
     this.levels = new LevelManager([
-      './assets/scenes/maze-01.json',
-      './assets/scenes/maze-02.json',
+      './assets/scenes/maze-01-tex.json',
+      './assets/scenes/maze-02-tex.json',
+      './assets/scenes/maze-03-tex.json',
     ]);
 
     void this.init();
@@ -63,6 +65,7 @@ class App extends Application {
 
     this.makeWelcomeScreen();
     this.setMenu(MENU_START);
+    this.setAboutMenu();
 
     this.pointerLockChangeHandler = () => this.pointerLockChange();
     document.addEventListener(
@@ -157,16 +160,6 @@ class App extends Application {
     this.mode = AppMode.Paused;
   }
 
-  private idle(): void {
-    this.disableCamera();
-
-    UIManager.menu.hide();
-    UIManager.scoreBoard.hide();
-    UIManager.welcome.show();
-
-    this.mode = AppMode.Idle;
-  }
-
   private async reset(): Promise<void> {
     this.disableCamera();
     this.levels.reset();
@@ -223,6 +216,7 @@ class App extends Application {
 
     await this.levels.next();
     this.rendererPrepare();
+    this.resize();
 
     UIManager.menu.show();
   }
@@ -263,7 +257,7 @@ class App extends Application {
             UIManager.menu.show();
           },
         },
-        { text: ButtonText.Info, callback: () => console.log('Info') },
+        { text: ButtonText.About, callback: () => UIManager.about.show() },
       ],
     });
   }
@@ -271,7 +265,7 @@ class App extends Application {
   private setMenu(options: IMenuPartial, show = true): void {
     UIManager.updateMenu({
       title: options.title,
-      info: '',
+      info: options.info,
       buttons: [
         {
           text: options.okText,
@@ -286,6 +280,7 @@ class App extends Application {
 
   private setModeMenu(currentMode: MazeMode, success: boolean): void {
     const {
+      isNextStage,
       lastMode,
       mazeMode,
       number,
@@ -294,26 +289,37 @@ class App extends Application {
     } = this.levels.current;
     const lastLevel = lastMode && this.levels.isLastLevel;
     const inspectionMode = currentMode === MazeMode.Inspection;
+
     let title: string;
     let buttons: Array<IMenuItem>;
 
     if (success) {
+      const { name } = MODE_TEXT[currentMode];
       title = lastMode
         ? `Level #${number} successfully completed.`
         : inspectionMode
-        ? `${currentMode} mode has ended.`
-        : `${currentMode} completed in ${timeDiff} seconds.`;
+        ? `${name} mode has ended.`
+        : `${name} completed in ${timeDiff} seconds.`;
     } else {
       title = TitleText.Failed;
     }
 
-    const info = lastMode ? `` : `Next mode: ${mazeMode}`;
+    const { name, description } = MODE_TEXT[mazeMode];
+    const info = isNextStage
+      ? `First stage completed. Maze will rotate, objects locations won't change. Next mode: ${name}. ${description}`
+      : lastMode
+      ? ``
+      : `Next mode: ${name}. ${description}`;
 
     if (lastMode) {
-      UIManager.updateScoreBoard(
-        { objectsTotal, number },
-        ScoreManager.levelScores(this.levels.current.number),
-      );
+      if (lastLevel) {
+        UIManager.finalScoreBoard({ objectsTotal }, ScoreManager.getScores);
+      } else {
+        UIManager.updateScoreBoard(
+          { objectsTotal, number },
+          ScoreManager.levelScores(this.levels.current.number),
+        );
+      }
     }
 
     if (lastLevel) {
@@ -347,6 +353,24 @@ class App extends Application {
         { text: ButtonText.Reset, callback: () => this.reset() },
       ],
     });
+  }
+
+  private setAboutMenu(): void {
+    UIManager.updateAbout({
+      title: TitleText.About,
+      html: InfoText.About,
+      buttons: [
+        {
+          text: ButtonText.Back,
+          callback: () => {
+            UIManager.about.hide();
+            UIManager.welcome.show();
+          },
+        },
+      ],
+    });
+
+    UIManager.about.hide();
   }
 }
 

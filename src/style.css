@@ -25,18 +25,23 @@ button {
   text-decoration: none;
   display: inline-block;
   transition-duration: 0.3s;
+  margin: 10px;
+  width: 20vw;
 }
 
 button:hover {
   background-color: #acacac;
 }
 
+/*
+ * Containers
+ */
+
 .container,
 .menu,
 .loading,
 .timer,
-.welcome,
-.score-board {
+.welcome {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -60,11 +65,13 @@ button:hover {
   height: 100vh;
 }
 
-.menu > button,
-.welcome > button {
-  margin: 10px;
-  width: 20vw;
+.loading {
+  z-index: 1;
 }
+
+/*
+ * Title text
+ */
 
 .menu-title,
 .menu-info,
@@ -75,7 +82,7 @@ button:hover {
 }
 
 .menu-title {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
@@ -84,14 +91,23 @@ button:hover {
   font-weight: bold;
 }
 
+/*
+ * Info text
+ */
+
 .menu-info,
 .welcome-info {
+  text-align: center;
   max-width: 80%;
 }
 
 .welcome-info {
   font-size: 1.2rem;
 }
+
+/*
+ * Timer & Objects board
+ */
 
 .timer,
 .objects {
@@ -130,6 +146,21 @@ button:hover {
   background: #242424;
 }
 
+/*
+ * Score board
+ */
+
+.scores {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  position: absolute;
+  top: 20vh;
+  width: 100%;
+  color: #f2f2f2;
+  z-index: 1;
+}
+
 .score-board {
   position: absolute;
   top: 20vh;
@@ -137,11 +168,39 @@ button:hover {
   color: #f2f2f2;
 }
 
-.score-board > div {
+.score-board-multi {
+  margin: 0 20px 0 20px;
+  padding: 0 20px 0 20px;
+  text-align: center;
+}
+
+.score-board > div,
+.score-board-multi > div {
   font-size: 1.2rem;
   font-weight: bold;
   margin: 10px;
 }
+
+/*
+ * About screen
+ */
+
+.controls {
+  margin: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.controls > ul {
+  margin-top: 5px;
+  list-style: none;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+/*
+ * SVG
+ */
 
 .scale-1,
 .scale-2 {

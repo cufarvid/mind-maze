@@ -36,6 +36,7 @@ export default class SceneBuilder {
             name: obj.name,
             mesh: this.getMesh(obj.mesh),
             image: this.getTexture(obj.texture),
+            color: obj.color,
             translation: obj.translation,
             aabb: obj.aabb,
             scale: obj.scale,

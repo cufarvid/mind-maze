@@ -1,4 +1,4 @@
-import { ISceneOptions, ISceneData } from '../types';
+import { ISceneData, ISceneOptions } from '../types';
 
 export default class SceneLoader {
   public async loadScene(uri: string): Promise<ISceneOptions> {

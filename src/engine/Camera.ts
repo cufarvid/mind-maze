@@ -129,15 +129,14 @@ export default class Camera extends Entity {
   }
 }
 
-// prettier-ignore
 const defaults: IEntityOptions = {
-  aspect           : 1,
-  fov              : 1.5,
-  near             : 0.01,
-  far              : 100,
-  velocity         : [0, 0, 0],
-  mouseSensitivity : 0.002,
-  maxSpeed         : 3,
-  friction         : 0.2,
-  acceleration     : 20
+  aspect: 1,
+  fov: 1.5,
+  near: 0.01,
+  far: 100,
+  velocity: [0, 0, 0],
+  mouseSensitivity: 0.002,
+  maxSpeed: 3,
+  friction: 0.2,
+  acceleration: 20,
 };
