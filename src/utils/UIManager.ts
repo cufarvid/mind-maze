@@ -1,6 +1,6 @@
 import UIElement from './UIElement';
 import { IMazeObject, IMenuOptions, IScoreData, IScores } from '../types';
-import { OBJECT_SVG, SCREEN_WELCOME, TitleText } from './constants';
+import { OBJECT_SVG, SCREEN_WELCOME, TitleText } from '../constants';
 
 export default class UIManager {
   static menu: UIElement;

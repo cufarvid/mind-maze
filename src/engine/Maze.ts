@@ -1,6 +1,6 @@
 import seedrandom from 'seedrandom';
 import UIManager from '../utils/UIManager';
-import { MazeMode } from '../utils/constants';
+import { MazeMode } from '../constants';
 import Entity from './Entity';
 import {
   IEntityOptions,
