@@ -216,6 +216,7 @@ class App extends Application {
 
     await this.levels.next();
     this.rendererPrepare();
+    this.resize();
 
     UIManager.menu.show();
   }
