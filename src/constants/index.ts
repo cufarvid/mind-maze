@@ -39,9 +39,9 @@ export enum ButtonText {
   About = 'About',
 }
 
-export enum MenuHtml {
-  ButtonFullscreen = `<div class="btn-fullscreen">Fullscreen</div>`,
-  About = `<div class="menu-info">
+export const MENU_HTML = {
+  ButtonFullscreen: `<div class="btn-fullscreen">Fullscreen</div>`,
+  About: `<div class="menu-info">
             WebGL game for Computer Graphics course, written in Typescript.<br>
             <div class="controls">
             Controls:
@@ -56,7 +56,8 @@ export enum MenuHtml {
             </div>
             More information will be displayed before each level.
            </div>`,
-}
+  Welcome: `<img class="logo" src="assets/images/logo.png" alt="logo">`,
+};
 
 /*
  * Constants

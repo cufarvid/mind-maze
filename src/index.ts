@@ -9,7 +9,7 @@ import {
   MENU_PAUSE,
   MENU_START,
   MENU_SVG,
-  MenuHtml,
+  MENU_HTML,
   MODE_TEXT,
   TitleText,
 } from './constants';
@@ -270,6 +270,7 @@ class App extends Application {
     UIManager.updateWelcomeScreen({
       title: TitleText.Welcome,
       info: InfoText.Welcome,
+      html: MENU_HTML.Welcome,
       buttons: [
         {
           text: ButtonText.Start,
@@ -376,7 +377,7 @@ class App extends Application {
   private setAboutMenu(): void {
     UIManager.updateAbout({
       title: TitleText.About,
-      html: MenuHtml.About,
+      html: MENU_HTML.About,
       buttons: [
         {
           text: ButtonText.Back,

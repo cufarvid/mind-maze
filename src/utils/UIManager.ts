@@ -88,18 +88,23 @@ export default class UIManager {
     const screen = new UIElement();
     screen.className = 'welcome';
 
+    if (options.html) screen.innerHTML += options.html;
     if (options.title)
       screen.appendChild(this.element(options.title, 'welcome-title'));
     if (options.info)
       screen.appendChild(this.element(options.info, 'welcome-info'));
 
-    this.appendOptions(screen, options);
+    this.appendOptions(screen, options, false);
 
     return screen;
   }
 
-  private static appendOptions(parent: UIElement, options: IMenuOptions): void {
-    if (options.html) parent.innerHTML += options.html;
+  private static appendOptions(
+    parent: UIElement,
+    options: IMenuOptions,
+    setHtml = true,
+  ): void {
+    if (options.html && setHtml) parent.innerHTML += options.html;
 
     options.buttons.forEach((option) => {
       const button = document.createElement('button');

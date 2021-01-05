@@ -26,7 +26,7 @@ button {
   display: inline-block;
   transition-duration: 0.3s;
   margin: 10px;
-  width: 20vw;
+  width: 15vw;
 }
 
 button:hover {
@@ -50,6 +50,11 @@ button:hover {
 
 .btn-fullscreen > svg:hover {
   fill: #acacac;
+}
+
+.logo {
+  width: 5vw;
+  margin-bottom: 1vw;
 }
 
 /*
