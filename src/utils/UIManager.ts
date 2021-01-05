@@ -139,7 +139,7 @@ export default class UIManager {
       const row = document.createElement('li');
       row.appendChild(
         document.createTextNode(
-          `Located ${option.objectsLocated}/${data.objectsTotal} objects in ${option.timeDiff}s`,
+          `Located ${option.objectsLocated}/${option.objectsTotal} objects in ${option.timeDiff}s`,
         ),
       );
       list.appendChild(row);
@@ -159,20 +159,13 @@ export default class UIManager {
     this.scoreBoard = newBoard;
   }
 
-  public static finalScoreBoard(
-    data: Record<string, number>,
-    scores: IScores,
-  ): void {
+  public static finalScoreBoard(scores: IScores): void {
     const newBoard = new UIElement();
     newBoard.className = 'scores';
 
     for (const level in scores) {
       newBoard.appendChild(
-        this.makeScoreBoard(
-          { number: Number(level), ...data },
-          scores[level],
-          true,
-        ),
+        this.makeScoreBoard({ number: Number(level) }, scores[level], true),
       );
     }
     this.replace(this.scoreBoard, newBoard);

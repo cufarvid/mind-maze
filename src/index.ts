@@ -181,9 +181,10 @@ class App extends Application {
 
   private nextMode(currentMode: MazeMode, success = true): void {
     if (currentMode !== MazeMode.Inspection) {
-      const { objectsLocated, timeDiff } = this.levels.current;
+      const { objectsLocated, objectsTotal, timeDiff } = this.levels.current;
 
       ScoreManager.addScore(this.levels.current.number, {
+        objectsTotal,
         objectsLocated,
         timeDiff,
       });
@@ -303,7 +304,6 @@ class App extends Application {
       lastMode,
       mazeMode,
       number,
-      objectsTotal,
       timeDiff,
     } = this.levels.current;
     const lastLevel = lastMode && this.levels.isLastLevel;
@@ -332,10 +332,10 @@ class App extends Application {
 
     if (lastMode) {
       if (lastLevel) {
-        UIManager.finalScoreBoard({ objectsTotal }, ScoreManager.getScores);
+        UIManager.finalScoreBoard(ScoreManager.getScores);
       } else {
         UIManager.updateScoreBoard(
-          { objectsTotal, number },
+          { number },
           ScoreManager.levelScores(this.levels.current.number),
         );
       }

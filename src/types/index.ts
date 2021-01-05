@@ -210,6 +210,7 @@ export interface IScores {
 }
 
 export interface IScoreData {
+  objectsTotal: number;
   objectsLocated: number;
   timeDiff: number;
 }
