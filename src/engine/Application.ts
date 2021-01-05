@@ -4,13 +4,13 @@ export default class Application {
 
   public constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
-    this.init();
+    this.initWebGL();
     this.start();
 
     requestAnimationFrame(this._update.bind(this));
   }
 
-  private init(): void {
+  private initWebGL(): void {
     try {
       this.gl = this.canvas.getContext('webgl2', {
         preserveDrawingBuffer: true,
