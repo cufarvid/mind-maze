@@ -48,6 +48,10 @@ button:hover {
   height: 20px;
 }
 
+.btn-fullscreen > svg:hover {
+  fill: #acacac;
+}
+
 /*
  * Containers
  */
