@@ -1,6 +1,6 @@
 import UIElement from './UIElement';
 import { IMazeObject, IMenuOptions, IScoreData, IScores } from '../types';
-import { OBJECT_SVG, SCREEN_WELCOME, TitleText } from '../constants';
+import { MENU_HTML, OBJECT_SVG, SCREEN_WELCOME } from '../constants';
 
 export default class UIManager {
   static menu: UIElement;
@@ -15,7 +15,7 @@ export default class UIManager {
   public static init(): void {
     customElements.define('ui-element', UIElement);
 
-    this.loading = this.element(TitleText.Loading, 'loading');
+    this.loading = this.makeLoader();
     this.welcome = this.makeWelcomeScreen(SCREEN_WELCOME);
     this.timer = this.makeTimer('00:00');
     this.scoreBoard = this.makeScoreBoard({}, []);
@@ -202,6 +202,15 @@ export default class UIManager {
     this.timer = newTimer;
 
     return this.timer;
+  }
+
+  private static makeLoader(): UIElement {
+    const loading = new UIElement();
+    loading.className = 'loading';
+
+    loading.innerHTML = MENU_HTML.Loading;
+
+    return loading;
   }
 
   public static inject(element: HTMLElement): void {
