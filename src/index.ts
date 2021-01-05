@@ -135,7 +135,7 @@ class App extends Application {
 
   private play(): void {
     this.enableCamera();
-    this.levels.current.timer.setElement(UIManager.timer);
+    this.levels.current.timer.setElement(UIManager.newTimer());
 
     switch (this.mode) {
       case AppMode.Idle:

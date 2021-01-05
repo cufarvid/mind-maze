@@ -191,6 +191,14 @@ export default class UIManager {
     this.fullscreenBtn = button;
   }
 
+  public static newTimer(): UIElement {
+    const newTimer = this.makeTimer('00:00');
+    this.replace(this.timer, newTimer);
+    this.timer = newTimer;
+
+    return this.timer;
+  }
+
   public static inject(element: HTMLElement): void {
     const app: HTMLElement = document.getElementById('app');
     app.appendChild(element);
