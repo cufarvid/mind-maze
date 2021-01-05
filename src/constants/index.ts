@@ -57,6 +57,7 @@ export const MENU_HTML = {
             More information will be displayed before each level.
            </div>`,
   Welcome: `<img class="logo" src="assets/images/logo.png" alt="logo">`,
+  Loading: `<img src="assets/images/logo.png" alt="logo">`,
 };
 
 /*

@@ -57,6 +57,21 @@ button:hover {
   margin-bottom: 1vw;
 }
 
+.logo {
+  transition: transform 0.5s ease-in-out;
+  animation: scale-rotate 0.5s ease-in-out;
+}
+
+.logo:hover {
+  transform: scale(0.75) rotate(-180deg);
+}
+
+@keyframes scale-rotate {
+  from {
+    transform: scale(0.5) rotate(-180deg);
+  }
+}
+
 /*
  * Containers
  */
@@ -91,6 +106,21 @@ button:hover {
 
 .loading {
   z-index: 1;
+}
+
+.loading > img {
+  width: 3vw;
+  height: 3vw;
+  animation: rotation 1s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /*
