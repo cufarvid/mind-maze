@@ -27,10 +27,17 @@ button {
   transition-duration: 0.3s;
   margin: 10px;
   width: 15vw;
+  animation: scale-button 0.4s ease-in-out;
 }
 
 button:hover {
   background-color: #acacac;
+}
+
+@keyframes scale-button {
+  from {
+    width: 14vw;
+  }
 }
 
 .btn-fullscreen {
