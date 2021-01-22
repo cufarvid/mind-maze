@@ -18,8 +18,8 @@ export default class Renderer {
     this.gl = gl;
 
     gl.clearColor(0.8, 0.9, 1, 1);
-    gl.enable(gl.DEPTH_TEST);
-    gl.enable(gl.CULL_FACE);
+    gl.enable(gl.DEPTH_TEST); // Activates depth comparisons and updates to the depth buffer
+    gl.enable(gl.CULL_FACE); // Activates culling of polygons
 
     this.programs = WebGLUtils.buildPrograms(gl, shaders);
 
