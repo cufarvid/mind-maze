@@ -1,2 +1,2 @@
 ## mind-maze
-WebGL game for Computer Graphics course.
+WebGL engine and game written in TypeScript.
